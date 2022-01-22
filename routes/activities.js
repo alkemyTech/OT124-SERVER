@@ -9,7 +9,7 @@ router.get('/activities', function(req, res, next) {
   Activity.findAll()
     .then(activities => {
       console.log(activities);
-      res.render('activities', { title: 'Express', activities })
+      res.render('activities', { title: 'Activities', activities })
     })
     .catch(err => console.log(err))
 
