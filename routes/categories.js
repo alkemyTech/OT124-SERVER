@@ -8,7 +8,7 @@ router.PUT('/categories/:id', function(req, res, next) {
     db.Categories.findAll({
         where: {
           id: { [Op.like]: req.params.id },
-        },
+        },q
       }).then(function (categories) {
         if (!categories) {
             db.Categories.update({
