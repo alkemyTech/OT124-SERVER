@@ -8,6 +8,7 @@ require('dotenv').config()
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
+const newsRouter = require('./routes/news');
 
 const app = express();
 app.use(cors())
@@ -20,10 +21,10 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/news', newsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -36,9 +37,18 @@ app.use(function(err, req, res, next) {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+  switch (err.name){
+    case 'NotParamError':
+      res.status(500);
+      break;
+    case 'NotFoundError':
+      res.status(404);
+      break;
+    case 'ValidationError':
+      res.status(400);
+      break;
+  }
+  res.send({error: err.message});
 });
 
 module.exports = app;
