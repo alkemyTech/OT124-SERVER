@@ -7,6 +7,21 @@ var router = express.Router();
 router.put('/news/:id', function(req, res, next) {
     const {id} = req.params
     const {name, content, image, categoryId, type } = req.body
+    const error = []
+
+    if (!name) {
+      error.push({text: "Agregar un nombre a la novedad"})
+    }
+    if (!content) {
+      error.push({text: "Agregar una breve descripcion a la novedad"})
+    }
+    if (!categoryId) {
+      error.push({text: "Agregar una id a la categoria"})
+    }
+
+    if (error.length > 0) {
+      res.render('news', { title: 'Novedades', messageErr: error })
+    }
 
     New.update(
         { name, content, image, categoryId, type },
