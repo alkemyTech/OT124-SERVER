@@ -7,14 +7,18 @@ const { Op } = require("sequelize");
 router.PUT('/categories/:id', function(req, res, next) {
     db.Categories.findAll({
         where: {
-          id: { [Op.like]: req.params.id },
+          id: { [Op.eq]: req.params.id },
         },q
       }).then(function (categories) {
         if (!categories) {
             db.Categories.update({
                 name: req.body.name,
                 description: req.body.description                
-              });      
+              }, {
+                where: {
+                    id: req.params.id
+                }
+            });      
               return res.json("Category created successfully");
           
         } else {       
