@@ -24,7 +24,7 @@ router.put('/news/:id', function(req, res, next) {
     } else {
       New.update(
           { name, content, image, categoryId, type },
-          { where: { _id: 1 } }
+          { where: { _id: id } }
         )
           .then(news =>
               res.render('news', { title: 'Novedades', message: "Novedad actualizada" })
