@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
 
-// const db = require('../config/database')
 const Activity = require('../models/activities')
 
 router.get('/activities', function(req, res, next) {
