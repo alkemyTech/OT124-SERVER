@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Organization.hasMany(models.entries);
       Organization.hasMany(models.categories);
+      Organization.hasMany(models.slides);
     }
   }
   Organization.init(
