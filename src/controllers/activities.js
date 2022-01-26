@@ -1,6 +1,4 @@
-var express = require('express');
-var router = express.Router();
-const Activity = require('../models/activities')
+const Activity = require('../models/activities');
 
 const getActivities = async function(req, res, next) {
     try {
@@ -26,7 +24,7 @@ const postActivities = async function(req, res, next) {
             return res.send({title: 'Activities', message: error})
           } else {
             const newActivity = await Activity.create({ name, content, img})
-            res.send({ title: 'Activities', message: "Actividad creada con exito!", newActivity: newActivity }))
+            res.send({ title: 'Activities', message: "Actividad creada con exito!", newActivity: newActivity })
         } 
     }
     catch(err){
