@@ -26,9 +26,20 @@ app.use(function (err, req, res, next) {
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render("error");
+  // response with server status depending by type of error
+  switch (err.name){
+    case 'NotFoundError':
+      res.status(404);
+      break;
+    case 'ValidationError':
+      res.status(400);
+      break;
+    default:
+      res.status(500);
+      break;
+  }
+   // response with error messages
+  res.send({error: err.message});
 });
 
 module.exports = app;
