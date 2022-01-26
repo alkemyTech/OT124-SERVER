@@ -1,5 +1,4 @@
 require("dotenv").config();
-const { noExtendLeft } = require("sequelize/types/lib/operators");
 const app = require("./app");
 const db = require("./models");
 
