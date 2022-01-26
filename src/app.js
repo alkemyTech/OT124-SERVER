@@ -38,8 +38,11 @@ app.use(function (err, req, res, next) {
       res.status(500);
       break;
   }
-   // response with error messages
-  res.send({error: err.message});
+  if (err.inner){
+    return res.send({errors: err.inner.map(e=>e.message)})
+  }
+  return res.send({errors: err.message})
+  ;
 });
 
 module.exports = app;
