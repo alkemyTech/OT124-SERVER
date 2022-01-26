@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       image: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       type: {
         type: DataTypes.STRING,
@@ -41,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       deleteAt: {
         type: DataTypes.DATE,
-        allowNull: false,
+        allowNull: true,
       },
       organizationId: {
         type: DataTypes.INTEGER,
