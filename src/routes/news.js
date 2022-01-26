@@ -1,8 +1,9 @@
 var express = require('express');
 var router = express.Router();
 
-const db = require('../config/database')
-const New = require('../models/news')
+// const db = require('../config/database')
+const New = require('../models/news') 
+const newsController = require('../controllers/news')
 
 router.put('/news/:id', function(req, res, next) {
     const {id} = req.params
@@ -38,29 +39,7 @@ router.put('/news/:id', function(req, res, next) {
 });
 
 /* DELETE new by ID. */
-router.delete('/:id', async function(req, res, next) {
-  try{
-  const {id} = req.params 
-  if (!id){
-    let err = new Error('Id missing')
-    err.name = 'NotParamError'
-    throw err
-  }
-  const deletedNew = await New.destroy({ where: id })
-  if (deletedNew){
-  return res.status(200).send({
-      errors: null,
-      msg: 'New deleted'})
-  }
-  let err = new Error('New not found, New Id Invalid')
-  err.name = 'NotFoundError'
-  throw err
-  }
-  catch(err){
-    console.log(err.name)
-    next(err)
-  }
-});
+router.delete('/:id', newsController.deleteNew);
 
 
 module.exports = router;
