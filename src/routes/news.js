@@ -37,5 +37,8 @@ router.put('/news/:id', function(req, res, next) {
 
 });
 
+/* DELETE new by ID. */
+router.delete('/:id', newsController.deleteNew);
+
 
 module.exports = router;
