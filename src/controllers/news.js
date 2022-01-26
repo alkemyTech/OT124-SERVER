@@ -1,37 +1,35 @@
 const db = require('../models')
 const entity = 'entries'
 
-const updateNew = function(req, res, next) {
-    const {id} = req.params
-    const {name, content, image, categoryId, type } = req.body
-    const error = []
+const updateNew = async function(req, res, next) {
 
-    if (!name) {
-      error.push({text: "Agregar un nombre a la novedad"})
-    }
-    if (!content) {
-      error.push({text: "Agregar una breve descripcion a la novedad"})
-    }
-    if (!categoryId) {
-      error.push({text: "Agregar una id a la categoria"})
-    }
-
-    if (error.length > 0) {
-      res.send({ title: 'Novedades', messageErr: error })
-    } else {
-      db['News'].update(
-          { name, content, image, categoryId, type },
-          { where: { _id: id } }
+    try {
+      const {id} = req.params
+      const {name, content, image, categoryId, type } = req.body
+      const error = []
+  
+      if (!name) {
+        error.push({text: "Agregar un nombre a la novedad"})
+      }
+      if (!content) {
+        error.push({text: "Agregar una breve descripcion a la novedad"})
+      }
+      if (!categoryId) {
+        error.push({text: "Agregar una id a la categoria"})
+      }
+  
+      if (error.length > 0) {
+        res.send({ title: 'Novedades', messageErr: error })
+      } else {
+        const newUpdate = await db['News'].update(
+            { name, content, image, categoryId, type },
+            { where: { _id: id } }
         )
-          .then(news =>
-              res.send({ title: 'Novedades', message: "Novedad actualizada" })
-          )
-          .error(err =>
-            console.log(err)
-          )
-
+        res.send({ title: 'Novedades', message: "Novedad actualizada", update: newUpdate })
+      }
+    } catch (err) {
+      next(err)
     }
-
 };
 
 const deleteNew =  async function(req, res, next) {
