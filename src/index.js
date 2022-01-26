@@ -13,7 +13,6 @@ async function start() {
     });
   } catch (err) {
     console.log(err);
-    next(err)
   }
 }
 start();
