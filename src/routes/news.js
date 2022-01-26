@@ -1,8 +1,8 @@
 var express = require('express');
 var router = express.Router();
 
-const db = require('../config/database')
-const New = require('../models/news')
+const db = require('../models')
+//const New = require('../models/news')
 
 router.put('/news/:id', function(req, res, next) {
     const {id} = req.params
@@ -22,7 +22,7 @@ router.put('/news/:id', function(req, res, next) {
     if (error.length > 0) {
       res.render('news', { title: 'Novedades', messageErr: error })
     } else {
-      New.update(
+      db['News'].update(
           { name, content, image, categoryId, type },
           { where: { _id: id } }
         )
