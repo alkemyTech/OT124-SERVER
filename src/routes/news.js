@@ -20,14 +20,14 @@ router.put('/news/:id', function(req, res, next) {
     }
 
     if (error.length > 0) {
-      res.render('news', { title: 'Novedades', messageErr: error })
+      res.send({ title: 'Novedades', messageErr: error })
     } else {
       db['News'].update(
           { name, content, image, categoryId, type },
           { where: { _id: id } }
         )
           .then(news =>
-              res.render('news', { title: 'Novedades', message: "Novedad actualizada" })
+              res.send({ title: 'Novedades', message: "Novedad actualizada" })
           )
           .error(err =>
             console.log(err)
