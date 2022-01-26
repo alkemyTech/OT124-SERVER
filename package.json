@@ -3,21 +3,27 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "nodemon src/index.js"
+    "prod": "set NODE_ENV=production&& node ./src/index.js",
+    "dev": "set NODE_ENV=development&& nodemon ./src/index.js",
+    "test": "set NODE_ENV=test&& jest --watch",
+    "migrate:prod": "sequelize db:create --env=production && sequelize db:migrate --env=production",
+    "migrate:dev": "sequelize db:create --env=development && sequelize db:migrate --env=development",
+    "migrate:test": "sequelize db:create --env=test && sequelize db:migrate --env=test",
+    "seed:prod": "sequelize db:seed --env=production",
+    "seed:dev": "sequelize db:seed --env=development",
+    "seed:test": "sequelize db:seed --env=test"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
-    "debug": "~2.6.9",
-    "dotenv": "^8.2.0",
-    "ejs": "~2.6.1",
-    "express": "~4.16.1",
-    "helmet": "^5.0.2",
-    "http-errors": "~1.6.3",
-    "morgan": "~1.9.1",
-    "mysql2": "^2.2.3",
-    "sequelize": "^6.3.5",
+    "dotenv": "^13.0.1",
+    "express": "~4.17.2",
+    "helmet": "^5.0.1",
+    "http-errors": "~2.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "morgan": "~1.10.0",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.13.0",
     "yup": "^0.32.11"
   },
   "devDependencies": {
