@@ -9,9 +9,9 @@
     "migrate:prod": "sequelize db:create --env=production && sequelize db:migrate --env=production",
     "migrate:dev": "sequelize db:create --env=development && sequelize db:migrate --env=development",
     "migrate:test": "sequelize db:create --env=test && sequelize db:migrate --env=test",
-    "seed:prod": "sequelize db:seed --env=production",
-    "seed:dev": "sequelize db:seed --env=development",
-    "seed:test": "sequelize db:seed --env=test"
+    "seed:prod": "sequelize db:seed:all --env=production",
+    "seed:dev": "sequelize db:seed:all --env=development",
+    "seed:test": "sequelize db:seed:all --env=test"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
