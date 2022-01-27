@@ -9,6 +9,8 @@ module.exports = {
         email: "example1@example.com",
         password: "1234",
         roleId: "1",
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
         firstName: "User 2",
@@ -16,6 +18,8 @@ module.exports = {
         email: "example2@example.com",
         password: "1234",
         roleId: "1",
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
         firstName: "User 3",
@@ -23,6 +27,8 @@ module.exports = {
         email: "example3@example.com",
         password: "1234",
         roleId: "1",
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
         firstName: "User 4",
@@ -30,6 +36,8 @@ module.exports = {
         email: "example4@example.com",
         password: "1234",
         roleId: "1",
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
         firstName: "User 5",
@@ -37,6 +45,8 @@ module.exports = {
         email: "example5@example.com",
         password: "1234",
         roleId: "1",
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
         firstName: "User 6",
@@ -44,6 +54,8 @@ module.exports = {
         email: "example6@example.com",
         password: "1234",
         roleId: "1",
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
         firstName: "User 7",
@@ -51,6 +63,8 @@ module.exports = {
         email: "example7@example.com",
         password: "1234",
         roleId: "1",
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
         firstName: "User 8",
@@ -58,6 +72,8 @@ module.exports = {
         email: "example8@example.com",
         password: "1234",
         roleId: "1",
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
         firstName: "User 9",
@@ -65,6 +81,8 @@ module.exports = {
         email: "example9@example.com",
         password: "1234",
         roleId: "1",
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
         firstName: "User 10",
@@ -72,6 +90,8 @@ module.exports = {
         email: "example10@example.com",
         password: "1234",
         roleId: "1",
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
         firstName: "User 11",
@@ -79,6 +99,8 @@ module.exports = {
         email: "example11@example.com",
         password: "1234",
         roleId: "2",
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
         firstName: "User 12",
@@ -86,6 +108,8 @@ module.exports = {
         email: "example12@example.com",
         password: "1234",
         roleId: "2",
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
         firstName: "User 13",
@@ -93,6 +117,8 @@ module.exports = {
         email: "example13@example.com",
         password: "1234",
         roleId: "2",
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
         firstName: "User 14",
@@ -100,6 +126,8 @@ module.exports = {
         email: "example14@example.com",
         password: "1234",
         roleId: "2",
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
         firstName: "User 15",
@@ -107,6 +135,8 @@ module.exports = {
         email: "example15@example.com",
         password: "1234",
         roleId: "2",
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
         firstName: "User 16",
@@ -114,6 +144,8 @@ module.exports = {
         email: "example16@example.com",
         password: "1234",
         roleId: "2",
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
         firstName: "User 17",
@@ -121,6 +153,8 @@ module.exports = {
         email: "example17@example.com",
         password: "1234",
         roleId: "2",
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
         firstName: "User 18",
@@ -128,6 +162,8 @@ module.exports = {
         email: "example18@example.com",
         password: "1234",
         roleId: "2",
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
         firstName: "User 19",
@@ -135,6 +171,8 @@ module.exports = {
         email: "example19@example.com",
         password: "1234",
         roleId: "2",
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
         firstName: "User 20",
@@ -142,6 +180,8 @@ module.exports = {
         email: "example20@example.com",
         password: "1234",
         roleId: "2",
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
     ]);
   },
