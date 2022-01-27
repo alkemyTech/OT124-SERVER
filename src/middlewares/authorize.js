@@ -1,6 +1,6 @@
 const authorize = () => async (req, res, next) => {
   try {
-    if (req.body.roleId == 1) {
+    if (req.body.roleId === 2) {
       next();
     } else {
       return res.status(401).json({ message: "Unauthorized" });
