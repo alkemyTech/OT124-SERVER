@@ -2,12 +2,12 @@ const express = require("express");
 const apiRouter = express.Router();
 const router = express.Router();
 const newRouter = require('./news');
-const activitiesRouter = require("./activities")
+const activitiesRouter = require('./activities')
 const testimonialsRouter = require("./testimonials")
 
 router.use('/news', newRouter)
-router.use('/activities', activitiesRouter);
 router.use('/testimonials', testimonialsRouter);
+router.use('/activities', activitiesRouter);
 
 //Importing the required routes here
 //Example: const userRouter = require("./routes/user");
