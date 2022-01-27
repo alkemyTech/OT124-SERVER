@@ -21,7 +21,7 @@ module.exports = {
             en Manos para nivelar a los niños y que vayan con más herramientas a la
             escuela.
             `,
-          deleteAt: new Date(),
+          deletedAt: new Date(),
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -39,7 +39,7 @@ module.exports = {
             espacio también es utilizado por los jóvenes como un punto de encuentro y
             relación entre ellos y la institución.
           `,
-          deleteAt: new Date(),
+          deletedAt: new Date(),
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -58,7 +58,7 @@ module.exports = {
             alumnos y con las instancias municipales, provinciales y nacionales que
             correspondan.
             `,
-          deleteAt: new Date(),
+          deletedAt: new Date(),
           createdAt: new Date(),
           updatedAt: new Date(),
         },
