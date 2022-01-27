@@ -1,17 +1,12 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class Entries extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
+  class Slides extends Model {
     static associate(models) {
-      Entries.belongsTo(models.organization);
+      Slides.belongsTo(models.organization);
     }
   }
-  Entries.init(
+  Slides.init(
     {
       id: {
         autoIncrement: true,
@@ -19,29 +14,17 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         primaryKey: true,
       },
-      name: {
+      imageUrl: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      content: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-      },
-      image: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      type: {
+      text: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      categoryId: {
+      order: {
         type: DataTypes.INTEGER,
         allowNull: false,
-      },
-      deleteAt: {
-        type: DataTypes.DATE,
-        allowNull: true,
       },
       organizationId: {
         type: DataTypes.INTEGER,
@@ -54,11 +37,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "entries",
-      tableName: "entries",
+      modelName: "slides",
+      tableName: "slides",
       timestamps: false,
-      paranoid: true,
     }
   );
-  return Entries;
+  return Slides;
 };

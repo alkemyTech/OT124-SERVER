@@ -10,10 +10,10 @@ const routes = require("./routes");
 const app = express();
 app.use(cors());
 app.use(helmet());
-app.use(routes);
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(routes);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -26,9 +26,23 @@ app.use(function (err, req, res, next) {
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render("error");
+  // response with server status depending by type of error
+  switch (err.name){
+    case 'NotFoundError':
+      res.status(404);
+      break;
+    case 'ValidationError':
+      res.status(400);
+      break;
+    default:
+      res.status(500);
+      break;
+  }
+  if (err.inner){
+    return res.send({errors: err.inner.map(e=>e.message)})
+  }
+  return res.send({errors: err.message})
+  ;
 });
 
 module.exports = app;
