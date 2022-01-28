@@ -66,10 +66,10 @@ const getNewById = async function(req, res, next) {
   }
 }
 
-const newsController = {
+const entriesController = {
     deleteNew,
     updateNew,
     getNewById
 };
 
-module.exports = newsController;
+module.exports = entriesController;
