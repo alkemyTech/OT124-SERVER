@@ -1,4 +1,4 @@
-const db = require('../models')
+const db = require('../models');
 require("dotenv").config();
 
 const login = async function (req, res , next) {
@@ -21,8 +21,34 @@ const login = async function (req, res , next) {
     }
 }
 
+const getMe = async function (req, res, next) {
+    try {
+        const { Authorization } = req.headers;
+        if (!Authorization) {
+            let err = new Error('Token not found')
+            err.name = 'NotFoundError'
+            throw err
+        }
+        let token = Authorization.split(' ')[1];
+
+        jwt.verify(token, process.env.PASSWORD, (err) => {
+            if(err) {
+                throw err
+            } else {
+                const findEmail = jwt.decode(token,process.env.PASSWORD).email
+                const foundOne = await db['Users'].findOne({ where: { email: findEmail } })
+                res.status(200).send(foundOne)
+            }
+        })
+
+    } catch (error) {
+        throw error
+    }
+}
+
 const authController = {
-    login
+    login,
+    getMe
 };
 
 module.exports = authController;

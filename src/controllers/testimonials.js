@@ -1,4 +1,4 @@
-const entity = 'Testimonials'
+const entity = 'testimonials'
 const db = require('../models')
 
 const createTestimonial = async function(req, res, next) {
