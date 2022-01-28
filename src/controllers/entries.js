@@ -1,7 +1,7 @@
 const db = require('../models')
 const entity = 'entries'
 
-const updateNew = async function(req, res, next) {
+const updateEntry = async function(req, res, next) {
 
     try {
       const {id} = req.params
@@ -35,7 +35,7 @@ const updateNew = async function(req, res, next) {
     }
 };
 
-const deleteNew =  async function(req, res, next) {
+const deleteEntry =  async function(req, res, next) {
     try{
     const {id} = req.params
     const deletedNew = await db[entity].destroy({ where: {id: id} })
@@ -53,7 +53,7 @@ const deleteNew =  async function(req, res, next) {
     }
   };
 
-const getNewById = async function(req, res, next) {
+const getEntryById = async function(req, res, next) {
   try {
     const {id} = req.params
     const foundOne = await db[entity].findOne({ where: { _id: id } })
@@ -66,10 +66,10 @@ const getNewById = async function(req, res, next) {
   }
 }
 
-const newsController = {
-    deleteNew,
-    updateNew,
-    getNewById
+const entriesController = {
+    deleteEntry,
+    updateEntry,
+    getEntryById
 };
 
-module.exports = newsController;
+module.exports = entriesController;
