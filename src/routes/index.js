@@ -4,10 +4,12 @@ const router = express.Router();
 const newRouter = require('./news');
 const activitiesRouter = require("./activities")
 const testimonialsRouter = require("./testimonials")
+const filesRouter = require("./files")
 
 router.use('/news', newRouter)
 router.use('/activities', activitiesRouter);
 router.use('/testimonials', testimonialsRouter);
+router.use('/files', filesRouter);
 
 //Importing the required routes here
 //Example: const userRouter = require("./routes/user");
