@@ -5,6 +5,7 @@ const { validation } = require('../middlewares/validator');
 const { userDeleteSchema } = require('../validations/usersSchema');
 
 //delete a 'contact' or user
-router.delete('/:id',validation(userDeleteSchema), userController.deleteUser );
+//,validation(userDeleteSchema)
+router.delete('/:id', userController.deleteUser );
 
 module.exports = router;

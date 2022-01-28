@@ -12,6 +12,7 @@ router.use("/testimonials", testimonialsRouter);
 router.use("/contacts", contactsRouter);
 router.use("/activities", activitiesRouter);
 router.use("/users",usersRouter );
+//router.use("/mentiritas",mentiritasRouter );
 
 //Importing the required routes here
 //Example: const userRouter = require("./routes/user");

@@ -1,7 +1,7 @@
 const yup = require("yup");
 
 const testimonialsCreatorSchema = yup.object().shape({
-  title: yup.string("Title must be an string").required("Title is required"),
+  name: yup.string("name must be an string").required("name is required"),
   content: yup.string("Title must be an string").required("Content is required")
 })
 
