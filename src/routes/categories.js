@@ -4,7 +4,7 @@ const { Op } = require("sequelize");
 
 
 /* PUT categories. */
-router.PUT('/categories/:id', function(req, res, next) {
+router.put('/categories/:id', function(req, res, next) {
     db.Categories.findAll({
         where: {
           id: { [Op.eq]: req.params.id },
