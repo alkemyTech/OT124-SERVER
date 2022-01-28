@@ -11,7 +11,11 @@ module.exports = {
           allowNull: false,
           primaryKey: true,
         },
-        name: {
+        firstName: {
+          type: Sequelize.STRING,
+          allowNull: false,
+        },
+        lastName: {
           type: Sequelize.STRING,
           allowNull: false,
         },
@@ -34,7 +38,7 @@ module.exports = {
         },
         deletedAt: {
           type: Sequelize.DATE,
-          allowNull: false,
+          allowNull: true,
         },
       },
       {
