@@ -1,7 +1,7 @@
 const yup = require("yup");
 
 const userDeleteSchema = yup.object().shape({
-    id: yup.number("id need to be a number").required('id is required')    
+    id: yup.string("id need to be a string").required('id is required')    
 
 })
 
