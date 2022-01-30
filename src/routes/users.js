@@ -6,6 +6,6 @@ const { userDeleteSchema } = require('../validations/usersSchema');
 
 //delete a 'contact' or user
 //,validation(userDeleteSchema)
-router.delete('/:id', validationIdParams(userDeleteSchema), userController.deleteUser );
+router.delete('/:id', userController.deleteUser );
 
 module.exports = router;
