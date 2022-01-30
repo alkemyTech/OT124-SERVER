@@ -4,8 +4,10 @@ const {uploadImage} = require('../services/fileUploader')
 
 const createTestimonial = async function(req, res, next) {
     try{
+    if (req.file){
     const {url} = await uploadImage(req.file, next) 
     req.body.lastimage = url
+    }
     await db[entity].create(req.body)
     return res.status(200).send({
           errors: null,
