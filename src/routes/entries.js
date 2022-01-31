@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const entriesController = require('../controllers/entries')
+const entriesController = require('../controllers/news')
 const {validation} = require('../middlewares/validator')
 const {entriesCreatorSchema} = require('../validations/entriesSchema')
 
