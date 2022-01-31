@@ -13,14 +13,11 @@ router.use("/news", newRouter);
 router.use("/testimonials", testimonialsRouter);
 router.use("/contacts", contactsRouter);
 router.use("/activities", activitiesRouter);
-
-router.use("/files", filesRouter);
-router.use("/categories", categoriesRouter);
-
-
+router.use("/users",usersRouter );
 router.use('/files', filesRouter);
+router.use('/categories', categoriesRouter);
+router.use('/organizations', organizationsRouter);
 
 
 apiRouter.use("/api/v1", router);
-
 module.exports = apiRouter;
