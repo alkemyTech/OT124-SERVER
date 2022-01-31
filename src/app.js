@@ -37,6 +37,9 @@ app.use(function (err, req, res, next) {
     case "ConflictError":
       res.status(409);
       break;
+    case "AuthorizationError":
+      res.status(401);
+      break;
     default:
       res.status(500);
       break;
