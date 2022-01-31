@@ -80,52 +80,6 @@ const getAllFiles = async function(req, res, next){
   }
 }
 
-const deleteFileByKey = async function(req, res, next){
-  try{
-    const {key} = req.params
-    const file = await deleteFile(key, next)
-    if (file){
-      return res.send({msg: 'File deleted successfully'})
-    }
-  }
-  catch(err){
-      next(err)
-  }
-}
-
-const updateFileByKey = async function(req, res, next){
-  try{
-    const {key} = req.params
-    console.log(req.file)
-    console.log(key)
-    if (req.file){
-      const fileUpdated = await updateFile(key, req.file, next) 
-      if (fileUpdated){
-        return res.send({msg: 'File updated successfully'})
-      }
-    }
-    
-  }
-  catch(err){
-      next(err)
-  }
-}
-
-const createFile = async function(req, res, next){
-  try{
-    if (req.file){
-      const {key} = await uploadFile(req.file, next) 
-      if (key){
-        return res.send({msg: 'File uploaded successfully', key: key})
-      }
-    }
-    
-  }
-  catch(err){
-      next(err)
-  }
-}
-
 const filesController = {
   getFileByKey,
   getAllFiles,
