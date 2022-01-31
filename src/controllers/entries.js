@@ -25,10 +25,13 @@ const updateNew = async function(req, res, next) {
             { name, content, image, categoryId, type },
             { where: { _id: id } }
         )
-        res.status(200).send({ title: 'Novedades', message: "Novedad actualizada", update: newUpdate })
-        let err = new Error('New not found, New id invalid')
-        err.name = 'NotFoundError'
-        throw err
+        if (newUpdate) {
+          res.status(200).send({ title: 'Novedades', message: "Novedad actualizada", update: newUpdate })
+        } else {
+          let err = new Error('New not found, New id invalid')
+          err.name = 'NotFoundError'
+          throw err
+        }
       }
     } catch (err) {
       next(err)

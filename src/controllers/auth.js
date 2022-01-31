@@ -36,7 +36,7 @@ const getMe = async function (req, res, next) {
                 throw err
             } else {
                 const findEmail = jwt.decode(token,process.env.PASSWORD).email
-                const foundOne = await db['Users'].findOne({ where: { email: findEmail } })
+                const foundOne = await db['users'].findOne({ where: { email: findEmail } })
                 res.status(200).send(foundOne)
             }
         })
