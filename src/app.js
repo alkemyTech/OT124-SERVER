@@ -9,7 +9,7 @@ const routes = require("./routes");
 
 const app = express();
 app.use(cors());
-app.use(helmet({crossOriginResourcePolicy: false}));
+app.use(helmet({ crossOriginResourcePolicy: false }));
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -33,6 +33,9 @@ app.use(function (err, req, res, next) {
       break;
     case "ValidationError":
       res.status(400);
+      break;
+    case "ConflictError":
+      res.status(409);
       break;
     case "AuthorizationError":
       res.status(401);
