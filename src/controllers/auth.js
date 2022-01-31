@@ -12,10 +12,9 @@ const registerUser = async function (req, res, next) {
       where: { email: email },
     });
     if (userFound) {
-      return res.status(409).send({
-        title: "Register",
-        message: "User already exists",
-      });
+      let err = new Error("User already exists");
+      err.name = "ConflictError";
+      throw err;
     } else {
       passwordHash = await generateEncryptedPassword(password);
       const newUser = await db[userEntity].create({

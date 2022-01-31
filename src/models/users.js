@@ -28,11 +28,7 @@ module.exports = (sequelize, DataTypes) => {
       password: {
         type: DataTypes.STRING,
         allowNull: false,
-      },
-      deletedAt: {
-        type: DataTypes.DATE,
-        allowNull: true,
-      },
+      }
     },
     {
       sequelize,
