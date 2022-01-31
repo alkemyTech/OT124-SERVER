@@ -17,6 +17,6 @@ router.use("/users",usersRouter );
 router.use('/files', filesRouter);
 router.use('/organizations', organizationsRouter);
 
-apiRouter.use("/api/v1", router);
 
+apiRouter.use("/api/v1", router);
 module.exports = apiRouter;
