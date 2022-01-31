@@ -9,6 +9,7 @@ const validation = (schema) => async (req, res, next) => {
     }
 };
 
+
 module.exports = {
-  validation,
+  validation
 };;
