@@ -12,7 +12,7 @@ router.use("/news", newRouter);
 router.use("/testimonials", testimonialsRouter);
 router.use("/contacts", contactsRouter);
 router.use("/activities", activitiesRouter);
-<<<<<<< HEAD
+router.use('/files', filesRouter);
 router.use("/users",usersRouter );
 //router.use("/mentiritas",mentiritasRouter );
 
@@ -24,9 +24,7 @@ router.use("/users",usersRouter );
 
 
 
-=======
 router.use('/files', filesRouter);
->>>>>>> a15142851d1dacf67b6adc116eda1d00b99c0cfb
 
 apiRouter.use("/api/v1", router);
 
