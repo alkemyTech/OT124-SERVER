@@ -70,16 +70,6 @@ const createFile = async function (req, res, next) {
   }
 };
 
-const getAllFiles = async function(req, res, next){
-  try{
-    const files = await searchFiles(next)
-    res.send({keys: files?.map(e=>e.Key) || 'There are no files in the Amazon Bucket'})
-  }
-  catch(err){
-      next(err)
-  }
-}
-
 const filesController = {
   getFileByKey,
   getAllFiles,
