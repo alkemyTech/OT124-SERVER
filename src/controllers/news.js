@@ -7,6 +7,7 @@ const updateNew = async function(req, res, next) {
       const {id} = req.params
       const {name, content, image, categoryId, type } = req.body
       const error = []
+
   
       if (!name) {
         error.push({text: "Agregar un nombre a la novedad"})
@@ -35,6 +36,7 @@ const updateNew = async function(req, res, next) {
 const deleteNew =  async function(req, res, next) {
     try{
     const {id} = req.params
+    console.log(db[entity])
     const deletedNew = await db[entity].destroy({ where: {id: id} })
     if (deletedNew){
     return res.status(200).send({
