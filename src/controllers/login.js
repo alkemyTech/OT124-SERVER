@@ -1,10 +1,10 @@
-const jwtMiddle = require("../middlewares/jwt")
+const jwt = require('jsonwebtoken')
 const db = require("../models")
 
 const entity = 'users'
 
 const login = async (req, res, next) => {
-    
+
     const {
         email,
         password
@@ -29,13 +29,32 @@ const login = async (req, res, next) => {
                     password
                 }
             })
-            console.log("resUser",resUser)
+            console.log("resUser", resUser)
             if (resUser) {
-                const resJwt = jwtMiddle.sign(user)
-                console.log("resJwt",resJwt)
 
-            }else{
-                console.log("que pasó capo")
+                jwt.sign({
+                    user: resUser.dataValues
+                }, 'secretKey', (err, token) => {
+                    if (!token) {
+                        res.send({
+                            err,
+                            token: null
+                        })
+
+                    } else if (token) {
+
+                        res.send({
+                            err: null,
+                            token
+                        })
+
+                    }
+                })
+
+            } else {
+                let err = new Error("user doesnt exist")
+                err.name = 'ValidationError'
+                throw err
             }
 
 

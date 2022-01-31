@@ -7,15 +7,14 @@ const testimonialsRouter = require("./testimonials");
 const usersRouter = require('./users')
 const contactsRouter = require("./contacts");
 const filesRouter = require("./files")
-const authRouter = require("./auth")
-
+const authRouter = require('./auth')
 router.use("/news", newRouter);
 router.use("/testimonials", testimonialsRouter);
 router.use("/contacts", contactsRouter);
 router.use("/activities", activitiesRouter);
 router.use("/users",usersRouter );
-router.use("/auth",authRouter );
-//router.use("/mentiritas",mentiritasRouter );
+router.use('/auth',authRouter)
+
 
 //Importing the required routes here
 //Example: const userRouter = require("./routes/user");
@@ -24,9 +23,6 @@ router.use("/auth",authRouter );
 // Example: router.use("/users", usersRouter);
 
 
-
-
-router.use('/files', filesRouter);
 
 
 apiRouter.use("/api/v1", router);
