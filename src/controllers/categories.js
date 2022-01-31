@@ -33,4 +33,4 @@ const contactsController = {
     putCategories,
 };
 
-module.exports = putCategories;
+module.exports = contactsController;
