@@ -1,12 +1,14 @@
 const authorize = () => async (req, res, next) => {
   try {
-    if (req.body.role === "admin") {
+    if (req.role === "admin") {
       next();
     } else {
-      return res.status(401).json({ message: "Unauthorized" });
+      let err = new Error("Unauthorized");
+      err.name = "AuthorizationError";
+      throw err;
     }
   } catch (err) {
-    return res.status(400).json(err);
+    next(err);
   }
 };
 
