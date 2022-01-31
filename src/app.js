@@ -27,22 +27,24 @@ app.use(function (err, req, res, next) {
   res.locals.error = req.app.get("env") === "development" ? err : {};
 
   // response with server status depending by type of error
-  switch (err.name){
-    case 'NotFoundError':
+  switch (err.name) {
+    case "NotFoundError":
       res.status(404);
       break;
-    case 'ValidationError':
+    case "ValidationError":
       res.status(400);
+      break;
+    case "AuthorizationError":
+      res.status(401);
       break;
     default:
       res.status(500);
       break;
   }
-  if (err.inner){
-    return res.send({errors: err.inner.map(e=>e.message)})
+  if (err.inner) {
+    return res.send({ errors: err.inner.map((e) => e.message) });
   }
-  return res.send({errors: err.message})
-  ;
+  return res.send({ errors: err.message });
 });
 
 module.exports = app;
