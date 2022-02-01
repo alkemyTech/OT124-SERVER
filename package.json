@@ -14,7 +14,7 @@
     "seed:test": "sequelize db:seed:all --env=test"
   },
   "dependencies": {
-    "aws-sdk": "^2.1064.0",
+    "@aws-sdk/client-s3": "^3.49.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^13.0.1",
@@ -25,6 +25,7 @@
     "morgan": "~1.10.0",
     "multer": "^1.4.4",
     "mysql2": "^2.3.3",
+    "s3-url-parser": "^1.0.3",
     "sequelize": "^6.13.0",
     "yup": "^0.32.11"
   },

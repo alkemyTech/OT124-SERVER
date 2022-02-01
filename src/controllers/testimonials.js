@@ -1,11 +1,11 @@
 const entity = 'testimonials'
 const db = require('../models')
-const {uploadImage} = require('../services/fileUploader')
+const { uploadFile } = require('../services/aws_s3')
 
 const createTestimonial = async function(req, res, next) {
     try{
     if (req.file){
-    const {url} = await uploadImage(req.file, next) 
+    const {url} = await uploadFile(req.file, next)
     req.body.lastimage = url
     }
     await db[entity].create(req.body)
