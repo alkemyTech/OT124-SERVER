@@ -9,6 +9,7 @@ const contactsRouter = require("./contacts");
 const filesRouter = require("./files");
 const authRouter = require("./auth");
 const organizationsRouter = require("./organizations");
+const membersRouter = require('./members');
 
 
 router.use("/news", newRouter);
@@ -19,6 +20,7 @@ router.use("/auth", authRouter);
 router.use("/users", usersRouter);
 router.use("/files", filesRouter);
 router.use("/organizations", organizationsRouter);
+router.use('/members', membersRouter);
 
 apiRouter.use("/api/v1", router);
 module.exports = apiRouter;
