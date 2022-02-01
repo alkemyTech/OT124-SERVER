@@ -23,8 +23,10 @@ const uploadFile = async (file, next) => {
     Key: key,
     ContentType: file.mimetype
   };
+    
     const object =  await s3.putObject(uploadParams)
-    return {object, key}
+    const url = `https://${bucketName}.s3.${region}.amazonaws.com/${key}`
+    return {object, url}
   }
   catch(err){
     next(err)

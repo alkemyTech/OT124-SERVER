@@ -1,54 +1,97 @@
-const db = require('../models');
 require("dotenv").config();
+const { generateJWT } = require("../helpers/generateJWT");
+const {
+  generateEncryptedPassword,
+} = require("../helpers/generateEncryptedPassword");
+const db = require("../models");
+const userEntity = "users";
+const jwt = require("jsonwebtoken");
 
-const login = async function (req, res , next) {
-    try {
-        const {email} = req.body
-        const foundOne = await db['Users'].findOne({ where: { email: email } })
-        if (!foundOne) {
-            let err = new Error('User not found, User email invalid')
-            err.name = 'NotFoundError'
-            throw err
-        }
-        const firmJWT = {
-            email: foundOne.email,
-            role: foundOne.role // "USER" O "ADM"
-        };
-        const Authorized = jwt.sign(firmJWT, process.env.JWTPASSWORD);
-        res.json({Authorized})
-    } catch (err) {
-        next(err)
+const registerUser = async function (req, res, next) {
+  try {
+    const { firstName, lastName, email, password } = req.body;
+    const userFound = await db[userEntity].findOne({
+      where: { email: email },
+    });
+    if (userFound) {
+      let err = new Error("User already exists");
+      err.name = "ConflictError";
+      throw err;
+    } else {
+      passwordHash = await generateEncryptedPassword(password);
+      const newUser = await db[userEntity].create({
+        firstName,
+        lastName,
+        email,
+        password: passwordHash,
+      });
+      const user = await db[userEntity].findOne({
+        where: { id: newUser.id },
+        attributes: {
+          exclude: ["password", "createdAt", "updatedAt", "deletedAt"],
+        },
+      });
+      const token = await generateJWT(newUser);
+      res.status(201).json({
+        token,
+        user,
+      });
     }
-}
+  } catch (err) {
+    next(err);
+  }
+};
+const login = async function (req, res, next) {
+  try {
+    const { email } = req.body;
+    const foundOne = await db[userEntity].findOne({ where: { email } });
+    if (!foundOne) {
+      let err = new Error("User not found, User email invalid");
+      err.name = "NotFoundError";
+      throw err;
+    }
+    const firmJWT = {
+      email: foundOne.email,
+      role: foundOne.role, // "USER" O "ADM"
+    };
+    const Authorized = jwt.sign(firmJWT, process.env.JWT_SECRET);
+    res.json({ Authorized });
+  } catch (err) {
+    next(err);
+  }
+};
 
 const getMe = async function (req, res, next) {
-    try {
-        const { Authorization } = req.headers;
-        if (!Authorization) {
-            let err = new Error('Token not found')
-            err.name = 'NotFoundError'
-            throw err
-        }
-        let token = Authorization.split(' ')[1];
-
-        jwt.verify(token, process.env.PASSWORD, (err) => {
-            if(err) {
-                throw err
-            } else {
-                const findEmail = jwt.decode(token,process.env.PASSWORD).email
-                const foundOne = await db['users'].findOne({ where: { email: findEmail } })
-                res.status(200).send(foundOne)
-            }
-        })
-
-    } catch (error) {
-        throw error
+  try {
+    const { authorization } = req.headers;
+    console.log(authorization);
+    if (!authorization) {
+      let err = new Error("Token not found");
+      err.name = "NotFoundError";
+      throw err;
     }
-}
+    let token = authorization.split(" ")[1];
+
+    jwt.verify(token, process.env.JWT_SECRET, async (err) => {
+      if (err) {
+        throw err;
+      } else {
+        const findEmail = jwt.decode(token, process.env.JWT_SECRET).email;
+        const foundOne = await db[userEntity].findOne({
+          where: { email: findEmail },
+        });
+        res.status(200).send(foundOne);
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 const authController = {
-    login,
-    getMe
+  login,
+  getMe,
+  registerUser,
 };
 
 module.exports = authController;

@@ -1,4 +1,4 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
 const newsController = require('../controllers/news')
 const {validation} = require('../middlewares/validator')
@@ -12,5 +12,6 @@ router.delete('/:id', newsController.deleteNew);
 /* GET new by ID */
 router.get('/:id', newsController.getNewById );
 
+router.get("/", newsController.getAllNews);
 
 module.exports = router;
