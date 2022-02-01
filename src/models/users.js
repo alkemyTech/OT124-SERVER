@@ -12,7 +12,11 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         primaryKey: true,
       },
-      name: {
+      firstName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      lastName: {
         type: DataTypes.STRING,
         allowNull: false,
       },
@@ -24,11 +28,7 @@ module.exports = (sequelize, DataTypes) => {
       password: {
         type: DataTypes.STRING,
         allowNull: false,
-      },
-      deletedAt: {
-        type: DataTypes.DATE,
-        allowNull: false,
-      },
+      }
     },
     {
       sequelize,
