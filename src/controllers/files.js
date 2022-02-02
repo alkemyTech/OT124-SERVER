@@ -75,7 +75,7 @@ const filesController = {
   getAllFiles,
   deleteFileByKey,
   updateFileByKey,
-  createFile,
+  createFile
 };
 
 module.exports = filesController;

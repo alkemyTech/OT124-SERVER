@@ -41,28 +41,7 @@ const registerUser = async function (req, res, next) {
     next(err);
   }
 };
-const login = async function (req, res, next) {
-  try {
-    const { email } = req.body;
-    const foundOne = await db[userEntity].findOne({ where: { email } });
-    if (!foundOne) {
-      let err = new Error("User not found, User email invalid");
-      err.name = "NotFoundError";
-      throw err;
-    }
-    const firmJWT = {
-      email: foundOne.email,
-      role: foundOne.role, // "USER" O "ADM"
-    };
-    const Authorized = jwt.sign(firmJWT, process.env.JWT_SECRET);
-    res.json({ Authorized });
-  } catch (err) {
-    next(err);
-  }
-};
-
-const getMe = async function (req, res, next) {
-  try {
+const getMe = function (req, res, next) {
     const { authorization } = req.headers;
     console.log(authorization);
     if (!authorization) {
@@ -76,20 +55,20 @@ const getMe = async function (req, res, next) {
       if (err) {
         throw err;
       } else {
+        try {
         const findEmail = jwt.decode(token, process.env.JWT_SECRET).email;
         const foundOne = await db[userEntity].findOne({
           where: { email: findEmail },
         });
         res.status(200).send(foundOne);
+      } catch (err) {
+        next(err);
       }
-    });
-  } catch (error) {
-    next(error);
-  }
+      }
+    })
 };
 
 const authController = {
-  login,
   getMe,
   registerUser,
 };
