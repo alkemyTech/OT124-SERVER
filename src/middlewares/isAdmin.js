@@ -1,9 +1,9 @@
-const authorize = () => async (req, res, next) => {
+const isAdmin = () => async (req, res, next) => {
   try {
     if (req.role === "admin") {
       next();
     } else {
-      let err = new Error("Unauthorized");
+      let err = new Error("Must be admin");
       err.name = "AuthorizationError";
       throw err;
     }
@@ -13,5 +13,5 @@ const authorize = () => async (req, res, next) => {
 };
 
 module.exports = {
-  authorize,
+  isAdmin,
 };
