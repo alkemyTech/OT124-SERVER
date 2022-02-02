@@ -1,5 +1,6 @@
 const db = require('../models')
 require("dotenv").config();
+const entity = 'users'
 
 const validateToken = (req, res, next) => {
 
@@ -25,9 +26,31 @@ const validateToken = (req, res, next) => {
     }
 }
 
+const matchPassword = async (req, res, next) => {
+    const { email, password } = req.body
+
+    try {
+        const resUser = await db[entity].findOne({ where: { email: email } })
+
+        if (!resUser) {
+            let err = new Error("UserNotExist");
+            err.name = "User does not exist";
+            throw err;
+        }
+
+        if (!bcrypt.compareSync(password, resUser.password)) {
+              return res.status(403).send('Contraseña invalida');
+        }
+        next();
+
+    } catch (err) {
+        next(err)
+    }
+}
 
 const authController = {
-    validateToken
+    validateToken,
+    matchPassword
 };
 
 module.exports = authController;

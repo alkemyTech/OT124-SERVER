@@ -5,26 +5,13 @@ const entity = 'users'
 
 const login = async (req, res, next) => {
 
-    const {
-        email,
-        password
-    } = req.body
+    // CONST { DATA } = REQ.BODY  
+    const { email } = req.body
     try {
-        let user = {
-            email,
-            password
-        }
-
-
         const resUser = await db[entity].findOne({
-            where: {
-                email,
-                password
-            }
+            where: { email: email }
         })
-        console.log("resUser", resUser)
         if (resUser) {
-
             jwt.sign({
                 user: resUser.dataValues
             }, 'secretKey', (err, token) => {
@@ -33,22 +20,14 @@ const login = async (req, res, next) => {
                         err,
                         token: null
                     })
-
                 } else if (token) {
-
                     res.send({
                         err: null,
                         token
                     })
-
                 }
             })
-
-
-
-
         }
-
     } catch (err) {
         next(err)
     }
