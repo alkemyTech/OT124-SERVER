@@ -2,9 +2,7 @@
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Entries extends Model {
-    
     static associate(models) {
-      Entries.belongsTo(models.organization);
     }
   }
   Entries.init(
@@ -38,14 +36,6 @@ module.exports = (sequelize, DataTypes) => {
       deleteAt: {
         type: DataTypes.DATE,
         allowNull: true,
-      },
-      organizationId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: "organization",
-          key: "id",
-        },
       },
     },
     {

@@ -3,7 +3,6 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Slides extends Model {
     static associate(models) {
-      Slides.belongsTo(models.organization);
     }
   }
   Slides.init(
@@ -25,14 +24,6 @@ module.exports = (sequelize, DataTypes) => {
       order: {
         type: DataTypes.INTEGER,
         allowNull: false,
-      },
-      organizationId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: "organization",
-          key: "id",
-        },
       },
     },
     {
