@@ -10,7 +10,7 @@ const filesRouter = require("./files")
 const membersRouter = require('./members')
 const authRouter = require("./auth");
 const organizationsRouter = require("./organizations");
-const categoriesRouter = require("./categories");
+const categoriesRouter = require('./categories')
 
 
 
@@ -24,6 +24,7 @@ router.use('/categories', categoriesRouter);
 router.use('/organizations', organizationsRouter);
 router.use('/members', membersRouter);
 router.use("/auth", authRouter);
+router.use('/categories', categoriesRouter);
 
 apiRouter.use("/api/v1", router);
 module.exports = apiRouter;
