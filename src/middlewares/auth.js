@@ -1,46 +1,56 @@
 const db = require('../models')
 require("dotenv").config();
 const entity = 'users'
+const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 
-const validateToken = (req, res, next) => {
+const validateToken = async (req, res, next) => {
 
     try {
-        const { Authorization } = req.headers;
-        if (!Authorization) {
+        const { authorization } = req.headers;
+        if (!authorization) {
             let err = new Error('Token not found')
             err.name = 'NotFoundError'
             throw err
         }
-        let token = Authorization.split(' ')[1];
+        let token = authorization.split(' ')[1];
 
-        jwt.verify(token, process.env.PASSWORD, (err) => {
+        jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
             if(err) {
                 throw err
             } else {
-                next();
+                req.user=decoded.id
+                req.role=decoded.role
             }
         })
+        next();
 
     } catch (error) {
-        throw error
+         next(error)
     }
 }
 
-const matchPassword = async (req, res, next) => {
+const matchCredentials = async (req, res, next) => {
     const { email, password } = req.body
 
     try {
-        const resUser = await db[entity].findOne({ where: { email: email } })
+        const resUser = await db[entity].findOne({ where: { email: email },
+            attributes: {
+                exclude: ["createdAt", "updatedAt", "deletedAt"],
+            }, })
 
         if (!resUser) {
-            let err = new Error("UserNotExist");
-            err.name = "User does not exist";
+            let err = new Error("User does not exist");
+            err.name = "AuthorizationError";
             throw err;
         }
 
         if (!bcrypt.compareSync(password, resUser.password)) {
-              return res.status(403).send('Contraseña invalida');
+            let err = new Error("Password invalid");
+            err.name = "AuthorizationError";
+            throw err;
         }
+        req.user=resUser
         next();
 
     } catch (err) {
@@ -50,7 +60,7 @@ const matchPassword = async (req, res, next) => {
 
 const authController = {
     validateToken,
-    matchPassword
+    matchCredentials
 };
 
 module.exports = authController;
