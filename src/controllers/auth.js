@@ -68,9 +68,30 @@ const getMe = function (req, res, next) {
     })
 };
 
+const login = async (req, res, next) => {
+
+    // CONST { DATA } = REQ.BODY  
+    const { user } = req
+    try {
+        if (user) {
+            const token = await generateJWT(user)
+            if (token){
+                    res.send({
+                        token,
+                        user: user
+                    })
+                }
+            }
+    } catch (err) {
+        next(err)
+    }
+}
+
+
 const authController = {
   getMe,
   registerUser,
+  login
 };
 
 module.exports = authController;
