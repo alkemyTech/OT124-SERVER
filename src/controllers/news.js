@@ -1,6 +1,29 @@
 const db = require("../models");
 const entity = "entries";
 
+const postNew = async function (req, res, next) {
+  try {
+    const { name, content, image, categoryId, type } = req.body;
+
+    const createdNew = await db.entity.create({
+      name,
+      content,
+      image,
+      categoryId,
+      type,
+    });
+
+    if (createdNew) {
+      res.send({
+        message: "News was created successfully",
+        createdNew,
+      });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
 const updateNew = async function (req, res, next) {
   try {
     const { id } = req.params;
@@ -93,6 +116,7 @@ const newsController = {
   updateNew,
   getAllNews,
   getNewById,
+  postNew,
 };
 
 module.exports = newsController;
