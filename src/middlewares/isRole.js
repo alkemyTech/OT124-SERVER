@@ -1,8 +1,10 @@
-const isAdmin = () => async (req, res, next) => {
+const isAdmin = async (req, res, next) => {
   try {
+    console.log(req.role)
     if (req.role === "admin") {
       next();
-    } else {
+    } 
+    else{
       let err = new Error("Must be admin");
       err.name = "AuthorizationError";
       throw err;
@@ -12,7 +14,7 @@ const isAdmin = () => async (req, res, next) => {
   }
 };
 
-const isDev = () => async (req, res, next) => {
+const isDev = async (req, res, next) => {
   try {
     if (req.role === "dev") {
       next();
