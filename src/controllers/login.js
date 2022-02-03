@@ -1,33 +1,18 @@
-const jwt = require('jsonwebtoken')
-const db = require("../models")
-
-const entity = 'users'
-
+const { generateJWT } = require('../helpers/generateJWT')
 const login = async (req, res, next) => {
 
     // CONST { DATA } = REQ.BODY  
-    const { email } = req.body
+    const { user } = req
     try {
-        const resUser = await db[entity].findOne({
-            where: { email: email }
-        })
-        if (resUser) {
-            jwt.sign({
-                user: resUser.dataValues
-            }, 'secretKey', (err, token) => {
-                if (!token) {
+        if (user) {
+            const token = await generateJWT(user)
+            if (token){
                     res.send({
-                        err,
-                        token: null
-                    })
-                } else if (token) {
-                    res.send({
-                        err: null,
-                        token
+                        token,
+                        user: user
                     })
                 }
-            })
-        }
+            }
     } catch (err) {
         next(err)
     }
