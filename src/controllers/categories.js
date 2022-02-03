@@ -17,7 +17,7 @@ const putCategories = async function (req, res, next) {
         {
           where: {
             id: req.params.id,
-          }
+          },
         }
       );
       return res.json("Category created successfully");
@@ -29,8 +29,32 @@ const putCategories = async function (req, res, next) {
   }
 };
 
+const deleteCategorie = async function (req, res, next) {
+  try {
+    const findCat = await db[entity].findOne({
+      where: {
+        id: { [Op.eq]: req.params.id },
+      },
+    });
+    if (!findCat) {
+      return res.json("La categoria no existe");
+    } else {
+      await db[entity].destroy({
+        where: {
+          id: { [Op.eq]: req.query.id },
+        },
+      });
+
+      return res.json("La categoria a sido borrada");
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
 const categoriesController = {
-    putCategories,
+  putCategories,
+  deleteCategorie,
 };
 
 module.exports = categoriesController;
