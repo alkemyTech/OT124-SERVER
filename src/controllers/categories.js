@@ -1,22 +1,32 @@
 const db = require('../models')
 entity = 'categories'
 
-const updateCategory = async function(req, res, next) {
-  db[entity].findAll({
+const updateCategory = async function (req, res, next) {
+  try {
+    const update = await db[entity].findAll({
       where: {
-        id: { [Op.like]: req.params.id },
+        id: { [Op.eq]: req.params.id },
       },
-    }).then(function (categories) {
-      if (!categories) {
-          db[entity].update({
-              name: req.body.name,
-              description: req.body.description                
-            });      
-            return res.json("Category created successfully");
-      } else {       
-          return res.json("The category already exists");
-      }
     });
+    if (!update) {
+      db[entity].update(
+        {
+          name: req.body.name,
+          description: req.body.description,
+        },
+        {
+          where: {
+            id: req.params.id,
+          }
+        }
+      );
+      return res.json("Category created successfully");
+    } else {
+      return res.json("The category already exists");
+    }
+  } catch (err) {
+    next(err);
+  }
 };
 
 const createCategory = async function (req, res, next) {
@@ -35,4 +45,5 @@ const createCategory = async function (req, res, next) {
       createCategory,
       updateCategory
   }
-  module.exports = categoriesController;
+module.exports = categoriesController;
+
