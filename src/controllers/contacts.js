@@ -11,18 +11,20 @@ const getContacts = async function (req, res, next) {
 };
 
 const postContact = async function (req, res, next) {
-  // ToDo: hacer la logica del controlador
   try {
-    const { name, phone, message } = req.body;
+    const { name, phone, email, message } = req.body;
 
-    const createMember = await db[entity].create({
-      
+    const createContact = await db[entity].create({
+      name,
+      phone,
+      email,
+      message
     });
-    // res.send({
-    //   title: "Members",
-    //   message: "Miembro creado con exito!",
-    //   newMember: createMember
-    // });
+    res.send({
+      title: "Contacts",
+      message: "contacto creado con exito!",
+      newContact: createContact
+    });
   } 
   catch (err) {
     next(err);
