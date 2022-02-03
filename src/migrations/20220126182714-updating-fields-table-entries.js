@@ -11,6 +11,14 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: true,
       }),
+      queryInterface.addColumn("entries", "createdAt", {
+        type: Sequelize.DATE,
+        allowNull: true,
+      }),
+      queryInterface.addColumn("entries", "updatedAt", {
+        type: Sequelize.DATE,
+        allowNull: true,
+      }),
     ]);
   },
   async down(queryInterface, Sequelize) {

@@ -29,8 +29,8 @@ const putCategories = async function (req, res, next) {
   }
 };
 
-const contactsController = {
+const categoriesController = {
     putCategories,
 };
 
-module.exports = contactsController;
+module.exports = categoriesController;
