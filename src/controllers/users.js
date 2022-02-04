@@ -41,8 +41,21 @@ const deleteUser = async (req, res, next) => {
     }
 }
 
+const getAllUsers = async (req, res, next) => {
+    try {
+        const users = await db[entity].findAll();
+        res.send({
+            users
+        });
+    } 
+    catch (err) {
+        next(err);
+    }
+}
+
 const usersController = {
-    deleteUser
+    deleteUser,
+    getAllUsers
 };
 
 module.exports = usersController;
