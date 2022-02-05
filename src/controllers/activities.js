@@ -1,5 +1,6 @@
 const db = require("../models");
 const entity = "activities";
+const updateFile = require("../services/aws_s3");
 
 const getActivities = async function (req, res, next) {
   try {
@@ -38,7 +39,7 @@ const postActivities = async function (req, res, next) {
 
 const putActivities = async function (req, res, next) {
   const { id } = req.params;
-  const { name, img, content } = req.body;
+  const { name, content } = req.body;
 
   try {
     const activityFound = await db[entity].findOne({
@@ -50,8 +51,8 @@ const putActivities = async function (req, res, next) {
     if (name) {
       activityFound.name = name;
     }
-    if (img) {
-      activityFound.img = img;
+    if (req.file) {
+      await updateFile(img, req.file, next);
     }
     if (content) {
       activityFound.content = content;
