@@ -41,32 +41,21 @@ const deleteFileByKey = async function (req, res, next) {
   }
 };
 
-const updateFileByKey = async function (req, res, next) {
-  try {
-    const { key } = req.params;
-    console.log(req.file);
-    console.log(key);
-    if (req.file) {
-      const fileUpdated = await updateFile(key, req.file, next);
-      if (fileUpdated) {
-        return res.send({ msg: "File updated successfully" });
-      }
-    }
-  } catch (err) {
-    next(err);
+const updateFileByKey = async function (req, activityFound) {
+  const key = activityFound.image;
+  if (req.file) {
+    await updateFile(key, req.file);
+    return { msg: "File updated successfully" };
   }
 };
 
-const createFile = async function (req, res, next) {
-  try {
-    if (req.file) {
-      const { key } = await uploadFile(req.file, next);
-      if (key) {
-        return res.send({ msg: "File uploaded successfully", key: key });
-      }
+const createFile = async function (req) {
+  if (req.file) {
+    const { key } = await uploadFile(req.file);
+
+    if (key) {
+      return { msg: "File uploaded successfully", key: key };
     }
-  } catch (err) {
-    next(err);
   }
 };
 
@@ -75,7 +64,7 @@ const filesController = {
   getAllFiles,
   deleteFileByKey,
   updateFileByKey,
-  createFile
+  createFile,
 };
 
 module.exports = filesController;

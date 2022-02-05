@@ -1,5 +1,5 @@
-const S3 = require('@aws-sdk/client-s3');
-const uuid = require('uuid');
+const S3 = require("@aws-sdk/client-s3");
+const uuid = require("uuid");
 
 // AWS account data
 const bucketName = process.env.AWS_BUCKET;
@@ -11,93 +11,79 @@ const region = process.env.AWS_REGION;
 const s3 = new S3.S3({
   region,
   accessKeyId,
-  secretAccessKey
+  secretAccessKey,
 });
 
-const uploadFile = async (file, next) => {
-  try{
-  const key = uuid.v4()
+const uploadFile = async (file) => {
+  const key = uuid.v4();
+
   const uploadParams = {
     Bucket: bucketName,
     Body: file.buffer,
     Key: key,
-    ContentType: file.mimetype
+    ContentType: file.mimetype,
   };
-    
-    const object =  await s3.putObject(uploadParams)
-    const url = `https://${bucketName}.s3.${region}.amazonaws.com/${key}`
-    return {object, url}
-  }
-  catch(err){
-    next(err)
-  }
+
+  const object = await s3.putObject(uploadParams);
+  const url = `https://${bucketName}.s3.${region}.amazonaws.com/${key}`;
+  return { object, url, key };
 };
 
 const downloadFile = async (key, next) => {
-  try{ 
+  try {
     const downloadParams = {
       Key: key,
-      Bucket: bucketName
+      Bucket: bucketName,
     };
-    const res =  await s3.getObject(downloadParams)
-    if (res){
-      return res
+    const res = await s3.getObject(downloadParams);
+    if (res) {
+      return res;
     }
-  }
-  catch(err){
-    next(err)
+  } catch (err) {
+    next(err);
   }
 };
 
-const searchFiles = async (next) =>{
-  try{
-    const {Contents} = await s3.listObjects({ Bucket: bucketName})
-    return Contents
+const searchFiles = async (next) => {
+  try {
+    const { Contents } = await s3.listObjects({ Bucket: bucketName });
+    return Contents;
+  } catch (err) {
+    next(err);
   }
-  catch(err){
-    next(err)
-  }
-}
+};
 
-const deleteFile = async (key, next) =>{
-  try{
+const deleteFile = async (key, next) => {
+  try {
     const deleteParams = {
       Key: key,
-      Bucket: bucketName
-    };
-
-    const object = await s3.getObject(deleteParams)
-    if (object){
-      return await s3.deleteObject(deleteParams)
-    }
-  }
-  catch(err){
-    next(err)
-  }
-}
-
-const updateFile = async (key, file, next) =>{
-  try{
-    const updateParams = {
-      Key: key,
-      Body: file.buffer,
       Bucket: bucketName,
-      contentType: file.mimeType
     };
-    const object = await s3.getObject({Key: key, Bucket: bucketName})
-    if (object){
-      return await s3.putObject(updateParams)
+
+    const object = await s3.getObject(deleteParams);
+    if (object) {
+      return await s3.deleteObject(deleteParams);
     }
+  } catch (err) {
+    next(err);
   }
-  catch(err){
-    next(err)
-  }
-}
+};
+
+const updateFile = async (key, file) => {
+  const updateParams = {
+    Key: key,
+    Body: file.buffer,
+    Bucket: bucketName,
+    contentType: file.mimeType,
+  };
+  await s3.getObject({ Key: key, Bucket: bucketName });
+  await s3.putObject(updateParams);
+};
 
 module.exports = {
   uploadFile,
-  downloadFile, 
+  downloadFile,
   searchFiles,
   deleteFile,
-  updateFile
+  updateFile,
 };

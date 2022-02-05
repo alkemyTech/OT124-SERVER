@@ -1,6 +1,6 @@
 const db = require("../models");
 const entity = "activities";
-const updateFile = require("../services/aws_s3");
+const { updateFileByKey, createFile } = require("./files");
 
 const getActivities = async function (req, res, next) {
   try {
@@ -13,25 +13,19 @@ const getActivities = async function (req, res, next) {
 
 const postActivities = async function (req, res, next) {
   try {
-    const { name, img, content } = req.body;
-    const error = [];
+    const { name, content } = req.body;
+    const createdFile = await createFile(req, res, next);
 
-    if (!name) {
-      error.push({ text: "Agregar el nombre de la actividad" });
-    }
-    if (!content) {
-      error.push({ text: "Agregar una breve descripcion de la actividad" });
-    }
-    if (error.length > 0) {
-      return res.send({ title: "Activities", message: error });
-    } else {
-      const newActivity = await db[entity].create({ name, content, img });
-      res.send({
-        title: "Activities",
-        message: "Actividad creada con exito!",
-        newActivity: newActivity,
-      });
-    }
+    const newActivity = await db[entity].create({
+      name,
+      content,
+      image: createdFile.key,
+    });
+    res.send({
+      title: "Activities",
+      message: "Actividad creada con exito!",
+      newActivity: newActivity,
+    });
   } catch (err) {
     next(err);
   }
@@ -39,7 +33,7 @@ const postActivities = async function (req, res, next) {
 
 const putActivities = async function (req, res, next) {
   const { id } = req.params;
-  const { name, content } = req.body;
+  const body = req.body;
 
   try {
     const activityFound = await db[entity].findOne({
@@ -48,19 +42,26 @@ const putActivities = async function (req, res, next) {
       },
     });
 
-    if (name) {
-      activityFound.name = name;
+    if (!activityFound) {
+      const error = new Error();
+      throw error;
+    }
+
+    if (body.name) {
+      activityFound.name = body.name;
     }
     if (req.file) {
-      await updateFile(img, req.file, next);
+      await updateFileByKey(req, activityFound, next);
     }
-    if (content) {
-      activityFound.content = content;
+    if (body.content) {
+      activityFound.content = body.content;
     }
 
     await activityFound.save();
 
-    return res.json("Actividad actualizada");
+    return res.status(200).json({
+      msg: "Activity succesfully updated",
+    });
   } catch (err) {
     next(err);
   }
