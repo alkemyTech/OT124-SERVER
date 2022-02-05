@@ -19,6 +19,7 @@ router.post(
   "/",
   validation(newsCreatorSchema),
   authController.validateToken,
+  isAdmin,
   newsController.postNew
 );
 
