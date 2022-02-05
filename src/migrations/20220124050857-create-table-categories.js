@@ -21,16 +21,10 @@ module.exports = {
         },
         deleteAt: {
           type: Sequelize.DATE,
-          allowNull: false,
+          allowNull: true,
         },
-        organizationId: {
-          type: Sequelize.INTEGER,
-          allowNull: false,
-          references: {
-            model: "organization",
-            key: "id",
-          },
-        },
+        
+       
       },
       {
         modelName: "categories",

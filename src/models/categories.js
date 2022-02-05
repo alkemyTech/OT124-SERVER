@@ -7,9 +7,7 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
-      Categories.belongsTo(models.organization);
-    }
+    
   }
   Categories.init(
     {
@@ -29,15 +27,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       deleteAt: {
         type: DataTypes.DATE,
-        allowNull: false,
-      },
-      organizationId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: "organization",
-          key: "id",
-        },
+        allowNull: true,
       },
     },
     {
