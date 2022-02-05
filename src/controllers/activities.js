@@ -1,4 +1,6 @@
+const { where } = require("sequelize/dist");
 const db = require("../models");
+const { options } = require("../routes/news");
 const entity = "activities";
 
 const getActivities = async function (req, res, next) {
@@ -36,9 +38,39 @@ const postActivities = async function (req, res, next) {
   }
 };
 
+const putActivities = async function (req, res, next) {
+  const { id } = req.params;
+  const { name, img, content } = req.body;
+
+  try {
+    const activityFound = await db[entity].findOne({
+      where: {
+        id: id,
+      },
+    });
+
+    if (name) {
+      activityFound.name = name;
+    }
+    if (img) {
+      activityFound.img = img;
+    }
+    if (content) {
+      activityFound.content = content;
+    }
+
+    const response = await activityFound.save();
+
+    res.send({ response });
+  } catch (err) {
+    next(err);
+  }
+};
+
 const activityController = {
   getActivities,
   postActivities,
+  putActivities,
 };
 
 module.exports = activityController;
