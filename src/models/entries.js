@@ -2,7 +2,6 @@
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Entries extends Model {
-    
     static associate(models) {
       Entries.belongsTo(models.organization);
     }
@@ -41,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       organizationId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
           model: "organization",
           key: "id",

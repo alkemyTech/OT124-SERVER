@@ -5,7 +5,7 @@ const postNew = async function (req, res, next) {
   try {
     const { name, content, image, categoryId, type } = req.body;
 
-    const createdNew = await db.entity.create({
+    const createdNew = await db.entries.create({
       name,
       content,
       image,
