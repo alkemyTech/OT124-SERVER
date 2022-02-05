@@ -5,7 +5,8 @@ const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
 
 const putActivitiesSchema = yup.object().shape({
   name: yup.string("Name must be a string"),
-  image: yup.Yup.mixed()
+  image: yup
+    .mixed()
     .test(
       "fileSize",
       "File Size is too large",

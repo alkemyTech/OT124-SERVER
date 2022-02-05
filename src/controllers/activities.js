@@ -1,6 +1,4 @@
-const { where } = require("sequelize/dist");
 const db = require("../models");
-const { options } = require("../routes/news");
 const entity = "activities";
 
 const getActivities = async function (req, res, next) {
@@ -45,7 +43,7 @@ const putActivities = async function (req, res, next) {
   try {
     const activityFound = await db[entity].findOne({
       where: {
-        id: id,
+        id,
       },
     });
 
@@ -59,9 +57,9 @@ const putActivities = async function (req, res, next) {
       activityFound.content = content;
     }
 
-    const response = await activityFound.save();
+    await activityFound.save();
 
-    res.send({ response });
+    return res.json("Actividad actualizada");
   } catch (err) {
     next(err);
   }
