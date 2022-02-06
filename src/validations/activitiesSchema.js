@@ -1,6 +1,6 @@
 const yup = require("yup");
 
-const FILE_SIZE = 10000000; // Bytes (5MB)
+const FILE_SIZE = 10000000; // Bytes (10MB)
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
 
 const activitiesSchema = yup.object().shape({
