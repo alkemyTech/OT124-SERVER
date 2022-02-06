@@ -8,10 +8,11 @@ const createTestimonial = async function(req, res, next) {
     const {url} = await uploadFile(req.file, next)
     req.body.lastimage = url
     }
-    await db[entity].create(req.body)
-    return res.status(200).send({
-          errors: null,
-          msg: 'Testimonial created'})
+    const testimonialCreated = await db[entity].create(req.body)
+    return res.status(201).send({
+        title: 'Testimonials',
+        message: 'The Testimonial has been created successfully',
+        newTestimonial: testimonialCreated})
     }
     catch(err){
         next(err)
