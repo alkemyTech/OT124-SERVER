@@ -1,7 +1,7 @@
 var express = require("express");
 var router = express.Router();
 const newsController = require("../controllers/news");
-const { validation } = require("../middlewares/validator");
+const { validation, fileValidation } = require("../middlewares/validator");
 const { newsCreatorSchema, fileSchema } = require("../validations/newsSchema");
 const authController = require("../middlewares/auth");
 const { isAdmin } = require("../middlewares/isRole");
@@ -23,8 +23,8 @@ router.post(
   authController.validateToken,
   isAdmin,
   upload.single("image"),
-  validation(fileSchema),
   validation(newsCreatorSchema),
+  fileValidation(fileSchema),
   newsController.postNew
 );
 
