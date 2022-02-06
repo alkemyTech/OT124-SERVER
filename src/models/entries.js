@@ -1,11 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class Entries extends Model {
-    static associate(models) {
-      Entries.belongsTo(models.organization);
-    }
-  }
+  class Entries extends Model {}
   Entries.init(
     {
       id: {
@@ -34,17 +30,9 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      deleteAt: {
+      deletedAt: {
         type: DataTypes.DATE,
         allowNull: true,
-      },
-      organizationId: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-        references: {
-          model: "organization",
-          key: "id",
-        },
       },
     },
     {
