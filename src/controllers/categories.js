@@ -1,5 +1,5 @@
-const db = require("../models");
-const entity = "categories";
+const db = require('../models')
+entity = 'categories'
 
 const putCategories = async function (req, res, next) {
   try {
@@ -29,7 +29,20 @@ const putCategories = async function (req, res, next) {
   }
 };
 
-const deleteCategorie = async function (req, res, next) {
+const createCategory = async function (req, res, next) {
+    try {
+      const categoryCreated = await db[entity].create(req.body)
+      res.status(201).send({
+          title: 'Categories',
+          message: 'The Category has been created sucessfully',
+          newCategory: categoryCreated
+      })
+    } catch (err) {
+      next(err);
+    }
+  };
+  
+const deleteCategory = async function (req, res, next) {
   try {
     const findCat = await db[entity].findOne({
       where: {
@@ -54,7 +67,9 @@ const deleteCategorie = async function (req, res, next) {
 
 const categoriesController = {
   putCategories,
-  deleteCategorie,
+  deleteCategory,
+  createCategory
 };
 
 module.exports = categoriesController;
+
