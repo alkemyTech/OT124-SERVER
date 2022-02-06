@@ -38,8 +38,7 @@ const fileSchema = yup.object().shape({
       } else {
         return SUPPORTED_FORMATS.includes(value.mimetype);
       }
-    })
-    .required("File is required"),
+    }),
 });
 
 const putFileSchema = yup.object().shape({

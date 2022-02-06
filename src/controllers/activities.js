@@ -13,8 +13,12 @@ const getActivities = async function (req, res, next) {
 
 const postActivities = async function (req, res, next) {
   try {
-    const { url } = await uploadFile(req.file, next);
-    req.body.image = url;
+    if (req.file) {
+      const { url } = await uploadFile(req.file, next);
+      req.body.image = url;
+    } else {
+      req.body.image = null;
+    }
 
     const newActivity = await db[entity].create(req.body);
     res.status(201).send({
