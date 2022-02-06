@@ -1,5 +1,26 @@
 const db = require("../models");
 const entity = "entries";
+const { uploadFile } = require("../services/aws_s3");
+
+const postNew = async function (req, res, next) {
+  try {
+    if (req.file) {
+      const { url } = await uploadFile(req.file, next);
+      req.body.image = url;
+    } else {
+      req.body.image = null;
+    }
+
+    const newsCreated = await db[entity].create(req.body);
+    return res.status(201).send({
+      title: "News",
+      message: "The news has been created successfully",
+      newTestimonial: newsCreated,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
 
 const updateNew = async function (req, res, next) {
   try {
@@ -97,6 +118,7 @@ const newsController = {
   updateNew,
   getAllNews,
   getNewById,
+  postNew,
 };
 
 module.exports = newsController;
