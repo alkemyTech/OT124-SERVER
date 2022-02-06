@@ -1,5 +1,26 @@
 const db = require("../models");
 const entity = "entries";
+const { uploadFile } = require("../services/aws_s3");
+
+const postNew = async function (req, res, next) {
+  try {
+    if (req.file) {
+      const { url } = await uploadFile(req.file, next);
+      req.body.image = url;
+    } else {
+      req.body.image = null;
+    }
+
+    const newsCreated = await db[entity].create(req.body);
+    return res.status(201).send({
+      title: "News",
+      message: "The news has been created successfully",
+      newTestimonial: newsCreated,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
 
 const updateNew = async function (req, res, next) {
   try {
@@ -79,10 +100,14 @@ const getNewById = async function (req, res, next) {
   try {
     const { id } = req.params;
     const foundOne = await db[entity].findOne({ where: { _id: id } });
-    res.status(200).send({ title: "Novedades", new: foundOne });
-    let err = new Error("New not found, New id invalid");
-    err.name = "NotFoundError";
-    throw err;
+
+    if (!foundOne) {
+      let err = new Error("New not found, New id invalid");
+      err.name = "NotFoundError";
+      throw err;
+    }
+
+    res.status(200).send({ new: foundOne });
   } catch (err) {
     next(err);
   }
@@ -93,6 +118,7 @@ const newsController = {
   updateNew,
   getAllNews,
   getNewById,
+  postNew,
 };
 
 module.exports = newsController;

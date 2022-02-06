@@ -31,17 +31,9 @@ module.exports = {
           type: Sequelize.INTEGER,
           allowNull: false,
         },
-        deleteAt: {
+        deletedAt: {
           type: Sequelize.DATE,
           allowNull: false,
-        },
-        organizationId: {
-          type: Sequelize.INTEGER,
-          allowNull: false,
-          references: {
-            model: "organization",
-            key: "id",
-          },
         },
       },
       {
