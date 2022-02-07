@@ -11,7 +11,10 @@
     "migrate:test": "sequelize db:create --env=test && sequelize db:migrate --env=test",
     "seed:prod": "sequelize db:seed:all --env=production",
     "seed:dev": "sequelize db:seed:all --env=development",
-    "seed:test": "sequelize db:seed:all --env=test"
+    "seed:test": "sequelize db:seed:all --env=test",
+    "delete:dev": "sequelize db:migrate:undo:all --env=development",
+    "delete:prod": "sequelize db:migrate:undo:all --env=production",
+    "delete:test": "sequelize db:migrate:undo:all --env=test"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.49.0",

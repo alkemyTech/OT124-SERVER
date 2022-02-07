@@ -19,7 +19,15 @@ module.exports = {
           type: Sequelize.STRING,
           allowNull: false,
         },
-        deleteAt: {
+        createdAt: {
+          type: Sequelize.DATE,
+          allowNull: true,
+        },
+        updatedAt: {
+          type: Sequelize.DATE,
+          allowNull: true,
+        },
+        deletedAt: {
           type: Sequelize.DATE,
           allowNull: true,
         },
@@ -29,7 +37,7 @@ module.exports = {
       {
         modelName: "categories",
         tableName: "categories",
-        timestamps: false,
+        timestamps: true,
         paranoid: true,
       }
     );
