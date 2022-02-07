@@ -18,13 +18,23 @@ module.exports = {
         type: Sequelize.TEXT
       },
       createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        allowNull: true,
       },
       updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+        allowNull: true,
+      },
+      deletedAt: {
+        type: Sequelize.DATE,
+        allowNull: true,
+      },
+    },
+    {
+        modelName: "testimonials",
+        tableName: "testimonials",
+        timestamps: true,
+        paranoid: true,
     });
   },
   async down(queryInterface, Sequelize) {

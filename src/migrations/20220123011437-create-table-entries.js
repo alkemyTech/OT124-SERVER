@@ -21,7 +21,7 @@ module.exports = {
         },
         image: {
           type: Sequelize.STRING,
-          allowNull: false,
+          allowNull: true,
         },
         type: {
           type: Sequelize.STRING,
@@ -31,24 +31,24 @@ module.exports = {
           type: Sequelize.INTEGER,
           allowNull: false,
         },
-        deleteAt: {
+        createdAt: {
           type: Sequelize.DATE,
-          allowNull: false,
+          allowNull: true,
         },
-        organizationId: {
-          type: Sequelize.INTEGER,
-          allowNull: false,
-          references: {
-            model: "organization",
-            key: "id",
-          },
+        updatedAt: {
+          type: Sequelize.DATE,
+          allowNull: true,
+        },
+        deletedAt: {
+          type: Sequelize.DATE,
+          allowNull: true,
         },
       },
       {
         modelName: "entries",
         tableName: "entries",
-        timestamps: false,
-        paranoid: true,
+        timestamps: true,
+        paranoid: true
       }
     );
   },

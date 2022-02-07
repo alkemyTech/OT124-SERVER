@@ -8,7 +8,16 @@ const validation = (schema) => async (req, res, next) => {
   }
 };
 
+const fileValidation = (schema) => async (req, res, next) => {
+  try {
+    await schema.validate(req, { abortEarly: false, stripUnknown: true });
+    next();
+  } catch (errs) {
+    next(errs);
+  }
+};
 
 module.exports = {
   validation,
+  fileValidation,
 };

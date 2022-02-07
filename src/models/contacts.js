@@ -24,16 +24,12 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      deleteAt: {
-        type: DataTypes.DATE,
-        allowNull: false,
-      },
     },
     {
       sequelize,
       modelName: "contacts",
       tableName: "contacts",
-      timestamps: false,
+      timestamps: true,
       paranoid: true,
     }
   );
