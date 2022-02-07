@@ -1,5 +1,5 @@
-const db = require('../models')
-entity = 'categories'
+const db = require("../models");
+entity = "categories";
 
 const putCategories = async function (req, res, next) {
   try {
@@ -29,19 +29,30 @@ const putCategories = async function (req, res, next) {
   }
 };
 
+const getAllCategories = async (req, res, next) => {
+  try {
+    const allCategories = await db[entity].findAll();
+    return res.status(201).send({
+      allCategories: allCategories.name,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 const createCategory = async function (req, res, next) {
-    try {
-      const categoryCreated = await db[entity].create(req.body)
-      res.status(201).send({
-          title: 'Categories',
-          message: 'The Category has been created sucessfully',
-          newCategory: categoryCreated
-      })
-    } catch (err) {
-      next(err);
-    }
-  };
-  
+  try {
+    const categoryCreated = await db[entity].create(req.body);
+    res.status(201).send({
+      title: "Categories",
+      message: "The Category has been created sucessfully",
+      newCategory: categoryCreated,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 const deleteCategory = async function (req, res, next) {
   try {
     const findCat = await db[entity].findOne({
@@ -68,8 +79,8 @@ const deleteCategory = async function (req, res, next) {
 const categoriesController = {
   putCategories,
   deleteCategory,
-  createCategory
+  createCategory,
+  getAllCategories,
 };
 
 module.exports = categoriesController;
-
