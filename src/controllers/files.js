@@ -44,8 +44,6 @@ const deleteFileByKey = async function (req, res, next) {
 const updateFileByKey = async function (req, res, next) {
   try {
     const { key } = req.params;
-    console.log(req.file);
-    console.log(key);
     if (req.file) {
       const fileUpdated = await updateFile(key, req.file, next);
       if (fileUpdated) {
@@ -60,9 +58,9 @@ const updateFileByKey = async function (req, res, next) {
 const createFile = async function (req, res, next) {
   try {
     if (req.file) {
-      const { key } = await uploadFile(req.file, next);
-      if (key) {
-        return res.send({ msg: "File uploaded successfully", key: key });
+      const { url } = await uploadFile(req.file, next);
+      if (url) {
+        return res.send({ msg: "File uploaded successfully", url: url });
       }
     }
   } catch (err) {

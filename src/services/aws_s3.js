@@ -1,5 +1,6 @@
 const S3 = require('@aws-sdk/client-s3');
 const uuid = require('uuid');
+const { generateS3Url } = require('../helpers/generateS3url');
 
 // AWS account data
 const bucketName = process.env.AWS_BUCKET;
@@ -25,7 +26,7 @@ const uploadFile = async (file, next) => {
   };
     
     const object =  await s3.putObject(uploadParams)
-    const url = `https://${bucketName}.s3.${region}.amazonaws.com/${key}`
+    const url = generateS3Url(key)
     return {object, url}
   }
   catch(err){
@@ -76,7 +77,7 @@ const deleteFile = async (key, next) =>{
   }
 }
 
-const updateFile = async (key, file, next) =>{
+const updateFile = async (file, key, next) =>{
   try{
     const updateParams = {
       Key: key,

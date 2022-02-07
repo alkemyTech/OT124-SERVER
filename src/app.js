@@ -25,7 +25,7 @@ app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};
-  console.log(err.name)
+  console.log(err)
   // response with server status depending by type of error
   switch (err.name) {
     case "NotFoundError":

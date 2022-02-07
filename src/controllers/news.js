@@ -1,33 +1,59 @@
+const { generateS3Url } = require("../helpers/generateS3url");
+const { parseS3Url } = require("../helpers/parseS3Url");
 const db = require("../models");
+const { updateFile, uploadFile, deleteFile } = require("../services/aws_s3");
 const entity = "entries";
+
+const postNew = async function (req, res, next) {
+  try {
+    if (req.file) {
+      const { url } = await uploadFile(req.file, next);
+      req.body.image = url;
+    } else {
+      req.body.image = null;
+    }
+
+    const newsCreated = await db[entity].create(req.body);
+    return res.status(201).send({
+      title: "News",
+      message: "The news has been created successfully",
+      newTestimonial: newsCreated,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
 
 const updateNew = async function (req, res, next) {
   try {
     const { id } = req.params;
-    const { name, content, image, categoryId, type } = req.body;
-    const error = [];
-
-    if (!name) {
-      error.push({ text: "Agregar un nombre a la novedad" });
+    let { name, content, image, key, categoryId, type} = req.body;
+    if (req.file){
+        if (key){
+          const {url} = await updateFile(req.file, key, next)
+          image = url
+        }
+        else{
+          const {url} = await uploadFile(req.file, next)
+          image = url
+        } 
     }
-    if (!content) {
-      error.push({ text: "Agregar una breve descripcion a la novedad" });
+    else{
+      if (key){
+        // await deleteFile(key, next) //Access Denied
+        // image = null
+        const url = generateS3Url(key)
+        image = url
+      }
     }
-    if (!categoryId) {
-      error.push({ text: "Agregar una id a la categoria" });
-    }
-
-    if (error.length > 0) {
-      res.send({ title: "Novedades", messageErr: error });
-    } else {
       const newUpdate = await db[entity].update(
         { name, content, image, categoryId, type },
-        { where: { _id: id } }
-      );
+        { where: { id: id } }
+      ); 
       if (newUpdate) {
-        res.status(200).send({
-          title: "Novedades",
-          message: "Novedad actualizada",
+        return res.status(200).send({
+          title: "News",
+          message: "New updated successfully",
           update: newUpdate,
         });
       } else {
@@ -35,7 +61,6 @@ const updateNew = async function (req, res, next) {
         err.name = "NotFoundError";
         throw err;
       }
-    }
   } catch (err) {
     next(err);
   }
@@ -44,7 +69,6 @@ const updateNew = async function (req, res, next) {
 const deleteNew = async function (req, res, next) {
   try {
     const { id } = req.params;
-    console.log(db[entity]);
     const deletedNew = await db[entity].destroy({ where: { id: id } });
     if (deletedNew) {
       return res.status(200).send({
@@ -78,16 +102,19 @@ const getAllNews = async function (req, res, next) {
 const getNewById = async function (req, res, next) {
   try {
     const { id } = req.params;
-    const foundOne = await db[entity].findOne({ where: { _id: id } });
-
-    if (!foundOne) {
-      let err = new Error("New not found, New id invalid");
-      err.name = "NotFoundError";
-      throw err;
-    }
-
-    res.status(200).send({ new: foundOne });
-  } catch (err) {
+    let foundOne = await db[entity].findOne({ where: { id: id } });
+      if (foundOne){
+      const parsedURL = parseS3Url(foundOne.image)
+        if (parsedURL?.key){
+        foundOne = {...foundOne.dataValues, key: parsedURL.key}
+        }
+      return res.status(200).send({ title: "Novedades", new: foundOne });
+     }
+    let err = new Error("New not found, New id invalid");
+    err.name = "NotFoundError";
+    throw err;
+  } 
+  catch (err) {
     next(err);
   }
 };
@@ -97,6 +124,7 @@ const newsController = {
   updateNew,
   getAllNews,
   getNewById,
+  postNew,
 };
 
 module.exports = newsController;

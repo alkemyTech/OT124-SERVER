@@ -32,6 +32,12 @@ module.exports = {
         allowNull: true,
         type: Sequelize.DATE,
       },
+    },
+    {
+        modelName: "activities",
+        tableName: "activities",
+        timestamps: true,
+        paranoid: true,
     });
   },
   down: async (queryInterface, Sequelize) => {
