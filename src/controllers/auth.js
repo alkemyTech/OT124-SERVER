@@ -7,6 +7,10 @@ const db = require("../models");
 const userEntity = "users";
 const jwt = require("jsonwebtoken");
 const { SendGrid } = require("../services/SendGrid");
+const { OAuth2Client} = require("google-auth-library");
+
+
+const client = new OAuth2Client(process.env.API_CLIENT_ID)
 
 const registerUser = async function (req, res, next) {
   try {
@@ -94,10 +98,43 @@ const login = async (req, res, next) => {
   }
 };
 
+const googleAuth = async (req, res, next) => {
+  const { tokenId } = req.body;
+  try {
+    const {payload}= await client.verifyIdToken({idToken: tokenId, audience: process.env.API_CLIENT_ID})
+    const {email, name, email_verified} = payload
+    if (email_verified){
+      const user = await db[userEntity].findOne({where: { email: email }})
+      if (user){
+        const token = await generateJWT(user);
+        return res.send({
+          token,
+          user: user,
+        });
+      }
+      else{
+         const password = await generateEncryptedPassword(email);
+         const [ firstName, lastName ] = name.split(' ')
+         const userCreated = await db[userEntity].create({email, firstName, lastName, password})
+         const token = await generateJWT(userCreated);
+          return res.send({
+          token,
+          user: userCreated,
+        });
+      }
+    }
+   } 
+   catch (err) {
+    next(err);
+  }
+};
+
+
 const authController = {
   getMe,
   registerUser,
   login,
+  googleAuth
 };
 
 module.exports = authController;
