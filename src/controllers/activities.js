@@ -82,10 +82,45 @@ const putActivities = async function (req, res, next) {
   }
 };
 
+const getActivityById = async function (req, res, next) {
+  try {
+    const { id } = req.params;
+    const activity = await db[entity].findOne({ where: { id } });
+    if (!activity) {
+      let err = new Error("Activity not found");
+      err.name = "NotFoundError";
+      throw err;
+    } else {
+      res.send({ title: "Activities", activity });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+const deleteActivityById = async function (req, res, next) {
+  try {
+    const { id } = req.params;
+    const activity = await db[entity].findOne({ where: { id } });
+    if (!activity) {
+      let err = new Error("Activity not found");
+      err.name = "NotFoundError";
+      throw err;
+    } else {
+      await activity.destroy();
+      res.send({ title: "Activities", message: "Activity deleted" });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
 const activityController = {
   getActivities,
   postActivities,
   putActivities,
+  getActivityById,
+  deleteActivityById,
 };
 
 module.exports = activityController;
