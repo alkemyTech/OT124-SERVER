@@ -3,7 +3,7 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable(
-      "entries",
+      "slides",
       {
         id: {
           autoIncrement: true,
@@ -11,23 +11,15 @@ module.exports = {
           allowNull: false,
           primaryKey: true,
         },
-        name: {
+        imageUrl: {
           type: Sequelize.STRING,
           allowNull: false,
         },
-        content: {
-          type: Sequelize.TEXT,
-          allowNull: false,
-        },
-        image: {
-          type: Sequelize.STRING,
-          allowNull: true,
-        },
-        type: {
+        text: {
           type: Sequelize.STRING,
           allowNull: false,
         },
-        categoryId: {
+        order: {
           type: Sequelize.INTEGER,
           allowNull: false,
         },
@@ -45,21 +37,15 @@ module.exports = {
         },
       },
       {
-        modelName: "entries",
-        tableName: "entries",
+        modelName: "slides",
+        tableName: "slides",
         timestamps: true,
-        paranoid: true
+        paranoid: true,
       }
     );
   },
 
   async down(queryInterface, Sequelize) {
-    /**
-     * Add reverting commands here.
-     *
-     * Example:
-     * await queryInterface.dropTable('users');
-     */
-    await queryInterface.dropTable("entries");
+    await queryInterface.dropTable("slides");
   },
 };

@@ -1,8 +1,12 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class Entries extends Model {}
-  Entries.init(
+  class Slides extends Model {
+    static associate(models) {
+      Slides.belongsTo(models.organization);
+    }
+  }
+  Slides.init(
     {
       id: {
         autoIncrement: true,
@@ -10,34 +14,26 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         primaryKey: true,
       },
-      name: {
+      imageUrl: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      content: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-      },
-      image: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      type: {
+      text: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      categoryId: {
+      order: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
     },
     {
       sequelize,
-      modelName: "entries",
-      tableName: "entries",
+      modelName: "slides",
+      tableName: "slides",
       timestamps: true,
       paranoid: true
     }
   );
-  return Entries;
+  return Slides;
 };
