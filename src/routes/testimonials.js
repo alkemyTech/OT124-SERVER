@@ -23,6 +23,11 @@ router.post(
 );
 
 /* DELETE testimonials content. */
-router.delete("/:id", validateToken, isAdmin);
+router.delete(
+  "/:id",
+  validateToken,
+  isAdmin,
+  testimonialsController.deleteTestimonialById
+);
 
 module.exports = router;
