@@ -23,19 +23,24 @@ module.exports = {
           type: Sequelize.INTEGER,
           allowNull: false,
         },
-        organizationId: {
-          type: Sequelize.INTEGER,
-          allowNull: false,
-          references: {
-            model: "organization",
-            key: "id",
-          },
+        createdAt: {
+          type: Sequelize.DATE,
+          allowNull: true,
+        },
+        updatedAt: {
+          type: Sequelize.DATE,
+          allowNull: true,
+        },
+        deletedAt: {
+          type: Sequelize.DATE,
+          allowNull: true,
         },
       },
       {
         modelName: "slides",
         tableName: "slides",
-        timestamps: false,
+        timestamps: true,
+        paranoid: true,
       }
     );
   },

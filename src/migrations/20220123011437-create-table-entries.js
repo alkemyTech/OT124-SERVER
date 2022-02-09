@@ -21,7 +21,7 @@ module.exports = {
         },
         image: {
           type: Sequelize.STRING,
-          allowNull: false,
+          allowNull: true,
         },
         type: {
           type: Sequelize.STRING,
@@ -31,16 +31,24 @@ module.exports = {
           type: Sequelize.INTEGER,
           allowNull: false,
         },
+        createdAt: {
+          type: Sequelize.DATE,
+          allowNull: true,
+        },
+        updatedAt: {
+          type: Sequelize.DATE,
+          allowNull: true,
+        },
         deletedAt: {
           type: Sequelize.DATE,
-          allowNull: false,
+          allowNull: true,
         },
       },
       {
         modelName: "entries",
         tableName: "entries",
-        timestamps: false,
-        paranoid: true,
+        timestamps: true,
+        paranoid: true
       }
     );
   },

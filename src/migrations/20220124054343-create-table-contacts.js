@@ -25,19 +25,32 @@ module.exports = {
           type: Sequelize.STRING,
           allowNull: false,
         },
+        email: {
+          type: Sequelize.STRING,
+          allowNull: false,
+          unique: true
+        },
         message: {
           type: Sequelize.STRING,
           allowNull: false,
         },
-        deleteAt: {
+        createdAt: {
           type: Sequelize.DATE,
-          allowNull: false,
+          allowNull: true,
+        },
+        updatedAt: {
+          type: Sequelize.DATE,
+          allowNull: true,
+        },
+        deletedAt: {
+          type: Sequelize.DATE,
+          allowNull: true,
         },
       },
       {
         modelName: "contacts",
         tableName: "contacts",
-        timestamps: false,
+        timestamps: true,
         paranoid: true,
       }
     );

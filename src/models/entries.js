@@ -30,17 +30,13 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      deletedAt: {
-        type: DataTypes.DATE,
-        allowNull: true,
-      },
     },
     {
       sequelize,
       modelName: "entries",
       tableName: "entries",
       timestamps: true,
-      paranoid: true,
+      paranoid: true
     }
   );
   return Entries;

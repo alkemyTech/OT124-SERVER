@@ -8,9 +8,6 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Organization.hasMany(models.entries);
-      Organization.hasMany(models.categories);
-      Organization.hasMany(models.slides);
     }
   }
   Organization.init(
@@ -51,7 +48,8 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: "organization",
       tableName: "organization",
-      timestamps: false,
+      timestamps: true,
+      paranoid: true
     }
   );
   return Organization;

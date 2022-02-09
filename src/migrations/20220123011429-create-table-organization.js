@@ -36,11 +36,24 @@ module.exports = {
           type: Sequelize.STRING,
           allowNull: false,
         },
+        createdAt: {
+          type: Sequelize.DATE,
+          allowNull: true,
+        },
+        updatedAt: {
+          type: Sequelize.DATE,
+          allowNull: true,
+        },
+        deletedAt: {
+          type: Sequelize.DATE,
+          allowNull: true,
+        },
       },
       {
         modelName: "organization",
         tableName: "organization",
-        timestamps: false,
+        timestamps: true,
+        timestamps: true
       }
     );
   },

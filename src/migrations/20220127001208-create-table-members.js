@@ -19,11 +19,24 @@ module.exports = {
           type: Sequelize.STRING,
           allowNull: true,
         },
+        createdAt: {
+          type: Sequelize.DATE,
+          allowNull: true,
+        },
+        updatedAt: {
+          type: Sequelize.DATE,
+          allowNull: true,
+        },
+        deletedAt: {
+          type: Sequelize.DATE,
+          allowNull: true,
+        },
       },
       {
         modelName: "members",
         tableName: "members",
-        timestamps: false,
+        timestamps: true,
+        paranoid: true,
       }
     );
   },

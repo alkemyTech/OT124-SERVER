@@ -20,12 +20,13 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      message: {
+      email: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true
       },
-      deleteAt: {
-        type: DataTypes.DATE,
+      message: {
+        type: DataTypes.STRING,
         allowNull: false,
       },
     },
@@ -33,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: "contacts",
       tableName: "contacts",
-      timestamps: false,
+      timestamps: true,
       paranoid: true,
     }
   );

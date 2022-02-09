@@ -10,7 +10,15 @@ const multer = require("multer");
 const upload = multer();
 
 /* UPDATE new by ID. */
-router.put("/:id", validation(newsCreatorSchema), newsController.updateNew);
+router.put(
+  '/:id',
+  authController.validateToken,
+  isAdmin, 
+  upload.single('image'), 
+  validation(newsCreatorSchema), 
+  fileValidation(fileSchema),
+  newsController.updateNew
+);
 /* DELETE new by ID. */
 router.delete("/:id", newsController.deleteNew);
 /* GET new by ID */
