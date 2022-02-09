@@ -1,5 +1,7 @@
 var express = require("express");
 var router = express.Router();
+const { validateToken } = require("../middlewares/auth");
+const { isAdmin } = require("../middlewares/isRole");
 
 const multer = require("multer");
 const upload = multer();
@@ -13,11 +15,14 @@ const {
 /* POST testimonials content. */
 router.post(
   "/",
+  validateToken,
+  isAdmin,
   upload.single("avatar"),
   validation(testimonialsCreatorSchema),
   testimonialsController.createTestimonial
 );
 
-router.delete("/:id");
+/* DELETE testimonials content. */
+router.delete("/:id", validateToken, isAdmin);
 
 module.exports = router;
