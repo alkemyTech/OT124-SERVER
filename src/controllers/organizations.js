@@ -1,14 +1,15 @@
 const db = require("../models");
 const entity = "organization";
 
-// El endpoint deberá devolver un JSON con los campos name, image, phone, address y welcomeText
-
 const getOrganization = async function (req, res, next) {
   try {
     const { id } = req.params;
     const error = [];
 
-    const organization = await db[entity].findOne({ where: { id } });
+    const organization = await db[entity].findOne({ where: { id: id } });
+    let socials = await db['socials'].findOne({ where: { organizationId: id } });
+
+    if (!socials || socials === null) socials = null;
 
     if (!organization || organization === null)
       error.push({ text: "Organization not found" });
@@ -25,6 +26,7 @@ const getOrganization = async function (req, res, next) {
       phone,
       address,
       welcomeText,
+      socials
     });
   } catch (error) {
     next(error);
@@ -32,7 +34,7 @@ const getOrganization = async function (req, res, next) {
 };
 
 const organizationsController = {
-  getOrganization,
+  getOrganization
 };
 
 module.exports = organizationsController;
