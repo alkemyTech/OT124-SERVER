@@ -32,12 +32,10 @@ const deleteTestimonialById = async function (req, res, next) {
     }
 
     if (testimonialFound.lastimage) {
-      console.log(testimonialFound.lastimage);
       const imageKey = await parseS3Url(testimonialFound.lastimage);
-      console.log(imageKey);
-      const deleted = await deleteFile(imageKey, next);
-      console.log(deleted);
+      //const deleted = await deleteFile(imageKey, next);
     }
+
     const testimonialDeleted = await testimonialFound.destroy();
     if (testimonialDeleted) {
       res.status(200).send({
