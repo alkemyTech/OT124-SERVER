@@ -1540,6 +1540,14 @@
   dependencies:
     "debug" "4"
 
+"ajax-request@^1.2.0":
+  "integrity" "sha1-mfy+wdbSeS+F+pSVNTMr0U9fN5A="
+  "resolved" "https://registry.npmjs.org/ajax-request/-/ajax-request-1.2.3.tgz"
+  "version" "1.2.3"
+  dependencies:
+    "file-system" "^2.1.1"
+    "utils-extend" "^1.0.7"
+
 "ansi-align@^3.0.0":
   "integrity" "sha512-IOfwwBF5iczOjp/WeY4YxyjqAFMQoZufdQWDd19SEExbVLNXqvpzSJ/M7Za4/sCPmQ0+GRquoA7bGcINcxew6w=="
   "resolved" "https://registry.npmjs.org/ansi-align/-/ansi-align-3.0.1.tgz"
@@ -1741,6 +1749,14 @@
   "integrity" "sha1-ibTRmasr7kneFk6gK4nORi1xt2c="
   "resolved" "https://registry.npmjs.org/balanced-match/-/balanced-match-1.0.0.tgz"
   "version" "1.0.0"
+
+"base64-img@^1.0.4":
+  "integrity" "sha1-PiLVXWx0okVT2EDSsbwSp9sHjTU="
+  "resolved" "https://registry.npmjs.org/base64-img/-/base64-img-1.0.4.tgz"
+  "version" "1.0.4"
+  dependencies:
+    "ajax-request" "^1.2.0"
+    "file-system" "^2.1.0"
 
 "base64-js@^1.3.0", "base64-js@^1.3.1":
   "integrity" "sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA=="
@@ -2795,6 +2811,21 @@
   "version" "2.0.1"
   dependencies:
     "bser" "2.1.1"
+
+"file-match@^1.0.1":
+  "integrity" "sha1-ycrSZdLIrfOoFHWw30dYWQafrvc="
+  "resolved" "https://registry.npmjs.org/file-match/-/file-match-1.0.2.tgz"
+  "version" "1.0.2"
+  dependencies:
+    "utils-extend" "^1.0.6"
+
+"file-system@^2.1.0", "file-system@^2.1.1":
+  "integrity" "sha1-fWWDPjojR9zZVqgTxncVPtPt2Yc="
+  "resolved" "https://registry.npmjs.org/file-system/-/file-system-2.2.2.tgz"
+  "version" "2.2.2"
+  dependencies:
+    "file-match" "^1.0.1"
+    "utils-extend" "^1.0.4"
 
 "fill-range@^7.0.1":
   "integrity" "sha512-qOo9F+dMUmC2Lcb4BbVvnKJxTPjCm+RRpe4gDuGrzkL7mEVl/djYSu2OdQ2Pa302N4oqkSg9ir6jaLWJ2USVpQ=="
@@ -5727,6 +5758,11 @@
   "integrity" "sha1-RQ1Nyfpw3nMnYvvS1KKJgUGaDM8="
   "resolved" "https://registry.npmjs.org/util-deprecate/-/util-deprecate-1.0.2.tgz"
   "version" "1.0.2"
+
+"utils-extend@^1.0.4", "utils-extend@^1.0.6", "utils-extend@^1.0.7":
+  "integrity" "sha1-zP17ZFQPjpDuIe7Fd2nQZRyril8="
+  "resolved" "https://registry.npmjs.org/utils-extend/-/utils-extend-1.0.8.tgz"
+  "version" "1.0.8"
 
 "utils-merge@1.0.1":
   "integrity" "sha1-n5VxD1CiZ5R7LMwSR0HBAoQn5xM="

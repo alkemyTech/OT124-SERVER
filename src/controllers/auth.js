@@ -8,6 +8,7 @@ const userEntity = "users";
 const jwt = require("jsonwebtoken");
 const { SendGrid } = require("../services/SendGrid");
 const { OAuth2Client} = require("google-auth-library");
+const { RegisterSendGrid } = require("../helpers/SenderSchema");
 
 
 const client = new OAuth2Client(process.env.API_CLIENT_ID)
@@ -36,14 +37,8 @@ const registerUser = async function (req, res, next) {
           exclude: ["password", "createdAt", "updatedAt", "deletedAt"],
         },
       });
-      const msgRegister = {
-        to: email, // Change to your recipient
-        from: 'ong.develop2022@gmail.com', // Change to your verified sender
-        subject: `bienvenido a  somos más, ${firstName+ " " +lastName}`,
-        text: `esto es un mensaje de verificación por su registro exitoso en somos más, lo estaremos acompañando`,
-        
-      }
-      SendGrid(msgRegister)
+      const resMsg = RegisterSendGrid(user)
+      SendGrid(resMsg)
       const token = await generateJWT(newUser);
       res.status(201).json({
         token,
