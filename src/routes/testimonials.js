@@ -1,33 +1,45 @@
 var express = require("express");
 var router = express.Router();
-const { validateToken } = require("../middlewares/auth");
-const { isAdmin } = require("../middlewares/isRole");
 
 const multer = require("multer");
 const upload = multer();
 
 const testimonialsController = require("../controllers/testimonials");
-const { validation } = require("../middlewares/validator");
+const authController = require("../middlewares/auth");
+const { isAdmin } = require("../middlewares/isRole");
+const { validation, fileValidation } = require("../middlewares/validator");
+const { fileSchema } = require("../validations/fileSchema");
 const {
   testimonialsCreatorSchema,
 } = require("../validations/testimonialSchema");
 
-/* POST testimonials content. */
+/* POST testimonials route. */
 router.post(
   "/",
-  validateToken,
+  authController.validateToken,
   isAdmin,
-  upload.single("avatar"),
+  upload.single("image"),
   validation(testimonialsCreatorSchema),
+  fileValidation(fileSchema),
   testimonialsController.createTestimonial
+);
+/* PUT testimonials route. */
+router.put(
+  "/:id",
+  authController.validateToken,
+  isAdmin,
+  upload.single("image"),
+  validation(testimonialsCreatorSchema),
+  fileValidation(fileSchema),
+  testimonialsController.updateTestimonial
 );
 
 /* DELETE testimonials content. */
 router.delete(
-  "/:id",
-  validateToken,
-  isAdmin,
-  testimonialsController.deleteTestimonialById
-);
+    "/:id",
+    authController.validateToken,
+    isAdmin,
+    testimonialsController.deleteTestimonialById
+  );
 
 module.exports = router;
