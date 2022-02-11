@@ -84,7 +84,7 @@ const updateMember = async function (req, res, next) {
       memberFound.name = body.name;
     }
 
-    // Save new activityFound properties in db
+    // Save new memberFound properties in db
     await memberFound.save();
 
     return res.status(200).json({
