@@ -4,7 +4,7 @@ const { uploadFile } = require('../services/aws_s3')
 
 const createTestimonial = async function(req, res, next) {
     try{
-    let { name, content, lastimage} = req.body;
+    let { name, content, image: lastimage} = req.body;
     if (req.file){
     const {url} = await uploadFile(req.file, next)
     lastimage = url
@@ -23,7 +23,7 @@ const createTestimonial = async function(req, res, next) {
 const updateTestimonial = async function (req, res, next) {
     try {
       const { id } = req.params;
-      let { name, content, lastimage, key} = req.body;
+      let { name, content, image: lastimage, key} = req.body;
       if (req.file){
           if (key){
             const {url} = await updateFile(req.file, key, next)

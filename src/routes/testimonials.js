@@ -18,7 +18,7 @@ router.post(
   "/",
   authController.validateToken,
   isAdmin,
-  upload.single("avatar"),
+  upload.single("image"),
   validation(testimonialsCreatorSchema),
   fileValidation(fileSchema),
   testimonialsController.createTestimonial
@@ -28,7 +28,7 @@ router.put(
   "/:id",
   authController.validateToken,
   isAdmin,
-  upload.single("lastimage"),
+  upload.single("image"),
   validation(testimonialsCreatorSchema),
   fileValidation(fileSchema),
   testimonialsController.updateTestimonial
