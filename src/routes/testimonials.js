@@ -34,4 +34,12 @@ router.put(
   testimonialsController.updateTestimonial
 );
 
+/* DELETE testimonials content. */
+router.delete(
+    "/:id",
+    authController.validateToken,
+    isAdmin,
+    testimonialsController.deleteTestimonialById
+  );
+
 module.exports = router;

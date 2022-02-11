@@ -1,6 +1,7 @@
-const entity = 'testimonials'
-const db = require('../models')
-const { uploadFile } = require('../services/aws_s3')
+const entity = "testimonials";
+const db = require("../models");
+const { uploadFile, deleteFile } = require("../services/aws_s3");
+const { parseS3Url } = require("../helpers/parseS3Url");
 
 const createTestimonial = async function(req, res, next) {
     try{
@@ -11,14 +12,42 @@ const createTestimonial = async function(req, res, next) {
     }
     const testimonialCreated = await db[entity].create({name, content, lastimage})
     return res.status(201).send({
-        title: 'Testimonials',
-        message: 'The Testimonial has been created successfully',
-        newTestimonial: testimonialCreated})
+      title: "Testimonials",
+      message: "The Testimonial has been created successfully",
+      newTestimonial: testimonialCreated,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const deleteTestimonialById = async function (req, res, next) {
+  try {
+    const { id } = req.params;
+
+    const testimonialFound = await db[entity].findByPk(id);
+
+    if (!testimonialFound) {
+      const err = new Error("Testimonial not found");
+      throw err;
     }
-    catch(err){
-        next(err)
+
+    if (testimonialFound.lastimage) {
+      const imageKey = await parseS3Url(testimonialFound.lastimage);
+      //const deleted = await deleteFile(imageKey, next);
     }
-}
+
+    const testimonialDeleted = await testimonialFound.destroy();
+    if (testimonialDeleted) {
+      res.status(200).send({
+        title: "Testimonials",
+        message: "The Testimonial has been deleted successfully",
+      });
+    }
+} catch (err) {
+    next(err);
+  }
+};
 
 const updateTestimonial = async function (req, res, next) {
     try {
@@ -65,7 +94,9 @@ const updateTestimonial = async function (req, res, next) {
   
 const testimonialsController = {
     createTestimonial,
-    updateTestimonial
+    updateTestimonial,
+    deleteTestimonialById
 }
 
-module.exports = testimonialsController
+
+module.exports = testimonialsController;
