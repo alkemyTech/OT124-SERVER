@@ -86,13 +86,13 @@ const deleteNew = async function (req, res, next) {
 
 const getAllNews = async function (req, res, next) {
   try {
-    const news = await db[entity].findAll({
+    const newsFound = await db[entity].findAll({
       where: { type: "news" },
       attributes: ["id", "name", "image", "createdAt"],
       paranoid: false,
     });
 
-    const newsParsed = news.map((item) => {
+    const news = newsFound.map((item) => {
       if (item.image) {
         const parsedImage = parseS3Url(item.image);
         item.image = parsedImage;
@@ -101,7 +101,7 @@ const getAllNews = async function (req, res, next) {
     });
 
     res.send({
-      newsParsed,
+      news,
     });
   } catch (err) {
     next(err);
