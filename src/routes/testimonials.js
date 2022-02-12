@@ -12,7 +12,6 @@ const { fileSchema } = require("../validations/fileSchema");
 const {
   testimonialsCreatorSchema,
 } = require("../validations/testimonialSchema");
-const { route } = require("./news");
 
 /* GET all testimonials route. */
 router.get("/", testimonialsController.getAllTestimonials);
