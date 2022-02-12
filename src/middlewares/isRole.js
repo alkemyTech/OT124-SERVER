@@ -1,6 +1,7 @@
 const isAdmin = async (req, res, next) => {
+  const {user} = req
   try {
-    if (req.role === "admin") {
+    if (user?.role === "admin") {
       next();
     } 
     else{
@@ -14,8 +15,9 @@ const isAdmin = async (req, res, next) => {
 };
 
 const isDev = async (req, res, next) => {
+  const {user} = req
   try {
-    if (req.role === "dev") {
+    if (user?.role === "dev") {
       next();
     } else {
       let err = new Error("Must be dev");
