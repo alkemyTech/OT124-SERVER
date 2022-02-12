@@ -84,7 +84,6 @@ const login = async (req, res, next) => {
       if (token) {
         res.send({
           token,
-          user: user,
         });
       }
     }
@@ -102,9 +101,8 @@ const googleAuth = async (req, res, next) => {
       const user = await db[userEntity].findOne({where: { email: email }})
       if (user){
         const token = await generateJWT(user);
-        return res.send({
+        return res.status(200).send({
           token,
-          user: user,
         });
       }
       else{
@@ -112,9 +110,8 @@ const googleAuth = async (req, res, next) => {
          const [ firstName, lastName ] = name.split(' ')
          const userCreated = await db[userEntity].create({email, firstName, lastName, password})
          const token = await generateJWT(userCreated);
-          return res.send({
+          return res.status(201).send({
           token,
-          user: userCreated,
         });
       }
     }
