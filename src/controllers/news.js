@@ -91,8 +91,17 @@ const getAllNews = async function (req, res, next) {
       attributes: ["id", "name", "image", "createdAt"],
       paranoid: false,
     });
+
+    const newsParsed = news.map((item) => {
+      if (item.image) {
+        const parsedImage = parseS3Url(item.image);
+        item.image = parsedImage;
+      }
+      return item;
+    });
+
     res.send({
-      news,
+      newsParsed,
     });
   } catch (err) {
     next(err);
