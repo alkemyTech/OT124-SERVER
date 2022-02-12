@@ -90,6 +90,7 @@ const getAllNews = async function (req, res, next) {
       where: { type: "news" },
       attributes: ["id", "name", "image", "createdAt"],
       paranoid: false,
+      order: [["createdAt", "DESC"]],
     });
 
     const news = newsFound.map((item) => {
