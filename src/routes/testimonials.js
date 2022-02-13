@@ -13,6 +13,9 @@ const {
   testimonialsCreatorSchema,
 } = require("../validations/testimonialSchema");
 
+/* GET all testimonials route. */
+router.get("/", testimonialsController.getAllTestimonials);
+
 /* POST testimonials route. */
 router.post(
   "/",
