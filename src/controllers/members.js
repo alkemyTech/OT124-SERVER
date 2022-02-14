@@ -53,10 +53,54 @@ const deleteMember = async (req, res, next) => {
   }
 };
 
+const updateMember = async function (req, res, next) {
+  try {
+    const { id } = req.params;
+    const { body } = req;
+
+
+    const memberFound = await db[entity].findOne({
+      where: {
+        id,
+      },
+    });
+
+    if (!memberFound) {
+      const error = new Error("Activity not found");
+      throw error;
+    }
+
+    if (req.file) {
+      if (body.key) {
+        const { url } = await updateFile(body.key, req.file, next);
+        memberFound.image = url;
+      } else {
+        const { url } = await uploadFile(req.file, next);
+        memberFound.image = url;
+      }
+    }
+
+    if (body.name) {
+      memberFound.name = body.name;
+    }
+
+    // Save new memberFound properties in db
+    await memberFound.save();
+
+    return res.status(200).json({
+      msg: "Member succesfully updated",
+    });
+
+  } catch (err) {
+    next(err);
+  }
+};
+
 const membersController = {
   getMembers,
   postMember,
   deleteMember,
+  updateMember
 };
 
 module.exports = membersController;
