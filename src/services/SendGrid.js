@@ -1,32 +1,27 @@
-
+require("dotenv").config();
 const sgMail = require('@sendgrid/mail')
+<<<<<<< HEAD
 require("dotenv").config();
 const KEY = process.env.SENDGRID_API_KEY;
 sgMail.setApiKey(KEY)
+=======
+const KEY = process.env.SENDGRID_API_KEY;
+sgMail.setApiKey(KEY)
 
- const SendGrid = (msg) => {
+const SendGrid = async (msg) => {
 
-     
-      sgMail
-        .send(msg)
-        .then((response) => {
-          console.log(response[0].statusCode)
-          console.log(response[0].headers)
-        })
-        .catch((error) => {
-          console.error(error)
-        })
+  try {
+
+    const resSend = await sgMail.send(msg)
+    console.log(resSend)
+  }
+  catch (err) {
+    console.log(err)
+  }
+>>>>>>> 8113f2d96c94952a7ce6e17b51e25a828e7ee8d5
+
+
 }
-
-
-
-// const msgContact = {
-//   to: email, // Change to your recipient
-//   from: 'ong.develop2022@gmail.com', // Change to your verified sender
-//   subject: 'Sending with SendGrid is Fun',
-//   text: 'and easy to do anywhere, even with Node.js',
-//   html: '<strong>and easy to do anywhere, even with Node.js</strong>',
-// }
 
 module.exports = {
   SendGrid

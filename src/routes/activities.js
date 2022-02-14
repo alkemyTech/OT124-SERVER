@@ -13,7 +13,7 @@ const { validation, fileValidation } = require("../middlewares/validator");
 const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
 
-router.get("/", activityController.getActivities);
+router.get("/", validateToken, isAdmin, activityController.getActivities);
 
 router.post(
   "/",
@@ -33,6 +33,13 @@ router.put(
   fileValidation(putFileSchema),
   validation(putActivitiesSchema),
   activityController.putActivities
+);
+router.get("/:id", validateToken, isAdmin, activityController.getActivityById);
+router.delete(
+  "/:id",
+  validateToken,
+  isAdmin,
+  activityController.deleteActivityById
 );
 
 module.exports = router;
