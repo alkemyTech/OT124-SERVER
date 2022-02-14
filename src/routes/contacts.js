@@ -9,6 +9,6 @@ const { validateToken } = require('../middlewares/auth');
 router.get("/", contactsController.getContacts);
 
 // To save contacts in the db
-router.post("/", validateToken, isDev, validation(contactPostSchema), contactsController.postContact);
+router.post("/", validateToken,isDev, validation(contactPostSchema), contactsController.postContact);
 
 module.exports = router;

@@ -8,6 +8,7 @@ const userEntity = "users";
 const jwt = require("jsonwebtoken");
 const { SendGrid } = require("../services/SendGrid");
 const { OAuth2Client} = require("google-auth-library");
+const { RegisterSendGrid } = require("../helpers/SenderSchema");
 
 
 const client = new OAuth2Client(process.env.API_CLIENT_ID)
@@ -36,14 +37,8 @@ const registerUser = async function (req, res, next) {
           exclude: ["password", "createdAt", "updatedAt", "deletedAt"],
         },
       });
-      const msgRegister = {
-        to: email, // Change to your recipient
-        from: 'ong.develop2022@gmail.com', // Change to your verified sender
-        subject: `bienvenido a  somos más, ${firstName+ " " +lastName}`,
-        text: `esto es un mensaje de verificación por su registro exitoso en somos más, lo estaremos acompañando`,
-        
-      }
-      SendGrid(msgRegister)
+      const resMsg = RegisterSendGrid(user)
+      SendGrid(resMsg)
       const token = await generateJWT(newUser);
       res.status(201).json({
         token,
@@ -89,7 +84,6 @@ const login = async (req, res, next) => {
       if (token) {
         res.send({
           token,
-          user: user,
         });
       }
     }
@@ -107,9 +101,8 @@ const googleAuth = async (req, res, next) => {
       const user = await db[userEntity].findOne({where: { email: email }})
       if (user){
         const token = await generateJWT(user);
-        return res.send({
+        return res.status(200).send({
           token,
-          user: user,
         });
       }
       else{
@@ -117,9 +110,8 @@ const googleAuth = async (req, res, next) => {
          const [ firstName, lastName ] = name.split(' ')
          const userCreated = await db[userEntity].create({email, firstName, lastName, password})
          const token = await generateJWT(userCreated);
-          return res.send({
+          return res.status(201).send({
           token,
-          user: userCreated,
         });
       }
     }
