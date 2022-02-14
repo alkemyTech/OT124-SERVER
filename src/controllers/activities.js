@@ -1,6 +1,7 @@
+const { parseS3Url } = require("../helpers/parseS3Url");
 const db = require("../models");
 const entity = "activities";
-const { uploadFile, updateFile } = require("../services/aws_s3");
+const { uploadFile, updateFile, deleteFile } = require("../services/aws_s3");
 
 const getActivities = async function (req, res, next) {
   try {
@@ -82,10 +83,56 @@ const putActivities = async function (req, res, next) {
   }
 };
 
+const getActivityById = async function (req, res, next) {
+  try {
+    const { id } = req.params;
+    const activity = await db[entity].findOne({ where: { id } });
+    if (!activity) {
+      let err = new Error("Activity not found");
+      err.name = "NotFoundError";
+      throw err;
+    } else {
+      if (activity.image) {
+        activity.image = parseS3Url(activity.image).key;
+        res.send({ activity });
+      }
+      res.send({ activity });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+const deleteActivityById = async function (req, res, next) {
+  try {
+    const { id } = req.params;
+    const activity = await db[entity].findOne({ where: { id } });
+    if (!activity) {
+      let err = new Error("Activity not found");
+      err.name = "NotFoundError";
+      next(err);
+    } else {
+      if (activity.image) {
+        const { key } = parseS3Url(activity.image);
+        await deleteFile(key, next);
+        await activity.destroy();
+        res.send({ message: "Activity deleted" });
+      } else {
+        await activity.destroy();
+        res.send({ message: "Activity deleted" });
+      }
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
 const activityController = {
   getActivities,
   postActivities,
   putActivities,
+  getActivityById,
+  deleteActivityById,
 };
 
 module.exports = activityController;

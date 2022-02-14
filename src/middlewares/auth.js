@@ -5,7 +5,6 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
 const validateToken = async (req, res, next) => {
-
     try {
         const { authorization } = req.headers;
         if (!authorization) {
@@ -19,8 +18,7 @@ const validateToken = async (req, res, next) => {
             if(err) {
                 throw err
             } else {
-                req.user=decoded.id
-                req.role=decoded.role
+                req.user=decoded.user
             }
         })
         next();
