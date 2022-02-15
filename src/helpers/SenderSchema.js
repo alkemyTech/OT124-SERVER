@@ -1,4 +1,4 @@
-var base64Img = require('base64-img');
+
 //const logo = require("../img/logo-somos-mas.png")
 //var base64str = base64_encode({ logo });
 
