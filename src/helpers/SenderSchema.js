@@ -10,7 +10,7 @@ const RegisterSendGrid = (user) => {
         from: 'ong.develop2022@gmail.com', // Change to your verified sender
         subject: `bienvenido a  somos más, ${user.firstName + " " + user.lastName}`,
         text: `esto es un mensaje de verificación por su registro exitoso en somos más, lo estaremos acompañando`,
-       
+        
 
     }
     return msgRegister
