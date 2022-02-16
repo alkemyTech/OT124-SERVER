@@ -16,6 +16,8 @@ const {
 /* GET all testimonials route. */
 router.get("/", testimonialsController.getAllTestimonials);
 
+router.get("/:id", testimonialsController.getTestimonial);
+
 /* POST testimonials route. */
 router.post(
   "/",
