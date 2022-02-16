@@ -23,6 +23,7 @@ const getCategoryById = async function (req, res, next) {
 
     if (!categoryFound) {
       const err = new Error("Category not found");
+      err.name = "NotFoundError";
       throw err;
     }
 
@@ -83,6 +84,7 @@ const deleteCategory = async function (req, res, next) {
 
     if (!categoryFound) {
       const err = new Error("Category not found");
+      err.name = "NotFoundError";
       throw err;
     }
 
