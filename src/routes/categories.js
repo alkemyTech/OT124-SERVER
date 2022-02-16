@@ -10,7 +10,13 @@ router.get("/", categoriesController.getAllCategories);
 router.get("/:id", categoriesController.getCategoryById);
 router.post('/', validateToken, isAdmin, validation(categoriesCreatorSchema), categoriesController.createCategory)
 /* PUT categories. */
-router.put('/:id', categoriesController.putCategories );
+router.put(
+  "/:id",
+  validateToken,
+  isAdmin,
+  validation(categoriesCreatorSchema),
+  categoriesController.putCategories
+);
 router.delete('/:id', categoriesController.deleteCategory );
 
 module.exports = router;
