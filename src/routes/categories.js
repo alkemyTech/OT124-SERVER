@@ -17,7 +17,12 @@ router.put(
   validation(categoriesCreatorSchema),
   categoriesController.putCategories
 );
-router.delete('/:id', categoriesController.deleteCategory );
+router.delete(
+  "/:id",
+  validateToken,
+  isAdmin,
+  categoriesController.deleteCategory
+);
 
 module.exports = router;
 
