@@ -1,7 +1,6 @@
 const db = require("../models");
 const entity = "members";
 
-
 const getAllMembers = async function (req, res, next) {
   try {
     const membersFound = await db[entity].findAll({
@@ -19,7 +18,8 @@ const getAllMembers = async function (req, res, next) {
     });
 
     res.send({
-      allMembers,
+      title: "Members",
+      Members: allMembers,
     });
   } catch (err) {
     next(err);
@@ -73,7 +73,6 @@ const updateMember = async function (req, res, next) {
     const { id } = req.params;
     const { body } = req;
 
-
     const memberFound = await db[entity].findOne({
       where: {
         id,
@@ -105,7 +104,6 @@ const updateMember = async function (req, res, next) {
     return res.status(200).json({
       msg: "Member succesfully updated",
     });
-
   } catch (err) {
     next(err);
   }
@@ -115,7 +113,7 @@ const membersController = {
   getAllMembers,
   postMember,
   deleteMember,
-  updateMember
+  updateMember,
 };
 
 module.exports = membersController;
