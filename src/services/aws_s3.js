@@ -19,7 +19,6 @@ const s3 = new S3.S3({
 
 const uploadFile = async (file, next) => {
   try {
-    console.log(file);
     const extension = file.originalname.split(".").pop(); // Get file extension
     const key = `${uuid.v4()}.${extension}`; // Generate unique key
     const fileContent = fs.readFileSync(file.path); // Read file

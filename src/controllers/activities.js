@@ -21,14 +21,13 @@ const postActivities = async function (req, res, next) {
   try {
     if (req.file) {
       const { url } = await uploadFile(req.file, next);
-      console.log(url);
       req.body.image = url;
     } else {
       req.body.image = null;
     }
 
     const newActivity = await db[entity].create(req.body);
-    return res.status(201).send({
+    res.status(201).send({
       title: "Activities",
       message: "New activity created",
       newActivity: newActivity,
