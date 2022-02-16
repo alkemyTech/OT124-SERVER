@@ -20,6 +20,32 @@ const getAllTestimonials = async function (req, res, next) {
     res.send({
       testimonials,
     });
+
+  } catch (err) {
+    next(err);
+  }
+};
+
+const getTestimonial = async function (req, res, next) {
+  const { id } = req.params
+  try {
+    let testimonialFound = await db[entity].findByPk(id)
+    
+    if (!testimonialFound) {
+      let err = new Error("Testimonial not found");
+      err.name= 'NotFoundError'
+      throw err;
+    }
+
+      if (testimonialFound.lastimage) {
+        const parsedImage = parseS3Url(testimonialFound.lastimage);
+        testimonialFound.lastimage = parsedImage;
+      }
+
+    return res.send({
+      testimonial: testimonialFound
+    })
+
   } catch (err) {
     next(err);
   }
@@ -37,11 +63,13 @@ const createTestimonial = async function (req, res, next) {
       content,
       lastimage,
     });
+
     return res.status(201).send({
       title: "Testimonials",
       message: "The Testimonial has been created successfully",
-      newTestimonial: testimonialCreated,
+      testimonialCreated,
     });
+    
   } catch (err) {
     next(err);
   }
@@ -54,7 +82,8 @@ const deleteTestimonialById = async function (req, res, next) {
     const testimonialFound = await db[entity].findByPk(id);
 
     if (!testimonialFound) {
-      const err = new Error("Testimonial not found");
+      let err = new Error("Testimonial not found");
+      err.name= 'NotFoundError'
       throw err;
     }
 
@@ -68,6 +97,7 @@ const deleteTestimonialById = async function (req, res, next) {
       res.status(200).send({
         title: "Testimonials",
         message: "The Testimonial has been deleted successfully",
+        testimonialDeleted
       });
     }
   } catch (err) {
@@ -99,17 +129,17 @@ const updateTestimonial = async function (req, res, next) {
       { name, content, lastimage },
       { where: { id: id } }
     );
-    if (testimonialUpdated) {
-      return res.status(200).send({
-        title: "Testimonials",
-        message: "Testimonial updated successfully",
-        testimonialUpdated,
-      });
-    } else {
-      let err = new Error("Testimonial not found, Testimonial id invalid");
+    if (!testimonialUpdated) {
+      let err = new Error("Testimonial not found");
       err.name = "NotFoundError";
       throw err;
     }
+      return res.status(200).send({
+        title: "Testimonials",
+        message: "The Testimonial has been updated successfully",
+        testimonialUpdated,
+      });
+      
   } catch (err) {
     next(err);
   }
@@ -120,6 +150,7 @@ const testimonialsController = {
   createTestimonial,
   updateTestimonial,
   deleteTestimonialById,
+  getTestimonial
 };
 
 
