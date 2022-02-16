@@ -10,6 +10,7 @@ const getFileByKey = async function (req, res, next) {
   try {
     const key = req.params.key;
     const readStream = await downloadFile(key, next);
+    console.log(readStream);
     res.type(readStream.ContentType);
     return readStream.Body.pipe(res);
   } catch (err) {

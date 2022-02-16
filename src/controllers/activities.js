@@ -1,7 +1,12 @@
 const { parseS3Url } = require("../helpers/parseS3Url");
 const db = require("../models");
 const entity = "activities";
-const { uploadFile, updateFile, deleteFile } = require("../services/aws_s3");
+const {
+  uploadFile,
+  updateFile,
+  deleteFile,
+  downloadFile,
+} = require("../services/aws_s3");
 
 const getActivities = async function (req, res, next) {
   try {
@@ -16,13 +21,14 @@ const postActivities = async function (req, res, next) {
   try {
     if (req.file) {
       const { url } = await uploadFile(req.file, next);
+      console.log(url);
       req.body.image = url;
     } else {
       req.body.image = null;
     }
 
     const newActivity = await db[entity].create(req.body);
-    res.status(201).send({
+    return res.status(201).send({
       title: "Activities",
       message: "New activity created",
       newActivity: newActivity,
@@ -93,7 +99,7 @@ const getActivityById = async function (req, res, next) {
       throw err;
     } else {
       if (activity.image) {
-        activity.image = parseS3Url(activity.image).key;
+        activity.key = parseS3Url(activity.image).key;
         res.send({ activity });
       }
       res.send({ activity });
