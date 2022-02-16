@@ -26,6 +26,27 @@ const getAllMembers = async function (req, res, next) {
   }
 };
 
+const getMemberById = async function (req, res, next) {
+  try {
+    const { id } = req.params;
+    let foundMember = await db[entity].findOne({ where: { id: id } });
+      if (foundMember){
+      const parsedURL = parseS3Url(foundMember.image)
+        if (parsedURL?.key){
+        foundMember = {...foundMember.dataValues, key: parsedURL.key}
+        }
+      return res.status(200).send({ title: "Miembro", miembro: foundMember });
+     }
+    let err = new Error("Miembro no encontrado");
+    err.name = "NotFoundError";
+    throw err;
+  } 
+  catch (err) {
+    next(err);
+  }
+};
+
+
 const postMember = async (req, res, next) => {
   try {
     const { name } = req.body;
@@ -111,6 +132,7 @@ const updateMember = async function (req, res, next) {
 
 const membersController = {
   getAllMembers,
+  getMemberById,
   postMember,
   deleteMember,
   updateMember,

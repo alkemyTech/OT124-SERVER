@@ -14,6 +14,9 @@ router.post("/", validation(memberPostSchema), membersController.postMember);
 
 router.delete("/:id", validateToken, isAdmin, membersController.deleteMember);
 
+/* GET  member by id*/
+router.get("/:id", validateToken, membersController.getMemberById);
+
 router.put(
   "/:id",
   validateToken,
