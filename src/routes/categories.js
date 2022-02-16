@@ -6,7 +6,8 @@ const { isAdmin } = require('../middlewares/isRole');
 const { validation } = require('../middlewares/validator');
 const {categoriesCreatorSchema} = require('../validations/categoriesSchema')
 
-
+router.get("/", categoriesController.getAllCategories);
+router.get("/:id", categoriesController.getCategoryById);
 router.post('/', validateToken, isAdmin, validation(categoriesCreatorSchema), categoriesController.createCategory)
 /* PUT categories. */
 router.put('/:id', categoriesController.putCategories );
