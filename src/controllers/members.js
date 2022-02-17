@@ -4,7 +4,6 @@ const entity = "members";
 const getAllMembers = async function (req, res, next) {
   try {
     const membersFound = await db[entity].findAll({
-      where: { type: "members" },
       attributes: ["id", "name", "image", "createdAt"],
       order: [["createdAt", "DESC"]],
     });

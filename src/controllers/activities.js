@@ -5,8 +5,22 @@ const { uploadFile, updateFile, deleteFile } = require("../services/aws_s3");
 
 const getActivities = async function (req, res, next) {
   try {
-    const listActivity = await db[entity].findAll();
-    res.send({ title: "Activities", listActivity });
+    const activitiesFound = await db[entity].findAll({
+      paranoid: false,
+      order: [["createdAt", "DESC"]],
+    });
+
+    const activities = activitiesFound.map((item) => {
+      if (item.image) {
+        const parsedImage = parseS3Url(item.image);
+        item.image = parsedImage;
+      }
+      return item;
+    });
+
+    res.send({
+      activities,
+    });
   } catch (err) {
     next(err);
   }
