@@ -10,9 +10,6 @@ chai.should();
 
 let id
 
-// PUT POST DELETE GET GET
-
-// Test: post testimonial endpoint
 describe( `POST ${newsPath}`, () => {
   it("Respond with json containing a token validation error (User is not admin)", async () => {
     const response = await request(app)
@@ -26,7 +23,6 @@ describe( `POST ${newsPath}`, () => {
   });
 });
 
-// Test: post testimonial endpoint
 describe( `POST ${newsPath}`, () => {
   it("Respond with json containing a success message", async () => {
     const response = await request(app)
@@ -48,7 +44,6 @@ describe( `POST ${newsPath}`, () => {
   });
 });
 
-// Test: post testimonial endpoint
 describe(`POST ${newsPath}`, () => {
   it("Respond with json containing a validation error, Content is required and Name is required", async () => {
     const response = await request(app)
@@ -67,7 +62,6 @@ describe(`POST ${newsPath}`, () => {
   });
 });
 
-// Test: PUT testimonial endpoint
 describe(`PUT ${newsPath}/:id`, () => {
   it("Respond with json containing a success message", async () => {
     const response = await request(app)
@@ -87,7 +81,6 @@ describe(`PUT ${newsPath}/:id`, () => {
   });
 });
 
-// Test: PUT testimonial endpoint
 describe(`PUT ${newsPath}/:id`, () => {
   it("Respond with json containing a token validation error (User is not admin)", async () => {
     const response = await request(app)
@@ -158,7 +151,6 @@ describe(`DELETE ${newsPath}/:id`, () => {
   });
 });
 
-// Test: delete testimonial endpoint
 describe(`DELETE ${newsPath}/:id`, () => {
   it("Respond with json containing a not found error, News not fount", async () => {
     const response = await request(app)
