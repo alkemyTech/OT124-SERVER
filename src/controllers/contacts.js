@@ -26,10 +26,11 @@ const postContact = async function (req, res, next) {
 
 const resMsgContact = ContactSendGrid(req.body)
 SendGrid(resMsgContact)
-    res.send({
+
+    return res.send({
       title: "Contacts",
       message: "contacto creado con exito!",
-      newContact: createContact
+      createContact,
     });
   } 
   catch (err) {

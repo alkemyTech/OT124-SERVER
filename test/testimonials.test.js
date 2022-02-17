@@ -1,4 +1,4 @@
-const { expect, assert } = require("chai");
+/*const { expect, assert } = require("chai");
 const chai = require("chai");
 const request = require("supertest");
 const app = require("../src/app");
@@ -138,20 +138,9 @@ describe("GET api/v1/testimonials", () => {
   });
 });
 
-// Test: delete testimonial endpoint
-describe("DELETE api/v1/testimonials/:id", () => {
-  it("respond with json containing a success message", async () => {
-    const response = await request(app)
-      .delete(testimonialPath + "/" + id)
-      .set("Authorization", `Bearer ${process.env.TOKEN_ADM_TEST}`);
 
-    expect(response.status).to.eql(200);
-    expect(response.body).that.includes({
-      title: "Testimonials",
-      message: "The Testimonial has been deleted successfully",
-    });
-  });
-});
+
+
 
 // Test: delete testimonial endpoint
 describe("DELETE api/v1/testimonials/:id", () => {
@@ -165,4 +154,4 @@ describe("DELETE api/v1/testimonials/:id", () => {
       .to.have.property("errors")
       .to.equal("Testimonial not found");
   });
-});
+});*/
