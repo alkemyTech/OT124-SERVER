@@ -1,13 +1,25 @@
 const db = require("../models");
 const entity = "members";
 const getMembers = async function (req, res, next) {
-  const resMembers = await db[entity].findAll();
-  if (resMembers) {
-    res.send(resMembers);
-  } else {
-    let err = new Error("problema al encontrar miembros");
-    err.name = "NotFoundError";
-    throw err;
+  try {
+    const membersFound = await db[entity].findAll({
+      paranoid: false,
+      order: [["createdAt", "DESC"]],
+    });
+
+    const members = membersFound.map((item) => {
+      if (item.image) {
+        const parsedImage = parseS3Url(item.image);
+        item.image = parsedImage;
+      }
+      return item;
+    });
+
+    res.send({
+      members,
+    });
+  } catch (err) {
+    next(err);
   }
 };
 
