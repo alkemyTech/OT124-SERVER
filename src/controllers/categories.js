@@ -1,6 +1,41 @@
 const db = require('../models')
 entity = 'categories'
 
+const getAllCategories = async function (req, res, next) {
+  try {
+    const categoriesFound = await db[entity].findAll({
+      order: [["createdAt", "DESC"]],
+    });
+
+    res.send({
+      title: "Categories",
+      categories: categoriesFound,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const getCategoryById = async function (req, res, next) {
+  try {
+    const { id } = req.params;
+    const categoryFound = await db[entity].findByPk(id);
+
+    if (!categoryFound) {
+      const err = new Error("Category not found");
+      err.name = "NotFoundError";
+      throw err;
+    }
+
+    res.send({
+      title: "Category",
+      category: categoryFound,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 const putCategories = async function (req, res, next) {
   try {
     const update = await db[entity].findAll({
@@ -30,45 +65,47 @@ const putCategories = async function (req, res, next) {
 };
 
 const createCategory = async function (req, res, next) {
-    try {
-      const categoryCreated = await db[entity].create(req.body)
-      res.status(201).send({
-          title: 'Categories',
-          message: 'The Category has been created sucessfully',
-          newCategory: categoryCreated
-      })
-    } catch (err) {
-      next(err);
-    }
-  };
-  
+  try {
+    const categoryCreated = await db[entity].create(req.body);
+    res.status(201).send({
+      title: "Categories",
+      message: "The Category has been created sucessfully",
+      newCategory: categoryCreated,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 const deleteCategory = async function (req, res, next) {
   try {
-    const findCat = await db[entity].findOne({
-      where: {
-        id: { [Op.eq]: req.params.id },
-      },
-    });
-    if (!findCat) {
-      return res.json("La categoria no existe");
-    } else {
-      await db[entity].destroy({
-        where: {
-          id: { [Op.eq]: req.query.id },
-        },
-      });
+    const { id } = req.params;
+    const categoryFound = await db[entity].findByPk(id);
 
-      return res.json("La categoria a sido borrada");
+    if (!categoryFound) {
+      const err = new Error("Category not found");
+      err.name = "NotFoundError";
+      throw err;
     }
+
+    const categoryDeleted = await categoryFound.destroy();
+
+    res.send({
+      title: "Categories",
+      message: "The category has been deleted",
+      categoryDeleted,
+    });
   } catch (err) {
     next(err);
   }
 };
 
 const categoriesController = {
+  getCategoryById,
+  getAllCategories,
   putCategories,
   deleteCategory,
-  createCategory
+  createCategory,
 };
 
 module.exports = categoriesController;
