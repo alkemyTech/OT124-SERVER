@@ -10,7 +10,7 @@ const { validateToken } = require("../middlewares/auth");
 router.get("/", membersController.getAllMembers);
 
 /* POST new member */
-router.post("/", validation(memberPostSchema), membersController.postMember);
+router.post("/", validateToken, isAdmin, validation(memberPostSchema), membersController.postMember);
 
 router.delete("/:id", validateToken, isAdmin, membersController.deleteMember);
 
