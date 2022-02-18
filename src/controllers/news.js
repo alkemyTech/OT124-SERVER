@@ -76,7 +76,7 @@ const deleteNew = async function (req, res, next) {
         msg: "New deleted",
       });
     }
-    let err = new Error("New not found, New id invalid");
+    let err = new Error("New not found");
     err.name = "NotFoundError";
     throw err;
   } catch (err) {

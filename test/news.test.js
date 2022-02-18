@@ -15,6 +15,7 @@ describe( `POST ${newsPath}`, () => {
     const response = await request(app)
       .post(newsPath)
       .set("Accept", "application/json")
+      .set("Authorization", `Bearer ${process.env.TOKEN_USER_TEST}`)
 
       expect(response.status).to.eql(401);
       expect(response.body).that.includes({
@@ -47,7 +48,7 @@ describe( `POST ${newsPath}`, () => {
 describe(`POST ${newsPath}`, () => {
   it("Respond with json containing a validation error, Content is required and Name is required", async () => {
     const response = await request(app)
-      .post(testimonialPath)
+      .post(newsPath)
       .set("Accept", "application/json")
       .set("Authorization", `Bearer ${process.env.TOKEN_ADM_TEST}`)
       .send({});
@@ -65,13 +66,13 @@ describe(`POST ${newsPath}`, () => {
 describe(`PUT ${newsPath}/:id`, () => {
   it("Respond with json containing a success message", async () => {
     const response = await request(app)
-      .put(testimonialPath + "/" + id)
+      .put(newsPath + "/" + id)
       .set("Authorization", `Bearer ${process.env.TOKEN_ADM_TEST}`)
       .attach("image", testFilePath)
       .field("name", "test 5")
       .field("content", "this is a put test")
       .field("type", "This is a post test.type")
-      .field("categoryId", "This is a post test.categoryId");
+      .field("categoryId", 2);
 
     expect(response.status).to.eql(200);
     expect(response.body).that.includes({
@@ -122,7 +123,7 @@ describe(`GET ${newsPath}/:id`, () => {
 describe(`GET ${newsPath}`, () => {
   it("Respond with json containing a list of all news where each new have a field lastimage with a parsed s3 url or is null", async () => {
     const response = await request(app)
-      .get(testimonialPath)
+      .get(newsPath)
       .set("Accept", "application/json");
 
     expect(response.status).to.eql(200);
@@ -145,8 +146,7 @@ describe(`DELETE ${newsPath}/:id`, () => {
 
     expect(response.status).to.eql(200);
     expect(response.body).that.includes({
-      title: "News",
-      message: "The New has been deleted successfully",
+      msg: "New deleted",
     });
   });
 });
@@ -160,6 +160,6 @@ describe(`DELETE ${newsPath}/:id`, () => {
     expect(response.status).to.eql(404);
     expect(response.body)
       .to.have.property("errors")
-      .to.equal("News not found");
+      .to.equal("New not found");
   });
 });

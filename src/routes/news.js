@@ -26,14 +26,6 @@ router.get("/:id", newsController.getNewById);
 
 router.get("/", newsController.getAllNews);
 
-router.post(
-  "/",
-  authController.validateToken,
-  isAdmin,
-  upload.single("image"),
-  validation(newsCreatorSchema),
-  fileValidation(fileSchema),
-  newsController.postNew
-);
+router.post("/",  authController.validateToken,  isAdmin,  upload.single("image"),  validation(newsCreatorSchema),  fileValidation(fileSchema),  newsController.postNew );
 
 module.exports = router;

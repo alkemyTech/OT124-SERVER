@@ -1,3 +1,4 @@
+/** 
 const { expect, assert } = require("chai");
 const chai = require("chai");
 const request = require("supertest");
@@ -166,3 +167,4 @@ describe("DELETE api/v1/testimonials/:id", () => {
       .to.equal("Testimonial not found");
   });
 });
+*/
