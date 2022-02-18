@@ -34,7 +34,7 @@ describe( `POST ${newsPath}`, () => {
       .field("name", "test 2")
       .field("content", "This is a post test")
       .field("type", "This is a post test.type")
-      .field("categoryId", "This is a post test.categoryId");
+      .field("categoryId", 1);
 
     expect(response.status).to.eql(201);
     expect(response.body).that.includes({
@@ -55,7 +55,7 @@ describe(`POST ${newsPath}`, () => {
 
     expect(response.status).to.eql(400);
     expect(response.body).to.have.property("errors");
-    expect(response.body.errors).to.have.lengthOf(2);
+    expect(response.body.errors).to.have.lengthOf(4);
     expect(response.body.errors[0]).to.equal("Name is required");
     expect(response.body.errors[1]).to.equal("Content is required");
     expect(response.body.errors[2]).to.equal("Type is required");
@@ -77,7 +77,7 @@ describe(`PUT ${newsPath}/:id`, () => {
     expect(response.status).to.eql(200);
     expect(response.body).that.includes({
       title: "News",
-      message: "The new has been updated successfully",
+      message: "The New has been updated successfully",
     });
   });
 });
@@ -96,6 +96,17 @@ describe(`PUT ${newsPath}/:id`, () => {
 });
 
 describe(`GET ${newsPath}/:id`, () => {
+  it("Respond with json containing a new with parsedS3URL", async () => {
+    const response = await request(app).get(newsPath + "/" + id);
+
+    expect(response.status).to.eql(200);
+    expect(response.body)
+      .to.have.property("new")
+      .to.have.property("image")
+      .to.satisfy(
+        (parsedUrl) => typeof parsedUrl === "object" || parsedUrl === null
+      );
+  });
   it("Respond with json containing a new not found error", async () => {
     const response = await request(app).get(newsPath+"/"+"notFile");
 
@@ -103,20 +114,6 @@ describe(`GET ${newsPath}/:id`, () => {
     expect(response.body).that.includes({
       errors: "New not found",
     });
-  });
-});
-
-describe(`GET ${newsPath}/:id`, () => {
-  it("Respond with json containing a new with parsedS3URL", async () => {
-    const response = await request(app).get(newsPath + "/" + id);
-
-    expect(response.status).to.eql(200);
-    expect(response.body)
-      .to.have.property("new")
-      .to.have.property("lastimage")
-      .to.satisfy(
-        (parsedUrl) => typeof parsedUrl === "object" || parsedUrl === null
-      );
   });
 });
 

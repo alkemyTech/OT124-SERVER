@@ -13,11 +13,11 @@ const postNew = async function (req, res, next) {
       req.body.image = null;
     }
 
-    const newsCreated = await db[entity].create(req.body);
+    const newCreated = await db[entity].create(req.body);
     return res.status(201).send({
       title: "News",
-      message: "The news has been created successfully",
-      newTestimonial: newsCreated,
+      message: "The New has been created successfully",
+      newCreated: newCreated,
     });
   } catch (err) {
     next(err);
@@ -53,7 +53,7 @@ const updateNew = async function (req, res, next) {
       if (newUpdate) {
         return res.status(200).send({
           title: "News",
-          message: "New updated successfully",
+          message: "The New has been updated successfully",
           update: newUpdate,
         });
       } else {
@@ -115,12 +115,11 @@ const getNewById = async function (req, res, next) {
     let foundOne = await db[entity].findOne({ where: { id: id } });
       if (foundOne){
       const parsedURL = parseS3Url(foundOne.image)
-        if (parsedURL?.key){
-        foundOne = {...foundOne.dataValues, key: parsedURL.key}
-        }
+      foundOne.image = parsedURL
+        
       return res.status(200).send({ title: "Novedades", new: foundOne });
      }
-    let err = new Error("New not found, New id invalid");
+    let err = new Error("New not found");
     err.name = "NotFoundError";
     throw err;
   } 
