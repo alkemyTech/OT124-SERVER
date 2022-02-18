@@ -1,13 +1,14 @@
 const db = require("../models");
 const entity = "members";
-const getMembers = async function (req, res, next) {
+
+const getAllMembers = async function (req, res, next) {
   try {
     const membersFound = await db[entity].findAll({
-      paranoid: false,
+      attributes: ["id", "name", "image", "createdAt"],
       order: [["createdAt", "DESC"]],
     });
 
-    const members = membersFound.map((item) => {
+    const allMembers = membersFound.map((item) => {
       if (item.image) {
         const parsedImage = parseS3Url(item.image);
         item.image = parsedImage;
@@ -16,12 +17,34 @@ const getMembers = async function (req, res, next) {
     });
 
     res.send({
-      members,
+      title: "Members",
+      Members: allMembers,
     });
   } catch (err) {
     next(err);
   }
 };
+
+const getMemberById = async function (req, res, next) {
+  try {
+    const { id } = req.params;
+    let foundMember = await db[entity].findOne({ where: { id: id } });
+      if (foundMember){
+      const parsedURL = parseS3Url(foundMember.image)
+        if (parsedURL?.key){
+        foundMember = {...foundMember.dataValues, key: parsedURL.key}
+        }
+      return res.status(200).send({ title: "Miembro", miembro: foundMember });
+     }
+    let err = new Error("Miembro no encontrado");
+    err.name = "NotFoundError";
+    throw err;
+  } 
+  catch (err) {
+    next(err);
+  }
+};
+
 
 const postMember = async (req, res, next) => {
   try {
@@ -70,7 +93,6 @@ const updateMember = async function (req, res, next) {
     const { id } = req.params;
     const { body } = req;
 
-
     const memberFound = await db[entity].findOne({
       where: {
         id,
@@ -102,17 +124,17 @@ const updateMember = async function (req, res, next) {
     return res.status(200).json({
       msg: "Member succesfully updated",
     });
-
   } catch (err) {
     next(err);
   }
 };
 
 const membersController = {
-  getMembers,
+  getAllMembers,
+  getMemberById,
   postMember,
   deleteMember,
-  updateMember
+  updateMember,
 };
 
 module.exports = membersController;
