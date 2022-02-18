@@ -20,7 +20,7 @@ router.put(
   newsController.updateNew
 );
 /* DELETE new by ID. */
-router.delete("/:id", newsController.deleteNew);
+router.delete("/:id",  authController.validateToken, isAdmin, newsController.deleteNew);
 /* GET new by ID */
 router.get("/:id", newsController.getNewById);
 

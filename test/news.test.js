@@ -146,9 +146,17 @@ describe(`DELETE ${newsPath}/:id`, () => {
       msg: "New deleted",
     });
   });
-});
+  it("respond with json containing a token validation error (User is not admin)", async () => {
+    const response = await request(app)
+      .post(newsPath)
+      .set("Accept", "application/json")
+      .set("Authorization", `Bearer ${process.env.TOKEN_USER_TEST}`)
 
-describe(`DELETE ${newsPath}/:id`, () => {
+      expect(response.status).to.eql(401);
+      expect(response.body).that.includes({
+        errors: "Must be admin",
+      });
+  });
   it("Respond with json containing a not found error, News not fount", async () => {
     const response = await request(app)
       .delete(newsPath + "/" + "notFile")
