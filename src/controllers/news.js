@@ -87,8 +87,6 @@ const deleteNew = async function (req, res, next) {
 const getAllNews = async function (req, res, next) {
   try {
     const newsFound = await db[entity].findAll({
-      where: { type: "news" },
-      attributes: ["id", "name", "image", "createdAt"],
       paranoid: false,
       order: [["createdAt", "DESC"]],
     });
