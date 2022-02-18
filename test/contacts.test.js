@@ -44,34 +44,19 @@ describe("POST api/v1/contacts", () => {
     });
   });
 
-  // Test: delete testimonial endpoint
-describe("DELETE api/v1/testimonials/:id", () => {
-    it("respond with json containing a success message", async () => {
-      const response = await request(app)
-        .delete(testimonialPath + "/" + id)
-        .set("Authorization", `Bearer ${process.env.TOKEN_ADM_TEST}`);
-  
-      expect(response.status).to.eql(200);
-      expect(response.body).that.includes({
-        title: "Testimonials",
-        message: "The Testimonial has been deleted successfully",
-      });
-    });
+
+  // Test: get all contacts endpoints
+describe("GET api/v1/contacts", () => {
+  it("Respond with json containing a list of all contacts ", async () => {
+    const response = await request(app)
+      .get(contactsPath)
+      .set("Accept", "application/json");
+
+    expect(response.status).to.eql(200);
+    assert.typeOf(response.body, "object");
+    expect(response.body).to.have.property("contactList");
+    assert.typeOf(response.body.contactList, "array");
+    
   });
-  
-  // Test: post testimonial endpoint
-  /*describe("POST api/v1/testimonials", () => {
-    it("Respond with json containing a validation error, Content is required and Name is required", async () => {
-      const response = await request(app)
-        .post(testimonialPath)
-        .set("Accept", "application/json")
-        .set("Authorization", `Bearer ${process.env.TOKEN_ADM_TEST}`)
-        .send({});
-  
-      expect(response.status).to.eql(400);
-      expect(response.body).to.have.property("errors");
-      expect(response.body.errors).to.have.lengthOf(2);
-      expect(response.body.errors[0]).to.equal("Name is required");
-      expect(response.body.errors[1]).to.equal("Content is required");
-    });
-  });*/
+});
+ 
