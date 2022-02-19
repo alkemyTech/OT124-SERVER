@@ -8,7 +8,7 @@ const { validateToken } = require('../middlewares/auth');
 
 //delete a 'contact' or user
 //,validation(userDeleteSchema)
-router.delete('/:id', userController.deleteUser );
+router.delete('/:id', validateToken, isAdmin, userController.deleteUser );
 
 // GET of all users, only for admin users
 router.get('/', validateToken, isAdmin, userController.getAllUsers);
