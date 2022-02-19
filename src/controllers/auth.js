@@ -48,31 +48,29 @@ const registerUser = async function (req, res, next) {
     next(err);
   }
 };
-const getMe = function (req, res, next) {
-  const { authorization } = req.headers;
-  console.log(authorization);
-  if (!authorization) {
-    let err = new Error("Token not found");
-    err.name = "NotFoundError";
-    throw err;
-  }
-  let token = authorization.split(" ")[1];
+const getMe = async function (req, res, next) {
 
-  jwt.verify(token, process.env.JWT_SECRET, async (err) => {
-    if (err) {
+  try {
+    const { authorization } = req.headers;
+    if (!authorization) {
+      let err = new Error("Token not found");
+      err.name = "NotFoundError";
       throw err;
-    } else {
-      try {
-        const findEmail = jwt.decode(token, process.env.JWT_SECRET).email;
-        const foundOne = await db[userEntity].findOne({
-          where: { email: findEmail },
-        });
-        res.status(200).send(foundOne);
-      } catch (err) {
-        next(err);
-      }
     }
-  });
+    let token = authorization.split(" ")[1];
+  
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+      if(err) {
+          throw err
+      } else {
+        res.status(200).send(decoded.user)
+      }
+    })
+    
+  } catch (error) {
+    next(error)
+  }
+
 };
 
 const login = async (req, res, next) => {

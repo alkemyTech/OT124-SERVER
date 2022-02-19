@@ -6,7 +6,12 @@ const entity = "contacts";
 const getContacts = async function (req, res, next) {
   try {
     const contactList = await db[entity].findAll();
-    res.json(contactList);
+
+    return res.send({
+      title: "Contacts",
+      contactList,
+    });
+
   } catch (err) {
     next(err);
   }
@@ -20,26 +25,25 @@ const postContact = async function (req, res, next) {
       name,
       phone,
       email,
-      message
+      message,
     });
-    
 
-const resMsgContact = ContactSendGrid(req.body)
-SendGrid(resMsgContact)
-    res.send({
+    const resMsgContact = ContactSendGrid(req.body);
+    SendGrid(resMsgContact);
+
+    return res.send({
       title: "Contacts",
       message: "contacto creado con exito!",
-      newContact: createContact
+      createContact,
     });
-  } 
-  catch (err) {
+  } catch (err) {
     next(err);
   }
-}
+};
 
 const contactsController = {
   getContacts,
-  postContact
+  postContact,
 };
 
 module.exports = contactsController;
