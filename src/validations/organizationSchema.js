@@ -10,9 +10,6 @@ const organizationPostSchema = yup.object().shape({
     .required("email is required")
     .email("Invalid email format"),
 });
-const organizationPutSchema = yup.object().shape({
-    name: yup.string().required("name is required"),
-    key: yup.string().required("key is required")
-});
 
-module.exports = { organizationPostSchema,organizationPutSchema }
+
+module.exports = { organizationPostSchema }

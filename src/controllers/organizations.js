@@ -14,8 +14,8 @@ const getOrganization = async function (req, res, next) {
     if (!organization || organization === null)
       error.push({ text: "Organization not found" });
 
-    const { name, image, phone, address, welcomeText } = organization;
-    if (![name, image, phone, address, welcomeText].every(Boolean))
+    const { name, image,email, phone, address, welcomeText } = organization;
+    if (![name, image,email, phone, address, welcomeText].every(Boolean))
       error.push({ text: "One of the fields of the organization is null" });
 
     if (error.length > 0)
@@ -23,6 +23,7 @@ const getOrganization = async function (req, res, next) {
     res.json({
       name,
       image,
+      email,
       phone,
       address,
       welcomeText,
@@ -34,7 +35,7 @@ const getOrganization = async function (req, res, next) {
 const getOrganizations = async function (req, res, next) {
   try {
     const organizationsFound = await db[entity].findAll();
-    if(organizationsFound){
+    if (organizationsFound) {
 
       const organizations = organizationsFound.map((item) => {
         if (item.image) {
@@ -43,11 +44,11 @@ const getOrganizations = async function (req, res, next) {
         }
         return item;
       });
-  
+
       res.send({
         organizations,
       });
-    }else{
+    } else {
       let err = new Error("Organizations not found");
       err.name = "NotFoundError";
       throw err;
@@ -63,53 +64,73 @@ const getOrganizations = async function (req, res, next) {
 const editOrganization = async function (req, res, next) {
   try {
     const { id } = req.params;
- 
-    let { name, key } = req.body;
+
+
+    let { address, name, phone, email, welcomeText } = req.body
+
+    console.log(req.body)
     let image;
     const error = [];
     if (req.file) {
-      if (key) {
-        const { url } = await updateFile(req.file, key, next);
-        image = url;
-      } else {
-        const { url } = await uploadFile(req.file, next);
-        image = url;
-      }
+      const { url } = await uploadFile(req.file, next);
+      image = url;
     }
-    const organizationUpdated = await db[entity].update(
-      { name, content, image },
-      { where: { id } });
-      if (organizationUpdated){
+    //creo el data para comparar a mi conveniencia con la base de datos
+    let data = {
+      name,
+      image,
+      address,
+      phone,
+      email,
+      welcomeText,
+    }
+
+    console.log(data)
+    const organizationFounded = await db[entity].findByPk(id);
+    console.log(organizationFounded)
+    if (organizationFounded) {
+
+      const organizationUpdated = await db[entity].update(
+        data,
+        { where: { id } });
+      if (organizationUpdated) {
         return res.status(200).send({
           title: "Organization",
           message: "Organization updated successfully",
-          organizationUpdated,
+          organizationUpdated
         });
-      } else {
-        let err = new Error("Organization not found, Organization id invalid");
-        err.name = "NotFoundError";
-        throw err;
       }
-   
+    } else {
+      let err = new Error("Organization not found, Organization id invalid");
+      err.name = "NotFoundError";
+      throw err;
+    }
 
 
   } catch (err) {
-
+    next(err);
   }
 }
 
 const deleteOrganization = async function (req, res, next) {
   try {
     const { id } = req.params;
-    const { name } = req.body;
-    const error = [];
 
-    const organization = await db[entity].findOne({ where: { id } });
-
-
+    const organizationFound = await db[entity].findByPk(id);
+    if (!organizationFound) {
+      const err = new Error("Testimonial not found");
+      throw err;
+    }
+    const OrganizationDeleted = await organizationFound.destroy();
+    if (OrganizationDeleted) {
+      res.status(200).send({
+        title: "Organization",
+        message: "The Organization has been deleted successfully",
+      });
+    }
 
   } catch (err) {
-
+    console.log(err)
   }
 }
 
@@ -145,6 +166,7 @@ const organizationsController = {
   createOrganization,
   editOrganization,
   getOrganizations,
+  deleteOrganization,
 };
 
 module.exports = organizationsController;

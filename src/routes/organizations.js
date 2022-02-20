@@ -24,21 +24,22 @@ router.post(
     fileValidation(fileSchema),
     organizationsController.createOrganization
   );
-/* PUT edit organization route. */
+/* PUT edit organization route */
 router.put(
-    "/",
+    "/:id",
     authController.validateToken,
     isAdmin,
     upload.single("image"),
-    validation(organizationPutSchema),
+    validation(organizationPostSchema),
     fileValidation(fileSchema),
     organizationsController.editOrganization
   );
-/* PUT edit organization route. */
+/* PUT edit organization route */
 router.delete(
     "/:id",
     authController.validateToken,
     isAdmin,
+    organizationsController.deleteOrganization
   )
 
 module.exports = router;
