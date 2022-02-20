@@ -7,19 +7,26 @@ const { parseS3Url } = require("../helpers/parseS3Url");
 const getOrganization = async function (req, res, next) {
   try {
     const { id } = req.params;
-    const error = [];
+    let err;
 
-    const organization = await db[entity].findOne({ where: { id } });
+    const organization = await db[entity].findOne({ where: { id: id } });
+    let socials = await db['socials'].findOne({ where: { organizationId: id } });
 
-    if (!organization || organization === null)
-      error.push({ text: "Organization not found" });
+    if (!socials) socials = null;
+
+    if (!organization) {
+      err = new Error('Organization not found');
+      err.name = '';
+      throw err;
+    }
 
     const { name, image,email, phone, address, welcomeText } = organization;
-    if (![name, image,email, phone, address, welcomeText].every(Boolean))
-      error.push({ text: "One of the fields of the organization is null" });
+    if (![name, image,email, phone, address, welcomeText].every(Boolean)) {
+      err = new Error('One of the fields of the organization is null');
+      err.name = '';
+      throw err;
+    }
 
-    if (error.length > 0)
-      return res.send({ title: "Organizaciones", messageErr: error });
     res.json({
       name,
       image,
@@ -27,6 +34,7 @@ const getOrganization = async function (req, res, next) {
       phone,
       address,
       welcomeText,
+      socials
     });
   } catch (error) {
     next(error);
@@ -167,6 +175,7 @@ const organizationsController = {
   editOrganization,
   getOrganizations,
   deleteOrganization,
+ 
 };
 
 module.exports = organizationsController;
