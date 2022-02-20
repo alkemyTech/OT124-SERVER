@@ -3,7 +3,7 @@ const {generateEncryptedPassword} = require('../helpers/generateEncryptedPasswor
 module.exports = {
   async up(queryInterface, Sequelize) {
     const general = await generateEncryptedPassword("123456")
-    return queryInterface.bulkInsert("Users", [
+    return queryInterface.bulkInsert("users", [
       {
         firstName: "User user",
         lastName: "Doe",
@@ -188,6 +188,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete("Users", { lastName: "Doe" });
+    await queryInterface.bulkDelete("users", { lastName: "Doe" });
   },
 };
