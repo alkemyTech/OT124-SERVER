@@ -9,7 +9,7 @@ const validateToken = async (req, res, next) => {
         const { authorization } = req.headers;
         if (!authorization) {
             let err = new Error('Token not found')
-            err.name = 'NotFoundError'
+            err.name = 'AuthorizationError'
             throw err
         }
         let token = authorization.split(' ')[1];
