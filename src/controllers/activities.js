@@ -8,6 +8,7 @@ const getActivities = async function (req, res, next) {
     const activitiesFound = await db[entity].findAll({
       paranoid: false,
       order: [["createdAt", "DESC"]],
+      exclude: ["deletedAt,createdAt,updatedAt"],
     });
 
     const activities = activitiesFound.map((item) => {
