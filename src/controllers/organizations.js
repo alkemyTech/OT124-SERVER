@@ -4,11 +4,14 @@ const { uploadFile } = require("../services/aws_s3");
 const { parseS3Url } = require("../helpers/parseS3Url");
 // El endpoint deberá devolver un JSON con los campos name, image, phone, address y welcomeText
 
-const getOrganization = async function (req, res, next) {
-  try {
-    const { id } = req.params;
-    let err;
 
+  
+const getOrganization = async function (req, res, next) {
+  const { id } = req.params;
+  let err = []
+  try {
+   
+ 
     const organization = await db[entity].findOne({ where: { id: id } });
     let socials = await db['socials'].findOne({ where: { organizationId: id } });
 
@@ -70,9 +73,14 @@ const getOrganizations = async function (req, res, next) {
 }
 
 const editOrganization = async function (req, res, next) {
+  const { id } = req.params;
+  if(!id) {
+    let err = new Error("id not found");
+    err.name = "NotFoundError";
+    throw err;
+  }
   try {
-    const { id } = req.params;
-
+  
 
     let { address, name, phone, email, welcomeText } = req.body
 
@@ -121,12 +129,16 @@ const editOrganization = async function (req, res, next) {
 }
 
 const deleteOrganization = async function (req, res, next) {
+  const { id } = req.params;
+  if(!id) {
+    let err = new Error("id not found");
+    err.name = "NotFoundError";
+    throw err;
+  }
   try {
-    const { id } = req.params;
-
     const organizationFound = await db[entity].findByPk(id);
     if (!organizationFound) {
-      const err = new Error("Testimonial not found");
+      const err = new Error("Organization not found");
       throw err;
     }
     const OrganizationDeleted = await organizationFound.destroy();

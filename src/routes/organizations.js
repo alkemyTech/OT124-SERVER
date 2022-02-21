@@ -8,38 +8,48 @@ const organizationsController = require('../controllers/organizations');
 const { validation, fileValidation } = require("../middlewares/validator");
 const { fileSchema } = require("../validations/fileSchema");
 const { organizationPostSchema, organizationPutSchema } = require('../validations/organizationSchema');
+const { idExists } = require('../middlewares/idExists');
 /* GET organization by ID. */
-router.get('/:id/public', organizationsController.getOrganization);
+router.get('/:id/public',
+authController.validateToken,
+isAdmin,
+idExists,
+ organizationsController.getOrganization);
 /*GET all organizations */
 router.get('/',
- organizationsController.getOrganizations);
+  authController.validateToken,
+  isAdmin,
+  organizationsController.getOrganizations,
+);
 
-/* POST create organization */ 
+/* POST create organization */
 router.post(
-    "/",
-    authController.validateToken,
-    isAdmin,
-    upload.single("image"),
-    validation(organizationPostSchema),
-    fileValidation(fileSchema),
-    organizationsController.createOrganization
-  );
+  "/",
+  authController.validateToken,
+  isAdmin,
+  upload.single("image"),
+  validation(organizationPostSchema),
+  fileValidation(fileSchema),
+  organizationsController.createOrganization
+);
 /* PUT edit organization route */
 router.put(
-    "/:id",
-    authController.validateToken,
-    isAdmin,
-    upload.single("image"),
-    validation(organizationPostSchema),
-    fileValidation(fileSchema),
-    organizationsController.editOrganization
-  );
-/* PUT edit organization route */
+  "/:id",
+  authController.validateToken,
+  isAdmin,
+  idExists,
+  upload.single("image"),
+  validation(organizationPostSchema),
+  fileValidation(fileSchema),
+  organizationsController.editOrganization
+);
+/* DELETE edit organization route */
 router.delete(
-    "/:id",
-    authController.validateToken,
-    isAdmin,
-    organizationsController.deleteOrganization
-  )
+  "/:id",
+  authController.validateToken,
+  isAdmin,
+  idExists,
+  organizationsController.deleteOrganization
+)
 
 module.exports = router;
