@@ -53,9 +53,56 @@ const getAllUsers = async (req, res, next) => {
     }
 }
 
+const getUser = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const user = await db[entity].findByPk(id);
+        
+        if (!user) {
+            let err = new Error("User not found");
+            err.name= 'NotFoundError';
+            throw err;
+        }
+
+        return res.status(200).send({
+            user
+        });
+    } catch (err) {
+        next(err);
+    }
+}
+
+const updateUser = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const { firstName, lastName, email, role } = req.body;
+        
+        const userUpdate = await db[entity].update(
+            { firstName, lastName, email, role },
+            { where: { id: id } }
+        );
+
+        if (!userUpdate) {
+            let err = new Error("User not found");
+            err.name = "NotFoundError";
+            throw err;
+        }
+
+        return res.status(200).send({
+            title: "Users",
+            message: "The User has been updated successfully",
+            userUpdate
+        });
+    } catch (err) {
+        next(err);
+    }
+}
+
 const usersController = {
     deleteUser,
-    getAllUsers
+    getAllUsers,
+    getUser,
+    updateUser
 };
 
 module.exports = usersController;
