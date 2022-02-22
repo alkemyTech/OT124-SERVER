@@ -73,18 +73,13 @@ const getOrganizations = async function (req, res, next) {
 }
 
 const editOrganization = async function (req, res, next) {
-  const { id } = req.params;
-  if(!id) {
-    let err = new Error("id not found");
-    err.name = "NotFoundError";
-    throw err;
-  }
   try {
-  
+    const { id } = req.params;
+
 
     let { address, name, phone, email, welcomeText } = req.body
 
-    console.log(req.body)
+
     let image;
     const error = [];
     if (req.file) {
@@ -101,9 +96,9 @@ const editOrganization = async function (req, res, next) {
       welcomeText,
     }
 
-    console.log(data)
+
     const organizationFounded = await db[entity].findByPk(id);
-    console.log(organizationFounded)
+
     if (organizationFounded) {
 
       const organizationUpdated = await db[entity].update(
@@ -129,13 +124,10 @@ const editOrganization = async function (req, res, next) {
 }
 
 const deleteOrganization = async function (req, res, next) {
-  const { id } = req.params;
-  if(!id) {
-    let err = new Error("id not found");
-    err.name = "NotFoundError";
-    throw err;
-  }
+
   try {
+    const { id } = req.params;
+
     const organizationFound = await db[entity].findByPk(id);
     if (!organizationFound) {
       const err = new Error("Organization not found");
@@ -150,7 +142,9 @@ const deleteOrganization = async function (req, res, next) {
     }
 
   } catch (err) {
-    console.log(err)
+
+    next(err)
+
   }
 }
 

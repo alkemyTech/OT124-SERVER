@@ -8,6 +8,7 @@ const organizationsController = require('../controllers/organizations');
 const { validation, fileValidation } = require("../middlewares/validator");
 const { fileSchema } = require("../validations/fileSchema");
 const { organizationPostSchema, organizationPutSchema } = require('../validations/organizationSchema');
+
 const { idExists } = require('../middlewares/idExists');
 /* GET organization by ID. */
 router.get('/:id/public',
@@ -51,5 +52,6 @@ router.delete(
   idExists,
   organizationsController.deleteOrganization
 )
+
 
 module.exports = router;
