@@ -15,7 +15,7 @@ let id;
 // Test post
 describe("POST /activities", () => {
   it("respond with success message", async () => {
-    const response = await await request(app)
+    const response = await request(app)
       .post(activitiesPath)
       .set("Authorization", `Bearer ${TOKEN_ADM_TEST}`)
       .set("Accept", "application/json")
@@ -28,7 +28,7 @@ describe("POST /activities", () => {
   });
 
   it("respond with 400 if no name is passed", async () => {
-    const response = await await request(app)
+    const response = await request(app)
       .post(activitiesPath)
       .set("Authorization", `Bearer ${TOKEN_ADM_TEST}`)
       .set("Accept", "application/json")
@@ -37,7 +37,7 @@ describe("POST /activities", () => {
   });
 
   it("respond with 400 if no content is passed", async () => {
-    const response = await await request(app)
+    const response = await request(app)
       .post(activitiesPath)
       .set("Authorization", `Bearer ${TOKEN_ADM_TEST}`)
       .set("Accept", "application/json")
@@ -46,7 +46,7 @@ describe("POST /activities", () => {
   });
 
   it("respond with 401 and error message if token not found", async () => {
-    const response = await await request(app)
+    const response = await request(app)
       .post(activitiesPath)
       .set("Accept", "application/json")
       .field("name", "Actividad")
@@ -58,7 +58,7 @@ describe("POST /activities", () => {
   });
 
   it("respond with 401 and error message if user not admin", async () => {
-    const response = await await request(app)
+    const response = await request(app)
       .post(activitiesPath)
       .set("Accept", "application/json")
       .set("Authorization", `Bearer ${TOKEN_USER_TEST}`)
