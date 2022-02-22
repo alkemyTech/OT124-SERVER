@@ -76,7 +76,6 @@ const editOrganization = async function (req, res, next) {
 
     let { address, name, phone, email, welcomeText } = req.body
 
-    console.log(req.body)
     let image;
     const error = [];
     if (req.file) {
