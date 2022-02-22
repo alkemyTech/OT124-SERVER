@@ -133,18 +133,12 @@ const deleteActivityById = async function (req, res, next) {
       if (activity.image) {
         const { key } = parseS3Url(activity.image);
         await deleteFile(key, next);
-        await activity.destroy();
-        res.send({
-          title: "Activities",
-          message: "The activity has been deleted successfully",
-        });
-      } else {
-        await activity.destroy();
-        res.send({
-          title: "Activities",
-          message: "The activity has been deleted successfully",
-        });
       }
+      await activity.destroy();
+      res.send({
+        title: "Activities",
+        message: "The activity has been deleted successfully",
+      });
     }
   } catch (err) {
     next(err);
