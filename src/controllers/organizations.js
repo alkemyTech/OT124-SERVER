@@ -93,7 +93,6 @@ const editOrganization = async function (req, res, next) {
     }
 
     const organizationFounded = await db[entity].findByPk(id);
-    console.log(organizationFounded)
     if (organizationFounded) {
 
       const organizationUpdated = await db[entity].update(
