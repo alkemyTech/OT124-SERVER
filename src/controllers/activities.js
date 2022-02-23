@@ -5,8 +5,23 @@ const { uploadFile, updateFile, deleteFile } = require("../services/aws_s3");
 
 const getActivities = async function (req, res, next) {
   try {
-    const listActivity = await db[entity].findAll();
-    res.send({ title: "Activities", listActivity });
+    const activitiesFound = await db[entity].findAll({
+      paranoid: false,
+      order: [["createdAt", "DESC"]],
+      exclude: ["deletedAt,createdAt,updatedAt"],
+    });
+
+    const activities = activitiesFound.map((item) => {
+      if (item.image) {
+        const parsedImage = parseS3Url(item.image);
+        item.image = parsedImage;
+      }
+      return item;
+    });
+
+    res.send({
+      activities,
+    });
   } catch (err) {
     next(err);
   }
@@ -47,6 +62,7 @@ const putActivities = async function (req, res, next) {
     // If not found, return
     if (!activityFound) {
       const error = new Error("Activity not found");
+      error.name = "NotFoundError";
       throw error;
     }
 
@@ -76,7 +92,8 @@ const putActivities = async function (req, res, next) {
     await activityFound.save();
 
     return res.status(200).json({
-      msg: "Activity succesfully updated",
+      title: "Activities",
+      message: "The activity has been updated successfully",
     });
   } catch (err) {
     next(err);
@@ -86,18 +103,19 @@ const putActivities = async function (req, res, next) {
 const getActivityById = async function (req, res, next) {
   try {
     const { id } = req.params;
-    const activity = await db[entity].findOne({ where: { id } });
+    const activity = await db[entity].findByPk(id);
+
     if (!activity) {
       let err = new Error("Activity not found");
       err.name = "NotFoundError";
       throw err;
-    } else {
-      if (activity.image) {
-        activity.image = parseS3Url(activity.image).key;
-        res.send({ activity });
-      }
-      res.send({ activity });
     }
+
+    if (activity.image) {
+      activity.image = parseS3Url(activity.image);
+    }
+
+    res.send({ activity });
   } catch (err) {
     next(err);
   }
@@ -115,12 +133,12 @@ const deleteActivityById = async function (req, res, next) {
       if (activity.image) {
         const { key } = parseS3Url(activity.image);
         await deleteFile(key, next);
-        await activity.destroy();
-        res.send({ message: "Activity deleted" });
-      } else {
-        await activity.destroy();
-        res.send({ message: "Activity deleted" });
       }
+      await activity.destroy();
+      res.send({
+        title: "Activities",
+        message: "The activity has been deleted successfully",
+      });
     }
   } catch (err) {
     next(err);
