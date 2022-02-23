@@ -1,39 +1,55 @@
-const entity = 'users'
-const db = require('../models')
+const entity = 'users';
+const db = require('../models');
+const { generateEncryptedPassword } = require('../helpers/generateEncryptedPassword');
 
 const deleteUser = async (req, res, next) => {
-    //when we have jwt, we need to insert validation token here
-  
     try {
-        console.log(db.users)
-        const {
-            id
-        } = req.params
-        // console.log(id)
-        // console.log(typeof id)
+        const { id } = req.params;
+        const { force } = req.query;
+
         if (!id) {
             let err = new Error("the id wasn't sent")
             err.name = 'ValidationError'
             throw err
         } else {
-            const idFound = await db[entity].findOne({where: {id}})
-            //console.log(idFound)
-            if (!idFound) {
-                let err = new Error('user not found, id invalid')
-                err.name = 'NotFoundError'
-                throw err
+            if (force) {
+                const idFound = await db[entity].findOne({where: {id}})
 
+                if (!idFound) {
+                    let err = new Error('user not found, id invalid')
+                    err.name = 'NotFoundError'
+                    throw err
+                } else {
+                    await db[entity].destroy({
+                        where: {
+                            id: id
+                        },
+                        force: true
+                    });
+
+                    res.send({
+                        errors: null,
+                        message: 'the user was successfully deleted in force mode'
+                    });
+                }
             } else {
+                const idFound = await db[entity].findOne({where: {id}})
 
-                await db[entity].destroy({
-                    where: {
-                        id: id
-                    }
-                })
-                res.send({
-                    errors: null,
-                    message: 'the user was successfully deleted'
-                })
+                if (!idFound) {
+                    let err = new Error('user not found, id invalid')
+                    err.name = 'NotFoundError'
+                    throw err
+                } else {
+                    await db[entity].destroy({
+                        where: {
+                            id: id
+                        }
+                    })
+                    res.send({
+                        errors: null,
+                        message: 'the user was successfully deleted'
+                    })
+                }
             }
         }
     } catch (err) {
@@ -56,7 +72,12 @@ const getAllUsers = async (req, res, next) => {
 const getUser = async (req, res, next) => {
     try {
         const { id } = req.params;
-        const user = await db[entity].findByPk(id);
+        const user = await db[entity].findOne({
+            where: { id },
+            attributes: {
+              exclude: ["password", "createdAt", "updatedAt", "deletedAt"]
+            }
+        });
         
         if (!user) {
             let err = new Error("User not found");
@@ -75,23 +96,101 @@ const getUser = async (req, res, next) => {
 const updateUser = async (req, res, next) => {
     try {
         const { id } = req.params;
-        const { firstName, lastName, email, role } = req.body;
+        const { firstName, lastName, email, role, password } = req.body;
+
+        const user = await db[entity].findOne({
+            where: { id }
+        });
+
+        if (!user) {
+            let err = new Error("User not found");
+            err.name= 'NotFoundError';
+            throw err;
+        }
+
+        passwordHash = await generateEncryptedPassword(password);
+
+        let payload = {
+            firstName,
+            lastName,
+            email,
+            password: passwordHash,
+            role
+        }
         
         const userUpdate = await db[entity].update(
-            { firstName, lastName, email, role },
-            { where: { id: id } }
+            payload,
+            { where: { id } }
         );
 
-        if (!userUpdate) {
+        res.status(200).send({
+            title: "Users",
+            message: "The User has been updated successfully"
+        });
+    } catch (err) {
+        next(err);
+    }
+}
+
+const postUser = async (req, res, next) => {
+    try {
+        const { firstName, lastName, email, password, role } = req.body;
+
+        const userFound = await db[entity].findOne({
+            where: { email: email },
+        });
+
+        if (userFound) {
+            let err = new Error("User already exists");
+            err.name = "ConflictError";
+            throw err;
+        } else {
+            passwordHash = await generateEncryptedPassword(password);
+
+            let payload = {
+                firstName,
+                lastName,
+                email,
+                password: passwordHash,
+                role
+            }
+
+            if (req?.body?.id) payload.id = req.body.id;
+
+            const newUser = await db[entity].create(payload);
+            const user = await db[entity].findOne({
+                where: { id: newUser.id },
+                attributes: {
+                    exclude: ["password", "createdAt", "updatedAt", "deletedAt"],
+                },
+            });
+            
+            return res.status(201).send({
+                title: "Users",
+                message: "The User has been created successfully",
+                user
+            });
+        }
+    } catch (err) {
+        next(err);
+    }
+}
+
+const restore = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+
+        const restoredUser = await db[entity].restore({ where: { id } });
+
+        if (!restoredUser) {
             let err = new Error("User not found");
             err.name = "NotFoundError";
             throw err;
         }
 
-        return res.status(200).send({
+        res.status(200).send({
             title: "Users",
-            message: "The User has been updated successfully",
-            userUpdate
+            message: "The User has been restored successfully"
         });
     } catch (err) {
         next(err);
@@ -102,7 +201,9 @@ const usersController = {
     deleteUser,
     getAllUsers,
     getUser,
-    updateUser
+    updateUser,
+    postUser,
+    restore
 };
 
 module.exports = usersController;
