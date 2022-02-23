@@ -2,12 +2,11 @@
 
 module.exports = {
   async up (queryInterface, Sequelize) {
-    const general = await generateEncryptedPassword("123456") 
-    return queryInterface.bulkInsert("Users", [
+    return queryInterface.bulkInsert("Entries", [
       {
         name: "Awesome title 1",
         content: "A large amount of content described here.",
-        image: "https://drive.google.com/uc?export=view&id=1ileZuq6dMphx9i-aFtz95iSDRsRVZgLj",
+        image: {key: "5c21b160-6cd2-41b6-96f2-27934bfd2f34"},
         type: "news",
         categoryId: 1,
         createdAt: new Date(),
@@ -16,7 +15,7 @@ module.exports = {
       {
         name: "Awesome title 2",
         content: "A large amount of content described here.",
-        image: "https://drive.google.com/uc?export=view&id=1ileZuq6dMphx9i-aFtz95iSDRsRVZgLj",
+        image: {key: "5c21b160-6cd2-41b6-96f2-27934bfd2f34"},
         type: "news",
         categoryId: 1,
         createdAt: new Date(),
@@ -25,7 +24,7 @@ module.exports = {
       {
         name: "Awesome title 3",
         content: "A large amount of content described here.",
-        image: "https://drive.google.com/uc?export=view&id=1ileZuq6dMphx9i-aFtz95iSDRsRVZgLj",
+        image: {key: "5c21b160-6cd2-41b6-96f2-27934bfd2f34"},
         type: "news",
         categoryId: 1,
         createdAt: new Date(),
@@ -34,7 +33,7 @@ module.exports = {
       {
         name: "Awesome title 4",
         content: "A large amount of content described here.",
-        image: "https://drive.google.com/uc?export=view&id=1ileZuq6dMphx9i-aFtz95iSDRsRVZgLj",
+        image: {key: "5c21b160-6cd2-41b6-96f2-27934bfd2f34"},
         type: "news",
         categoryId: 1,
         createdAt: new Date(),
@@ -43,25 +42,16 @@ module.exports = {
       {
         name: "Awesome title 5",
         content: "A large amount of content described here.",
-        image: "https://drive.google.com/uc?export=view&id=1ileZuq6dMphx9i-aFtz95iSDRsRVZgLj",
+        image: {key: "5c21b160-6cd2-41b6-96f2-27934bfd2f34"},
         type: "news",
         categoryId: 1,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
     ])
-    /**
-     * Add seed commands here.
-     *
-     * Example:
-     * await queryInterface.bulkInsert('People', [{
-     *   name: 'John Doe',
-     *   isBetaMember: false
-     * }], {});
-    */
   },
 
-  async down (queryInterface, Sequelize) {
+  async down (queryInterface) {
     await queryInterface.bulkDelete("entries", null, {});
   }
 };

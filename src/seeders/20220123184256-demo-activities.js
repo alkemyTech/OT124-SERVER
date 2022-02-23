@@ -7,8 +7,7 @@ module.exports = {
       [
         {
           name: "Apoyo Escolar para el nivel Primario",
-          image:
-            "https://drive.google.com/uc?export=view&id=1ileZuq6dMphx9i-aFtz95iSDRsRVZgLj",
+          image: {key: "5c21b160-6cd2-41b6-96f2-27934bfd2f34"},
           content: `El espacio de apoyo escolar es el corazón del área educativa. Se realizan los
             talleres de lunes a jueves de 10 a 12 horas y de 14 a 16 horas en el
             contraturno, Los sábados también se realiza el taller para niños y niñas que
@@ -27,8 +26,7 @@ module.exports = {
         },
         {
           name: "Apoyo Escolar Nivel Secundaria",
-          image:
-            "https://drive.google.com/uc?export=view&id=1EfWmYnA2R49ZW8anbMT9Hg2J02pVT5D9",
+          image: {key: "5c21b160-6cd2-41b6-96f2-27934bfd2f34"},
           content: `
             Del mismo modo que en primaria, este taller es el corazón del área
             secundaria. Se realizan talleres de lunes a viernes de 10 a 12 horas y de 16 a
@@ -45,8 +43,7 @@ module.exports = {
         },
         {
           name: "Tutorías",
-          image:
-            "https://drive.google.com/uc?export=view&id=1yqHbCDAx6FFbN1mRj0dCvEkjeqSsov2u",
+          image: {key: "5c21b160-6cd2-41b6-96f2-27934bfd2f34"},
           content: `
             Es un programa destinado a jóvenes a partir del tercer año de secundaria,
             cuyo objetivo es garantizar su permanencia en la escuela y construir un
