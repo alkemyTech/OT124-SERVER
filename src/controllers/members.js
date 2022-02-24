@@ -1,4 +1,7 @@
 const db = require("../models");
+const { generateS3Url } = require("../helpers/generateS3url");
+const { parseS3Url } = require("../helpers/parseS3Url");
+const { updateFile, uploadFile, deleteFile } = require("../services/aws_s3");
 const entity = "members";
 
 const getAllMembers = async function (req, res, next) {
@@ -8,7 +11,7 @@ const getAllMembers = async function (req, res, next) {
       order: [["createdAt", "DESC"]],
     });
 
-    const allMembers = membersFound.map((item) => {
+    const Members = membersFound.map((item) => {
       if (item.image) {
         const parsedImage = parseS3Url(item.image);
         item.image = parsedImage;
@@ -17,8 +20,7 @@ const getAllMembers = async function (req, res, next) {
     });
 
     res.send({
-      title: "Members",
-      Members: allMembers,
+      Members,
     });
   } catch (err) {
     next(err);
@@ -30,13 +32,13 @@ const getMemberById = async function (req, res, next) {
     const { id } = req.params;
     let foundMember = await db[entity].findOne({ where: { id: id } });
       if (foundMember){
-      const parsedURL = parseS3Url(foundMember.image)
-        if (parsedURL?.key){
-        foundMember = {...foundMember.dataValues, key: parsedURL.key}
+        if (foundMember.image) {
+          const parsedImage = parseS3Url(foundMember.image);
+          foundMember.image = parsedImage;
         }
-      return res.status(200).send({ title: "Miembro", miembro: foundMember });
+      return res.status(200).send({ title: "Miembro", member: foundMember });
      }
-    let err = new Error("Miembro no encontrado");
+    let err = new Error("Member not found");
     err.name = "NotFoundError";
     throw err;
   } 
@@ -45,21 +47,20 @@ const getMemberById = async function (req, res, next) {
   }
 };
 
-
 const postMember = async (req, res, next) => {
   try {
-    const { name } = req.body;
-    let image = null;
-    if (req.body && req.body.image) image = req.body.image;
+    if (req.file) {
+      const { url } = await uploadFile(req.file, next);
+      req.body.image = url;
+    } else {
+      req.body.image = null;
+    }
 
-    const createMember = await db[entity].create({
-      name,
-      image,
-    });
-    res.send({
+    const memberCreated = await db[entity].create(req.body);
+    return res.status(201).send({
       title: "Members",
-      message: "Miembro creado con exito!",
-      newMember: createMember,
+      message: "Member created succesfully",
+      newMember: memberCreated,
     });
   } catch (err) {
     next(err);
@@ -75,13 +76,13 @@ const deleteMember = async (req, res, next) => {
       },
     });
     if (!deleteMember) {
-      let err = new Error("Miembro no encontrado");
+      let err = new Error("Member not found");
       err.name = "NotFoundError";
       throw err;
     }
 
     res.status(200).send({
-      message: "Miembro eliminado con exito!",
+      message: "Member deleted succesfully!",
     });
   } catch (err) {
     next(err);
@@ -91,39 +92,39 @@ const deleteMember = async (req, res, next) => {
 const updateMember = async function (req, res, next) {
   try {
     const { id } = req.params;
-    const { body } = req;
+    let { name, image, key } = req.body;
 
-    const memberFound = await db[entity].findOne({
-      where: {
-        id,
-      },
-    });
-
-    if (!memberFound) {
-      const error = new Error("Activity not found");
-      throw error;
-    }
-
-    if (req.file) {
-      if (body.key) {
-        const { url } = await updateFile(body.key, req.file, next);
-        memberFound.image = url;
-      } else {
-        const { url } = await uploadFile(req.file, next);
-        memberFound.image = url;
+    if (req.file){
+      if (key){
+        const {url} = await updateFile(req.file, key, next)
+        image = url
+      }
+      else{
+        const {url} = await uploadFile(req.file, next)
+        image = url
+      } 
+    }else{
+      if (key){
+        const url = generateS3Url(key)
+        image = url
       }
     }
+    const memberUpdate = await db[entity].update(
+      {name, image},
+      {where: { id: id,} }
+      );
 
-    if (body.name) {
-      memberFound.name = body.name;
-    }
-
-    // Save new memberFound properties in db
-    await memberFound.save();
-
-    return res.status(200).json({
-      msg: "Member succesfully updated",
-    });
+      if (memberUpdate) {
+        return res.status(200).send({
+          title: "Member",
+          message: "Member updated successfully",
+          update: memberUpdate,
+        });
+      } else {
+        let err = new Error("Member not found");
+        err.name = "NotFoundError";
+        throw err;
+      }
   } catch (err) {
     next(err);
   }
