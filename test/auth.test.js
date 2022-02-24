@@ -1,4 +1,4 @@
-/*const { expect, assert } = require("chai");
+const { expect, assert } = require("chai");
 const chai = require("chai");
 const request = require("supertest");
 const app = require("../src/app");
@@ -90,4 +90,4 @@ describe(`${authRoute}/login`, () => {
     expect(response.body).to.have.property("errors");
     expect(response.body.errors).include("User does not exist");
   });
-});*/
+});

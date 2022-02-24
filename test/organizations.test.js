@@ -1,4 +1,4 @@
-/*const { expect, assert } = require("chai");
+const { expect, assert } = require("chai");
 const chai = require("chai");
 const request = require("supertest");
 const app = require("../src/app");
@@ -272,5 +272,5 @@ expect(response.body).that.includes({
 });
 
 })
-})*/
+})
 

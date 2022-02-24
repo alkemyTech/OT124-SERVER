@@ -1,4 +1,4 @@
-/*const { expect, assert } = require("chai");
+const { expect, assert } = require("chai");
 const chai = require("chai");
 const request = require("supertest");
 const app = require("../src/app");
@@ -167,4 +167,4 @@ describe(`DELETE ${newsPath}/:id`, () => {
       .to.have.property("errors")
       .to.equal("New not found");
   });
-});*/
+});
