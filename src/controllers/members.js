@@ -6,12 +6,11 @@ const entity = "members";
 
 const getAllMembers = async function (req, res, next) {
   try {
-    const membersFound = await db[entity].findAll({
-      attributes: ["id", "name", "image", "createdAt"],
+    const membersFound = await db[entity].findAll({      
       order: [["createdAt", "DESC"]],
     });
 
-    const Members = membersFound.map((item) => {
+    const members = membersFound.map((item) => {
       if (item.image) {
         const parsedImage = parseS3Url(item.image);
         item.image = parsedImage;
@@ -20,7 +19,7 @@ const getAllMembers = async function (req, res, next) {
     });
 
     res.send({
-      Members,
+      members,
     });
   } catch (err) {
     next(err);
@@ -47,7 +46,7 @@ const getMemberById = async function (req, res, next) {
   }
 };
 
-const postMember = async (req, res, next) => {
+const postMember = async function (req, res, next) {
   try {
     if (req.file) {
       const { url } = await uploadFile(req.file, next);
