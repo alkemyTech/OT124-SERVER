@@ -85,9 +85,11 @@ const updateFile = async (file, key, next) =>{
       Bucket: bucketName,
       contentType: file.mimeType
     };
-    const object = await s3.getObject({Key: key, Bucket: bucketName})
+    let object = await s3.getObject({Key: key, Bucket: bucketName})
     if (object){
-      return await s3.putObject(updateParams)
+      const url = generateS3Url(key)
+      await s3.putObject(updateParams)
+      return { url }
     }
   }
   catch(err){

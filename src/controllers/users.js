@@ -107,14 +107,16 @@ const updateUser = async (req, res, next) => {
             err.name= 'NotFoundError';
             throw err;
         }
-
-        passwordHash = await generateEncryptedPassword(password);
+        
+        if (password){
+            passwordHash = await generateEncryptedPassword(password);
+        }
 
         let payload = {
             firstName,
             lastName,
             email,
-            password: passwordHash,
+            password: password ? passwordHash : user.dataValues.password,
             role
         }
         

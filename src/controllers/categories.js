@@ -40,10 +40,10 @@ const putCategories = async function (req, res, next) {
   try {
     const update = await db[entity].findAll({
       where: {
-        id: { [Op.eq]: req.params.id },
+        id: req.params.id
       },
     });
-    if (!update) {
+    if (update) {
       db[entity].update(
         {
           name: req.body.name,
