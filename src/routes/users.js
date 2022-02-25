@@ -14,8 +14,8 @@ router.get('/', validateToken, isAdmin, userController.getAllUsers);
 // GET a user, only for admin users
 router.get('/:id', validateToken, isAdmin, userController.getUser);
 
-// UPDATE a user, only for admin users
-router.put('/:id', validateToken, isAdmin, validation(userUpdateSchema), userController.updateUser);
+// UPDATE a user, only for admin users or itself
+router.put('/:id', validateToken, isAdminOrItself, validation(userUpdateSchema), userController.updateUser);
 
 // POST a user, only for admin users and for testing purposes
 router.post('/', validateToken, isAdmin, validation(userCreateSchema), userController.postUser);
