@@ -3,6 +3,8 @@ var router = express.Router();
 const userController = require('../controllers/users');
 const { isAdmin, isAdminOrItself } = require('../middlewares/isRole');
 const { validateToken } = require('../middlewares/auth');
+const {validation} = require("../middlewares/validator")
+const {userUpdateSchema , userCreateSchema} = require("../validations/usersSchema")
 
 //delete a 'contact' or user
 //,validation(userDeleteSchema)
