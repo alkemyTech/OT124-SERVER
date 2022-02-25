@@ -10,11 +10,7 @@ const getAllMembers = async function (req, res, next) {
       order: [["createdAt", "DESC"]],
     });
 
-<<<<<<< HEAD
-    const Members = membersFound.map((item) => {
-=======
     const members = membersFound.map((item) => {
->>>>>>> fb1a2992150d29286d38c1c7ce24d871f5d5fc26
       if (item.image) {
         const parsedImage = parseS3Url(item.image);
         item.image = parsedImage;
@@ -23,11 +19,7 @@ const getAllMembers = async function (req, res, next) {
     });
 
     res.send({
-<<<<<<< HEAD
-      Members,
-=======
       members,
->>>>>>> fb1a2992150d29286d38c1c7ce24d871f5d5fc26
     });
   } catch (err) {
     next(err);

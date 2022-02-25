@@ -87,7 +87,6 @@ const deleteNew = async function (req, res, next) {
 const getAllNews = async function (req, res, next) {
   try {
     const newsFound = await db[entity].findAll({
-      paranoid: false,
       order: [["createdAt", "DESC"]],
     });
 
@@ -107,7 +106,7 @@ const getAllNews = async function (req, res, next) {
   }
 };
 
-const getNewById = async function (req, res, next) {
+const getNewById = async function (req, res, next) { 
   try {
     const { id } = req.params;
     let foundOne = await db[entity].findOne({ where: { id: id } });
