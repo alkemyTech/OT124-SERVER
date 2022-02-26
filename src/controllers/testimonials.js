@@ -14,7 +14,7 @@ const getAllTestimonials = async function (req, res, next) {
 
     const testimonialsFound = await db[entity].findAndCountAll({
       limit,
-      offset,
+      offset: search ? null : offset,
       ...searchQuery,
       order: [["createdAt", "DESC"]],
     });

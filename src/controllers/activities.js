@@ -15,7 +15,7 @@ const getActivities = async function (req, res, next) {
     const activitiesFound = await db[entity].findAndCountAll({
       order: [["createdAt", "DESC"]],
       exclude: ["deletedAt,createdAt,updatedAt"],
-      limit, offset, ...searchQuery
+      limit, offset: search ? null : offset, ...searchQuery
     });
 
     const activities = activitiesFound?.rows.map((item) => {
