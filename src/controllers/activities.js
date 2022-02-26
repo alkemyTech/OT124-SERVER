@@ -1,18 +1,21 @@
 const { calculatePagination } = require("../helpers/calculatePagination");
+const { generateSearch } = require("../helpers/generateSearch");
 const { parseS3Url } = require("../helpers/parseS3Url");
 const db = require("../models");
 const entity = "activities";
 const { uploadFile, updateFile, deleteFile } = require("../services/aws_s3");
 
 const getActivities = async function (req, res, next) {
-  const {size, page} = req.query
+  const {size, page, search} = req.query
   try {
     const { limit, offset } = calculatePagination(size, page)
+
+    const searchQuery = generateSearch(entity, search)
     
     const activitiesFound = await db[entity].findAndCountAll({
       order: [["createdAt", "DESC"]],
       exclude: ["deletedAt,createdAt,updatedAt"],
-      limit, offset
+      limit, offset, ...searchQuery
     });
 
     const activities = activitiesFound?.rows.map((item) => {

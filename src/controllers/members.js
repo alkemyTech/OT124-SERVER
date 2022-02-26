@@ -3,14 +3,18 @@ const { generateS3Url } = require("../helpers/generateS3url");
 const { parseS3Url } = require("../helpers/parseS3Url");
 const { updateFile, uploadFile, deleteFile } = require("../services/aws_s3");
 const { calculatePagination } = require("../helpers/calculatePagination");
+const { generateSearch } = require("../helpers/generateSearch");
 const entity = "members";
 
 const getAllMembers = async function (req, res, next) {
-  const {size, page} = req.query
+  const {size, page, search} = req.query
   try {
     const { limit, offset } = calculatePagination(size, page)
+
+    const searchQuery = generateSearch(entity, search)
+
     const membersFound = await db[entity].findAndCountAll({   
-      limit, offset,   
+      limit, offset, ...searchQuery,
       order: [["createdAt", "DESC"]],
     });
 

@@ -3,6 +3,7 @@ const entity = "organization";
 const { uploadFile } = require("../services/aws_s3");
 const { parseS3Url } = require("../helpers/parseS3Url");
 const { calculatePagination } = require("../helpers/calculatePagination");
+const { generateSearch } = require("../helpers/generateSearch");
 // El endpoint deberá devolver un JSON con los campos name, image, phone, address y welcomeText
 
 
@@ -42,10 +43,13 @@ const getOrganization = async function (req, res, next) {
   }
 };
 const getOrganizations = async function (req, res, next) {
-  const {size, page} = req.query
+  const {size, page, search} = req.query
   try {
     const { limit, offset } = calculatePagination(size, page)
-    const organizationsFound = await db[entity].findAndCountAll({limit, offset});
+    
+    const searchQuery = generateSearch(entity, search)
+
+    const organizationsFound = await db[entity].findAndCountAll({limit, offset, ...searchQuery});
     if (organizationsFound) {
 
       const organizations = organizationsFound?.rows?.map((item) => {

@@ -3,13 +3,18 @@ const db = require("../models");
 const { uploadFile } = require("../services/aws_s3");
 const { parseS3Url } = require("../helpers/parseS3Url");
 const { calculatePagination } = require("../helpers/calculatePagination");
+const { generateSearch } = require("../helpers/generateSearch");
 
 const getAllTestimonials = async function (req, res, next) {
-  const {size, page} = req.query
+  const {size, page, search} = req.query
   try {
     const { limit, offset } = calculatePagination(size, page)
+
+    const searchQuery = generateSearch(entity, search)
+
+
     const testimonialsFound = await db[entity].findAndCountAll({
-      limit, offset,
+      limit, offset, ...searchQuery,
       order: [["createdAt", "DESC"]],
     });
 

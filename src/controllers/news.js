@@ -1,5 +1,6 @@
 const { calculatePagination } = require("../helpers/calculatePagination");
 const { generateS3Url } = require("../helpers/generateS3url");
+const { generateSearch } = require("../helpers/generateSearch");
 const { parseS3Url } = require("../helpers/parseS3Url");
 const db = require("../models");
 const { updateFile, uploadFile, deleteFile } = require("../services/aws_s3");
@@ -86,11 +87,14 @@ const deleteNew = async function (req, res, next) {
 };
 
 const getAllNews = async function (req, res, next) {
-  const {size, page} = req.query
+  const {size, page, search} = req.query
   try {
     const { limit, offset } = calculatePagination(size, page)
+
+    const searchQuery = generateSearch(entity, search)
+
     const newsFound = await db[entity].findAndCountAll({
-      limit, offset,
+      limit, offset, ...searchQuery,
       order: [["createdAt", "DESC"]],
     });
 

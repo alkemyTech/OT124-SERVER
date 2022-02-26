@@ -1,22 +1,27 @@
-const { calculatePagination } = require('../helpers/calculatePagination');
-const db = require('../models')
-entity = 'categories'
+const { calculatePagination } = require("../helpers/calculatePagination");
+const { generateSearch } = require("../helpers/generateSearch");
+const db = require("../models");
+
+
+entity = "categories";
 
 const getAllCategories = async function (req, res, next) {
-  const { size, page } = req.query
-  
+  const { size, page, search } = req.query;
   try {
-    const { limit, offset } = calculatePagination(size, page)
+    const { limit, offset } = calculatePagination(size, page);
+
+    const searchQuery = generateSearch(entity, search)
 
     const categoriesFound = await db[entity].findAndCountAll({
       order: [["createdAt", "DESC"]],
-        limit ,
-        offset 
+      limit,
+      offset,
+      ...searchQuery
     });
     res.send({
       title: "Categories",
       categories: categoriesFound?.rows,
-      count: categoriesFound?.count
+      count: categoriesFound?.count,
     });
   } catch (err) {
     next(err);
@@ -47,7 +52,7 @@ const putCategories = async function (req, res, next) {
   try {
     const update = await db[entity].findAll({
       where: {
-        id: req.params.id
+        id: req.params.id,
       },
     });
     if (update) {
@@ -116,4 +121,3 @@ const categoriesController = {
 };
 
 module.exports = categoriesController;
-
