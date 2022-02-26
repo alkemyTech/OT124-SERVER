@@ -1,6 +1,6 @@
 const entity = "testimonials";
 const db = require("../models");
-const { uploadFile } = require("../services/aws_s3");
+const { uploadFile, updateFile } = require("../services/aws_s3");
 const { parseS3Url } = require("../helpers/parseS3Url");
 const { calculatePagination } = require("../helpers/calculatePagination");
 const { generateSearch } = require("../helpers/generateSearch");
@@ -114,38 +114,52 @@ const deleteTestimonialById = async function (req, res, next) {
 };
 
 const updateTestimonial = async function (req, res, next) {
+  const { id } = req.params;
+  const { body } = req;
+
   try {
-    const { id } = req.params;
-    let { name, content, image: image, key } = req.body;
+    // Find tetimonial to update
+    const testimonialFound = await db[entity].findOne({
+      where: {
+        id,
+      },
+    });
+
+    // If not found, return
+    if (!testimonialFound) {
+      const error = new Error("Tetimonial not found");
+      error.name = "NotFoundError";
+      throw error;
+    }
+
+    // If a file was sent
     if (req.file) {
-      if (key) {
-        const { url } = await updateFile(req.file, key, next);
-        image = url;
+      // If also a key was provided, update file with key and and update testimonialFound url
+      if (body.key) {
+        const { url } = await updateFile(body.key, req.file, next);
+        testimonialFound.image = url;
+        // If the is no provided key, upload new file and update testimonialFound url
       } else {
         const { url } = await uploadFile(req.file, next);
-        image = url;
-      }
-    } else {
-      if (key) {
-        // await deleteFile(key, next) //Access Denied
-        // image = null
-        const url = generateS3Url(key);
-        image = url;
+        testimonialFound.image = url;
       }
     }
-    const testimonialUpdated = await db[entity].update(
-      { name, content, image },
-      { where: { id: id } }
-    );
-    if (!testimonialUpdated) {
-      let err = new Error("Testimonial not found");
-      err.name = "NotFoundError";
-      throw err;
+
+    // If name was provided, update testimonialfound
+    if (body.name) {
+      testimonialFound.name = body.name;
     }
-    return res.status(200).send({
+    // If content was provided, update testimonialFound
+    if (body.content) {
+      testimonialFound.content = body.content;
+    }
+
+    // Save new testimonialFound properties in db
+    await testimonialFound.save();
+
+    return res.status(200).json({
       title: "Testimonials",
-      message: "The Testimonial has been updated successfully",
-      testimonialUpdated,
+      message: "The testimonial has been updated successfully",
     });
   } catch (err) {
     next(err);
