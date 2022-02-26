@@ -1,12 +1,12 @@
-'use strict';
-
+"use strict";
+ 
 module.exports = {
-  async up (queryInterface, Sequelize) {
-    return queryInterface.bulkInsert("Entries", [
+  async up(queryInterface, Sequelize) {
+    return queryInterface.bulkInsert("entries", [
       {
         name: "Awesome title 1",
         content: "A large amount of content described here.",
-        image: {key: "5c21b160-6cd2-41b6-96f2-27934bfd2f34"},
+        image: "5c21b160-6cd2-41b6-96f2-27934bfd2f34",
         type: "news",
         categoryId: 1,
         createdAt: new Date(),
@@ -15,7 +15,7 @@ module.exports = {
       {
         name: "Awesome title 2",
         content: "A large amount of content described here.",
-        image: {key: "5c21b160-6cd2-41b6-96f2-27934bfd2f34"},
+        image: "5c21b160-6cd2-41b6-96f2-27934bfd2f34",
         type: "news",
         categoryId: 1,
         createdAt: new Date(),
@@ -24,7 +24,7 @@ module.exports = {
       {
         name: "Awesome title 3",
         content: "A large amount of content described here.",
-        image: {key: "5c21b160-6cd2-41b6-96f2-27934bfd2f34"},
+        image: "5c21b160-6cd2-41b6-96f2-27934bfd2f34",
         type: "news",
         categoryId: 1,
         createdAt: new Date(),
@@ -33,7 +33,7 @@ module.exports = {
       {
         name: "Awesome title 4",
         content: "A large amount of content described here.",
-        image: {key: "5c21b160-6cd2-41b6-96f2-27934bfd2f34"},
+        image: "5c21b160-6cd2-41b6-96f2-27934bfd2f34",
         type: "news",
         categoryId: 1,
         createdAt: new Date(),
@@ -42,16 +42,16 @@ module.exports = {
       {
         name: "Awesome title 5",
         content: "A large amount of content described here.",
-        image: {key: "5c21b160-6cd2-41b6-96f2-27934bfd2f34"},
+        image: "5c21b160-6cd2-41b6-96f2-27934bfd2f34",
         type: "news",
         categoryId: 1,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
-    ])
+    ]);
   },
 
-  async down (queryInterface) {
+  async down(queryInterface) {
     await queryInterface.bulkDelete("entries", null, {});
-  }
+  },
 };

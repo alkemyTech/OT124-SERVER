@@ -7,7 +7,7 @@ module.exports = {
       [
         {
           name: "Apoyo Escolar para el nivel Primario",
-          image: {key: "5c21b160-6cd2-41b6-96f2-27934bfd2f34"},
+          image: "5c21b160-6cd2-41b6-96f2-27934bfd2f34",
           content: `El espacio de apoyo escolar es el corazón del área educativa. Se realizan los
             talleres de lunes a jueves de 10 a 12 horas y de 14 a 16 horas en el
             contraturno, Los sábados también se realiza el taller para niños y niñas que
@@ -20,13 +20,13 @@ module.exports = {
             en Manos para nivelar a los niños y que vayan con más herramientas a la
             escuela.
             `,
-          deletedAt: new Date(),
+          deletedAt: null,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
           name: "Apoyo Escolar Nivel Secundaria",
-          image: {key: "5c21b160-6cd2-41b6-96f2-27934bfd2f34"},
+          image: "5c21b160-6cd2-41b6-96f2-27934bfd2f34",
           content: `
             Del mismo modo que en primaria, este taller es el corazón del área
             secundaria. Se realizan talleres de lunes a viernes de 10 a 12 horas y de 16 a
@@ -37,13 +37,13 @@ module.exports = {
             espacio también es utilizado por los jóvenes como un punto de encuentro y
             relación entre ellos y la institución.
           `,
-          deletedAt: new Date(),
+          deletedAt: null,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
           name: "Tutorías",
-          image: {key: "5c21b160-6cd2-41b6-96f2-27934bfd2f34"},
+          image: "5c21b160-6cd2-41b6-96f2-27934bfd2f34",
           content: `
             Es un programa destinado a jóvenes a partir del tercer año de secundaria,
             cuyo objetivo es garantizar su permanencia en la escuela y construir un
@@ -55,7 +55,7 @@ module.exports = {
             alumnos y con las instancias municipales, provinciales y nacionales que
             correspondan.
             `,
-          deletedAt: new Date(),
+          deletedAt: null,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
