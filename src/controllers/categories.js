@@ -1,15 +1,22 @@
+const { calculatePagination } = require('../helpers/calculatePagination');
 const db = require('../models')
 entity = 'categories'
 
 const getAllCategories = async function (req, res, next) {
+  const { size, page } = req.query
+  
   try {
-    const categoriesFound = await db[entity].findAll({
-      order: [["createdAt", "DESC"]],
-    });
+    const { limit, offset } = calculatePagination(size, page)
 
+    const categoriesFound = await db[entity].findAndCountAll({
+      order: [["createdAt", "DESC"]],
+        limit ,
+        offset 
+    });
     res.send({
       title: "Categories",
-      categories: categoriesFound,
+      categories: categoriesFound?.rows,
+      count: categoriesFound?.count
     });
   } catch (err) {
     next(err);

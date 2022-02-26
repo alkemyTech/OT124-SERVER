@@ -1,16 +1,21 @@
+const { calculatePagination } = require("../helpers/calculatePagination");
 const { parseS3Url } = require("../helpers/parseS3Url");
 const db = require("../models");
 const entity = "activities";
 const { uploadFile, updateFile, deleteFile } = require("../services/aws_s3");
 
 const getActivities = async function (req, res, next) {
+  const {size, page} = req.query
   try {
-    const activitiesFound = await db[entity].findAll({
+    const { limit, offset } = calculatePagination(size, page)
+    
+    const activitiesFound = await db[entity].findAndCountAll({
       order: [["createdAt", "DESC"]],
       exclude: ["deletedAt,createdAt,updatedAt"],
+      limit, offset
     });
 
-    const activities = activitiesFound.map((item) => {
+    const activities = activitiesFound?.rows.map((item) => {
       if (item.image) {
         const parsedImage = parseS3Url(item.image);
         item.image = parsedImage;
@@ -20,6 +25,7 @@ const getActivities = async function (req, res, next) {
 
     res.send({
       activities,
+      count: activitiesFound?.count
     });
   } catch (err) {
     next(err);

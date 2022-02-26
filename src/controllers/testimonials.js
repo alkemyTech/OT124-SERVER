@@ -2,14 +2,18 @@ const entity = "testimonials";
 const db = require("../models");
 const { uploadFile } = require("../services/aws_s3");
 const { parseS3Url } = require("../helpers/parseS3Url");
+const { calculatePagination } = require("../helpers/calculatePagination");
 
 const getAllTestimonials = async function (req, res, next) {
+  const {size, page} = req.query
   try {
-    const testimonialsFound = await db[entity].findAll({
+    const { limit, offset } = calculatePagination(size, page)
+    const testimonialsFound = await db[entity].findAndCountAll({
+      limit, offset,
       order: [["createdAt", "DESC"]],
     });
 
-    const testimonials = testimonialsFound.map((item) => {
+    const testimonials = testimonialsFound?.rows?.map((item) => {
       if (item.lastimage) {
         const parsedImage = parseS3Url(item.lastimage);
         item.lastimage = parsedImage;
@@ -19,6 +23,7 @@ const getAllTestimonials = async function (req, res, next) {
 
     res.send({
       testimonials,
+      count: testimonialsFound?.count
     });
 
   } catch (err) {

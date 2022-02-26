@@ -1,6 +1,7 @@
 const entity = 'users';
 const db = require('../models');
 const { generateEncryptedPassword } = require('../helpers/generateEncryptedPassword');
+const { calculatePagination } = require('../helpers/calculatePagination');
 
 const deleteUser = async (req, res, next) => {
     try {
@@ -58,10 +59,13 @@ const deleteUser = async (req, res, next) => {
 }
 
 const getAllUsers = async (req, res, next) => {
+    const {size, page} = req.query
     try {
-        const users = await db[entity].findAll();
+        const { limit, offset } = calculatePagination(size, page)
+        const users = await db[entity].findAndCountAll({limit, offset});
         res.send({
-            users
+            users: users?.rows,
+            count: users?.count
         });
     } 
     catch (err) {

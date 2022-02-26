@@ -1,3 +1,4 @@
+const { calculatePagination } = require("../helpers/calculatePagination");
 const { generateS3Url } = require("../helpers/generateS3url");
 const { parseS3Url } = require("../helpers/parseS3Url");
 const db = require("../models");
@@ -85,12 +86,15 @@ const deleteNew = async function (req, res, next) {
 };
 
 const getAllNews = async function (req, res, next) {
+  const {size, page} = req.query
   try {
-    const newsFound = await db[entity].findAll({
+    const { limit, offset } = calculatePagination(size, page)
+    const newsFound = await db[entity].findAndCountAll({
+      limit, offset,
       order: [["createdAt", "DESC"]],
     });
 
-    const news = newsFound.map((item) => {
+    const news = newsFound?.rows?.map((item) => {
       if (item.image) {
         const parsedImage = parseS3Url(item.image);
         item.image = parsedImage;
@@ -100,6 +104,7 @@ const getAllNews = async function (req, res, next) {
 
     res.send({
       news,
+      count: newsFound?.count
     });
   } catch (err) {
     next(err);

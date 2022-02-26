@@ -1,15 +1,21 @@
+const { calculatePagination } = require("../helpers/calculatePagination");
 const { ContactSendGrid } = require("../helpers/SenderSchema");
 const db = require("../models");
 const { SendGrid } = require("../services/SendGrid");
 const entity = "contacts";
 
 const getContacts = async function (req, res, next) {
+  const {size, page} = req.query
   try {
-    const contactList = await db[entity].findAll();
+    const { limit, offset } = calculatePagination(size, page)
+    const contactList = await db[entity].findAndCountAll({
+      limit, offset
+    });
 
     return res.send({
       title: "Contacts",
-      contactList,
+      contactList: contactList?.rows,
+      count: contactList?.count
     });
 
   } catch (err) {
