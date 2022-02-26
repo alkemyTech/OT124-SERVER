@@ -23,22 +23,19 @@ const getOrganization = async function (req, res, next) {
       throw err;
     }
 
+    if (organization.image) {
+      const parsedImage = parseS3Url(organization.image);
+      organization.image = parsedImage;
+    }
+
     const { name, image,email, phone, address, welcomeText } = organization;
+
     if (![name, image,email, phone, address, welcomeText].every(Boolean)) {
       err = new Error('One of the fields of the organization is null');
       err.name = '';
       throw err;
     }
-
-    res.json({
-      name,
-      image,
-      email,
-      phone,
-      address,
-      welcomeText,
-      socials
-    });
+    res.json(organization);
   } catch (error) {
     next(error);
   }
@@ -55,7 +52,6 @@ const getOrganizations = async function (req, res, next) {
         }
         return item;
       });
-
       res.send({
         organizations,
       });

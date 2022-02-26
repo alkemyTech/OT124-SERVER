@@ -6,7 +6,6 @@ const { uploadFile, updateFile, deleteFile } = require("../services/aws_s3");
 const getActivities = async function (req, res, next) {
   try {
     const activitiesFound = await db[entity].findAll({
-      paranoid: false,
       order: [["createdAt", "DESC"]],
       exclude: ["deletedAt,createdAt,updatedAt"],
     });
@@ -132,7 +131,7 @@ const deleteActivityById = async function (req, res, next) {
     } else {
       if (activity.image) {
         const { key } = parseS3Url(activity.image);
-        await deleteFile(key, next);
+        //await deleteFile(key, next);
       }
       await activity.destroy();
       res.send({

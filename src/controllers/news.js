@@ -30,7 +30,7 @@ const updateNew = async function (req, res, next) {
     let { name, content, image, key, categoryId, type} = req.body;
     if (req.file){
         if (key){
-          const {url} = await updateFile(req.file, key, next)
+          const { url } = await updateFile(req.file, key, next)
           image = url
         }
         else{
@@ -106,7 +106,7 @@ const getAllNews = async function (req, res, next) {
   }
 };
 
-const getNewById = async function (req, res, next) {
+const getNewById = async function (req, res, next) { 
   try {
     const { id } = req.params;
     let foundOne = await db[entity].findOne({ where: { id: id } });
