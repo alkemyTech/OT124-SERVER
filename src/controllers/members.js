@@ -14,7 +14,7 @@ const getAllMembers = async function (req, res, next) {
     const searchQuery = generateSearch(entity, search)
 
     const membersFound = await db[entity].findAndCountAll({   
-      limit, offset, ...searchQuery,
+      limit, offset: search ? null : offset, ...searchQuery,
       order: [["createdAt", "DESC"]],
     });
 
