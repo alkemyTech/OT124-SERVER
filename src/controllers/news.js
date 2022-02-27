@@ -94,7 +94,7 @@ const getAllNews = async function (req, res, next) {
     const searchQuery = generateSearch(entity, search)
 
     const newsFound = await db[entity].findAndCountAll({
-      limit, offset: search ? null : offset, ...searchQuery,
+      limit, offset, ...searchQuery,
       order: [["createdAt", "DESC"]],
     });
 

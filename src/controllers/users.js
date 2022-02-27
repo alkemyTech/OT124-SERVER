@@ -66,7 +66,7 @@ const getAllUsers = async (req, res, next) => {
 
         const searchQuery = generateSearch(entity, search)
 
-        const users = await db[entity].findAndCountAll({limit, offset: search ? null : offset, ...searchQuery});
+        const users = await db[entity].findAndCountAll({limit, offset, ...searchQuery});
         res.send({
             users: users?.rows,
             count: users?.count
