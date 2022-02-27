@@ -7,7 +7,7 @@ module.exports = {
       [
         {
           name: "Carla",
-          image:
+          lastImage:
             "https://cohorte-enero-835eb560.s3.us-east-1.amazonaws.com/7cca230b-e7eb-4702-bc88-8f51488d23c8",
           content: `
               Me encanta como trabajan en la ONG. Muy responsables y al servicio.
@@ -17,7 +17,7 @@ module.exports = {
         },
         {
           name: "Pedro",
-          image:
+          lastImage:
             "https://cohorte-enero-835eb560.s3.us-east-1.amazonaws.com/d2dfceb3-545f-46f4-a02a-0974409caac0",
           content: `
               Somos Más es un gran espacio para los chicos y muy positivo para las familias.
@@ -27,7 +27,7 @@ module.exports = {
         },
         {
           name: "Juan",
-          image:
+          lastImage:
             "https://cohorte-enero-835eb560.s3.us-east-1.amazonaws.com/f2149525-3eef-42dd-b936-3ba21cb123c7",
           content: `
               Gracias a la ONG mis hijos pueden desarrollarse mejor en la escuela.
@@ -37,7 +37,7 @@ module.exports = {
         },
         {
           name: "Marta",
-          image:
+          lastImage:
             "https://cohorte-enero-835eb560.s3.us-east-1.amazonaws.com/5a38ab4c-6528-455a-98ea-036160d7af67",
           content: `
               Me gusta la calidad de los vinculos que existe en Somos Más.
