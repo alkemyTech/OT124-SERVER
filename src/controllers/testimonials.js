@@ -1,61 +1,60 @@
 const entity = "testimonials";
 const db = require("../models");
-const { uploadFile } = require("../services/aws_s3");
+const { uploadFile, updateFile } = require("../services/aws_s3");
 const { parseS3Url } = require("../helpers/parseS3Url");
 const { calculatePagination } = require("../helpers/calculatePagination");
 const { generateSearch } = require("../helpers/generateSearch");
 
 const getAllTestimonials = async function (req, res, next) {
-  const {size, page, search} = req.query
+  const { size, page, search } = req.query;
   try {
-    const { limit, offset } = calculatePagination(size, page)
+    const { limit, offset } = calculatePagination(size, page);
 
-    const searchQuery = generateSearch(entity, search)
-
+    const searchQuery = generateSearch(entity, search);
 
     const testimonialsFound = await db[entity].findAndCountAll({
-      limit, offset: search ? null : offset, ...searchQuery,
+      limit,
+      offset: search ? null : offset,
+      ...searchQuery,
       order: [["createdAt", "DESC"]],
     });
 
     const testimonials = testimonialsFound?.rows?.map((item) => {
-      if (item.lastimage) {
-        const parsedImage = parseS3Url(item.lastimage);
-        item.lastimage = parsedImage;
+      if (item.image) {
+        const parsedImage = parseS3Url(item.image);
+        item.image = parsedImage;
       }
       return item;
     });
 
     res.send({
       testimonials,
-      count: testimonialsFound?.count
+      count: testimonialsFound?.count,
     });
-
   } catch (err) {
     next(err);
   }
 };
 
 const getTestimonial = async function (req, res, next) {
-  const { id } = req.params
+  const { id } = req.params;
   try {
-    let testimonialFound = await db[entity].findByPk(id)
-    
+    let testimonialFound = await db[entity].findByPk(id);
+
     if (!testimonialFound) {
       let err = new Error("Testimonial not found");
-      err.name= 'NotFoundError'
+      err.name = "NotFoundError";
       throw err;
     }
 
-      if (testimonialFound.lastimage) {
-        const parsedImage = parseS3Url(testimonialFound.lastimage);
-        testimonialFound.lastimage = parsedImage;
-      }
+    if (testimonialFound.image) {
+      const parsedImage = parseS3Url(testimonialFound.image);
+      testimonialFound.image = parsedImage;
+    }
 
     return res.send({
-      testimonial: testimonialFound
-    })
-
+      testimonial: testimonialFound,
+    });
   } catch (err) {
     next(err);
   }
@@ -63,15 +62,15 @@ const getTestimonial = async function (req, res, next) {
 
 const createTestimonial = async function (req, res, next) {
   try {
-    let { name, content, image: lastimage } = req.body;
+    let { name, content, image: image } = req.body;
     if (req.file) {
       const { url } = await uploadFile(req.file, next);
-      lastimage = url;
+      image = url;
     }
     const testimonialCreated = await db[entity].create({
       name,
       content,
-      lastimage,
+      image,
     });
 
     return res.status(201).send({
@@ -79,7 +78,6 @@ const createTestimonial = async function (req, res, next) {
       message: "The Testimonial has been created successfully",
       testimonialCreated,
     });
-    
   } catch (err) {
     next(err);
   }
@@ -93,12 +91,12 @@ const deleteTestimonialById = async function (req, res, next) {
 
     if (!testimonialFound) {
       let err = new Error("Testimonial not found");
-      err.name= 'NotFoundError'
+      err.name = "NotFoundError";
       throw err;
     }
 
-    if (testimonialFound.lastimage) {
-      const imageKey = await parseS3Url(testimonialFound.lastimage);
+    if (testimonialFound.image) {
+      const imageKey = await parseS3Url(testimonialFound.image);
       //const deleted = await deleteFile(imageKey, next);
     }
 
@@ -107,7 +105,7 @@ const deleteTestimonialById = async function (req, res, next) {
       res.status(200).send({
         title: "Testimonials",
         message: "The Testimonial has been deleted successfully",
-        testimonialDeleted
+        testimonialDeleted,
       });
     }
   } catch (err) {
@@ -116,40 +114,53 @@ const deleteTestimonialById = async function (req, res, next) {
 };
 
 const updateTestimonial = async function (req, res, next) {
+  const { id } = req.params;
+  const { body } = req;
+
   try {
-    const { id } = req.params;
-    let { name, content, image: lastimage, key } = req.body;
+    // Find tetimonial to update
+    const testimonialFound = await db[entity].findOne({
+      where: {
+        id,
+      },
+    });
+
+    // If not found, return
+    if (!testimonialFound) {
+      const error = new Error("Tetimonial not found");
+      error.name = "NotFoundError";
+      throw error;
+    }
+
+    // If a file was sent
     if (req.file) {
-      if (key) {
-        const { url } = await updateFile(req.file, key, next);
-        lastimage = url;
+      // If also a key was provided, update file with key and and update testimonialFound url
+      if (body.key) {
+        const { url } = await updateFile(body.key, req.file, next);
+        testimonialFound.image = url;
+        // If the is no provided key, upload new file and update testimonialFound url
       } else {
         const { url } = await uploadFile(req.file, next);
-        lastimage = url;
-      }
-    } else {
-      if (key) {
-        // await deleteFile(key, next) //Access Denied
-        // image = null
-        const url = generateS3Url(key);
-        lastimage = url;
+        testimonialFound.image = url;
       }
     }
-    const testimonialUpdated = await db[entity].update(
-      { name, content, lastimage },
-      { where: { id: id } }
-    );
-    if (!testimonialUpdated) {
-      let err = new Error("Testimonial not found");
-      err.name = "NotFoundError";
-      throw err;
+
+    // If name was provided, update testimonialfound
+    if (body.name) {
+      testimonialFound.name = body.name;
     }
-      return res.status(200).send({
-        title: "Testimonials",
-        message: "The Testimonial has been updated successfully",
-        testimonialUpdated,
-      });
-      
+    // If content was provided, update testimonialFound
+    if (body.content) {
+      testimonialFound.content = body.content;
+    }
+
+    // Save new testimonialFound properties in db
+    await testimonialFound.save();
+
+    return res.status(200).json({
+      title: "Testimonials",
+      message: "The testimonial has been updated successfully",
+    });
   } catch (err) {
     next(err);
   }
@@ -160,8 +171,7 @@ const testimonialsController = {
   createTestimonial,
   updateTestimonial,
   deleteTestimonialById,
-  getTestimonial
+  getTestimonial,
 };
-
 
 module.exports = testimonialsController;
