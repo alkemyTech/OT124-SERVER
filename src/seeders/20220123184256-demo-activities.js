@@ -1,51 +1,39 @@
 "use strict";
 
-const { generateS3Url } = require("../helpers/generateS3url");
-
 module.exports = {
-  async up(queryInterface, Sequelize) {
+  async up(queryInterface) {
     return queryInterface.bulkInsert(
       "activities",
       [
         {
           name: "Apoyo Escolar para el nivel Primario",
-          image: generateS3Url("5c21b160-6cd2-41b6-96f2-27934bfd2f34"),
+          image:
+            "https://cohorte-enero-835eb560.s3.us-east-1.amazonaws.com/a922da66-ca72-4dd6-9859-9bf916838a13",
           content: `El espacio de apoyo escolar es el corazón del área educativa. Se realizan los
             talleres de lunes a jueves de 10 a 12 horas y de 14 a 16 horas en el
             contraturno, Los sábados también se realiza el taller para niños y niñas que
-            asisten a la escuela doble turno. Tenemos un espacio especial para los de
-            1er grado 2 veces por semana ya que ellos necesitan atención especial!
-            Actualmente se encuentran inscriptos a este programa 150 niños y niñas de
-            6 a 15 años. Este taller está pensado para ayudar a los alumnos con el
-            material que traen de la escuela, también tenemos una docente que les da
-            clases de lengua y matemática con una planificación propia que armamos
-            en Manos para nivelar a los niños y que vayan con más herramientas a la
-            escuela.
+            asisten a la escuela doble turno. 
             `,
-          deletedAt: new Date(),
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
           name: "Apoyo Escolar Nivel Secundaria",
-          image: generateS3Url("5c21b160-6cd2-41b6-96f2-27934bfd2f34"),
+          image:
+            "https://cohorte-enero-835eb560.s3.us-east-1.amazonaws.com/1c83f7f5-168f-46ab-a4e7-577e8a8412a0",
           content: `
             Del mismo modo que en primaria, este taller es el corazón del área
             secundaria. Se realizan talleres de lunes a viernes de 10 a 12 horas y de 16 a
             18 horas en el contraturno. Actualmente se encuentran inscriptos en el taller
-            50 adolescentes entre 13 y 20 años. Aquí los jóvenes se presentan con el
-            material que traen del colegio y una docente de la institución y un grupo de
-            voluntarios los recibe para ayudarlos a estudiar o hacer la tarea. Este
-            espacio también es utilizado por los jóvenes como un punto de encuentro y
-            relación entre ellos y la institución.
+            50 adolescentes entre 13 y 20 años.
           `,
-          deletedAt: new Date(),
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
           name: "Tutorías",
-          image: generateS3Url("5c21b160-6cd2-41b6-96f2-27934bfd2f34"),
+          image:
+            "https://cohorte-enero-835eb560.s3.us-east-1.amazonaws.com/49fb9434-90cd-4a2a-9c91-eabc6e06c334",
           content: `
             Es un programa destinado a jóvenes a partir del tercer año de secundaria,
             cuyo objetivo es garantizar su permanencia en la escuela y construir un
@@ -57,7 +45,6 @@ module.exports = {
             alumnos y con las instancias municipales, provinciales y nacionales que
             correspondan.
             `,
-          deletedAt: new Date(),
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -66,7 +53,7 @@ module.exports = {
     );
   },
 
-  async down(queryInterface, Sequelize) {
+  async down(queryInterface) {
     await queryInterface.bulkDelete("activities", null, {});
   },
 };

@@ -16,6 +16,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      position: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       image: {
         type: DataTypes.STRING,
         allowNull: true,
@@ -26,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "members",
       tableName: "members",
       timestamps: true,
-      paranoid: true
+      paranoid: true,
     }
   );
   return Members;
