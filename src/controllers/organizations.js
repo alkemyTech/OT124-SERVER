@@ -6,52 +6,51 @@ const { calculatePagination } = require("../helpers/calculatePagination");
 const { generateSearch } = require("../helpers/generateSearch");
 // El endpoint deberá devolver un JSON con los campos name, image, phone, address y welcomeText
 
-
-  
 const getOrganization = async function (req, res, next) {
   const { id } = req.params;
-  let err = []
+  let err = [];
+
   try {
-   
- 
-    const organization = await db[entity].findOne({ where: { id: id } });
-    let socials = await db['socials'].findOne({ where: { organizationId: id } });
+    const organizationFound = await db[entity].findOne({
+      where: {
+        id,
+      },
+      include: db.socials,
+    });
 
-    if (!socials) socials = null;
-
-    if (!organization) {
-      err = new Error('Organization not found');
-      err.name = '';
+    if (!organizationFound) {
+      err = new Error("Organization not found");
+      err.name = "NotFoundError";
       throw err;
     }
 
-    if (organization.image) {
-      const parsedImage = parseS3Url(organization.image);
-      organization.image = parsedImage;
+    if (organizationFound.image) {
+      const parsedImage = parseS3Url(organizationFound.image);
+      organizationFound.image = parsedImage;
     }
 
-    const { name, image,email, phone, address, welcomeText } = organization;
-
-    if (![name, image,email, phone, address, welcomeText].every(Boolean)) {
-      err = new Error('One of the fields of the organization is null');
-      err.name = '';
-      throw err;
-    }
-    res.json(organization);
+    res.send({
+      Title: "Organization",
+      organization: organizationFound,
+    });
   } catch (error) {
     next(error);
   }
 };
+
 const getOrganizations = async function (req, res, next) {
-  const {size, page, search} = req.query
+  const { size, page, search } = req.query;
   try {
-    const { limit, offset } = calculatePagination(size, page)
-    
-    const searchQuery = generateSearch(entity, search)
+    const { limit, offset } = calculatePagination(size, page);
 
-    const organizationsFound = await db[entity].findAndCountAll({limit, offset, ...searchQuery});
+    const searchQuery = generateSearch(entity, search);
+
+    const organizationsFound = await db[entity].findAndCountAll({
+      limit,
+      offset,
+      ...searchQuery,
+    });
     if (organizationsFound) {
-
       const organizations = organizationsFound?.rows?.map((item) => {
         if (item.image) {
           const parsedImage = parseS3Url(item.image);
@@ -61,28 +60,23 @@ const getOrganizations = async function (req, res, next) {
       });
       res.send({
         organizations,
-        count: organizationsFound?.count
+        count: organizationsFound?.count,
       });
     } else {
       let err = new Error("Organizations not found");
       err.name = "NotFoundError";
       throw err;
     }
-
-
   } catch (err) {
     next(err);
   }
-
-}
+};
 
 const editOrganization = async function (req, res, next) {
   try {
     const { id } = req.params;
 
-
-    let { address, name, phone, email, welcomeText } = req.body
-
+    let { address, name, phone, email, welcomeText } = req.body;
 
     let image;
     const error = [];
@@ -98,21 +92,19 @@ const editOrganization = async function (req, res, next) {
       phone,
       email,
       welcomeText,
-    }
-
+    };
 
     const organizationFounded = await db[entity].findByPk(id);
 
     if (organizationFounded) {
-
-      const organizationUpdated = await db[entity].update(
-        data,
-        { where: { id } });
+      const organizationUpdated = await db[entity].update(data, {
+        where: { id },
+      });
       if (organizationUpdated) {
         return res.status(200).send({
           title: "Organization",
           message: "Organization updated successfully",
-          organizationUpdated
+          organizationUpdated,
         });
       }
     } else {
@@ -120,15 +112,12 @@ const editOrganization = async function (req, res, next) {
       err.name = "NotFoundError";
       throw err;
     }
-
-
   } catch (err) {
     next(err);
   }
-}
+};
 
 const deleteOrganization = async function (req, res, next) {
-
   try {
     const { id } = req.params;
 
@@ -144,13 +133,10 @@ const deleteOrganization = async function (req, res, next) {
         message: "The Organization has been deleted successfully",
       });
     }
-
   } catch (err) {
-
-    next(err)
-
+    next(err);
   }
-}
+};
 
 const createOrganization = async function (req, res, next) {
   try {
@@ -173,19 +159,16 @@ const createOrganization = async function (req, res, next) {
       message: "The Organization has been created successfully",
       newOrganization: organizationCreated,
     });
-
-
   } catch (err) {
     next(err);
   }
-}
+};
 const organizationsController = {
   getOrganization,
   createOrganization,
   editOrganization,
   getOrganizations,
   deleteOrganization,
- 
 };
 
 module.exports = organizationsController;
