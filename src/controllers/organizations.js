@@ -1,6 +1,6 @@
 const db = require("../models");
 const entity = "organization";
-const { uploadFile } = require("../services/aws_s3");
+const { uploadFile, updateFile } = require("../services/aws_s3");
 const { parseS3Url } = require("../helpers/parseS3Url");
 const { calculatePagination } = require("../helpers/calculatePagination");
 const { generateSearch } = require("../helpers/generateSearch");
@@ -73,45 +73,65 @@ const getOrganizations = async function (req, res, next) {
 };
 
 const editOrganization = async function (req, res, next) {
+  const { id } = req.params;
+  const { body } = req;
+
   try {
-    const { id } = req.params;
+    // Find organization to update
+    const organizationFound = await db[entity].findOne({
+      where: {
+        id,
+      },
+    });
 
-    let { address, name, phone, email, welcomeText } = req.body;
+    // If not found, return
+    if (!organizationFound) {
+      const error = new Error("Organization not found");
+      error.name = "NotFoundError";
+      throw error;
+    }
 
-    let image;
-    const error = [];
+    // If a file was sent
     if (req.file) {
-      const { url } = await uploadFile(req.file, next);
-      image = url;
-    }
-    //creo el data para comparar a mi conveniencia con la base de datos
-    let data = {
-      name,
-      image,
-      address,
-      phone,
-      email,
-      welcomeText,
-    };
-
-    const organizationFounded = await db[entity].findByPk(id);
-
-    if (organizationFounded) {
-      const organizationUpdated = await db[entity].update(data, {
-        where: { id },
-      });
-      if (organizationUpdated) {
-        return res.status(200).send({
-          title: "Organization",
-          message: "Organization updated successfully",
-          organizationUpdated,
-        });
+      // If also a key was provided, update file with key and and update organizationFound url
+      if (body.key) {
+        const { url } = await updateFile(body.key, req.file, next);
+        organizationFound.image = url;
+        // If the is no provided key, upload new file and update organizationFound url
+      } else {
+        const { url } = await uploadFile(req.file, next);
+        organizationFound.image = url;
       }
-    } else {
-      let err = new Error("Organization not found, Organization id invalid");
-      err.name = "NotFoundError";
-      throw err;
     }
+
+    // If name was provided, update organizationfound
+    if (body.name) {
+      organizationFound.name = body.name;
+    }
+    // If phone was provided, update organizationFound
+    if (body.phone) {
+      organizationFound.content = body.content;
+    }
+    // If email was provided, update organizationfound
+    if (body.email) {
+      organizationFound.email = body.email;
+    }
+    // If address was provided, update organizationfound
+    if (body.address) {
+      organizationFound.address = body.address;
+    }
+    // If welcomeText was provided, update organizationfound
+    if (body.welcomeText) {
+      organizationFound.welcomeText = body.welcomeText;
+    }
+
+    // Save new organizationFound properties in db
+    await organizationFound.save();
+
+    return res.status(200).json({
+      title: "Organizations",
+      message: "The organization has been updated successfully",
+    });
   } catch (err) {
     next(err);
   }

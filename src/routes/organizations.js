@@ -38,7 +38,6 @@ router.put(
   "/:id",
   authController.validateToken,
   isAdmin,
-  idExists,
   upload.single("image"),
   validation(organizationPostSchema),
   fileValidation(fileSchema),
