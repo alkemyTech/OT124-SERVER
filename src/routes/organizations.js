@@ -10,12 +10,13 @@ const { fileSchema } = require("../validations/fileSchema");
 const { organizationPostSchema, organizationPutSchema } = require('../validations/organizationSchema');
 
 const { idExists } = require('../middlewares/idExists');
+
 /* GET organization by ID. */
 router.get('/:id/public',
-authController.validateToken,
-isAdmin,
-idExists,
- organizationsController.getOrganization);
+  idExists,
+  organizationsController.getOrganization
+);
+
 /*GET all organizations */
 router.get('/',
   authController.validateToken,

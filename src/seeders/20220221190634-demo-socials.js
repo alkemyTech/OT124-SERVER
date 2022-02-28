@@ -5,25 +5,25 @@ module.exports = {
     return queryInterface.bulkInsert('socials', [
       {
         organizationId: 1,
-        facebook: 'facebook.com/somos_mas',
-        linkedin: 'linkedin.com/in/somosmas',
-        instagram: 'instagram.com/somos_mas',
+        facebook: 'https://www.facebook.com/somos_mas',
+        linkedin: 'https://www.linkedin.com/in/somosmas',
+        instagram: 'https://www.instagram.com/somos_mas',
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         organizationId: 2,
-        facebook: 'facebook.com/amnistia',
-        linkedin: 'linkedin.com/in/amnistia',
-        instagram: 'instagram.com/amnistia',
+        facebook: 'https://www.facebook.com/amnistia',
+        linkedin: 'https://www.linkedin.com/in/amnistia',
+        instagram: 'https://www.instagram.com/amnistia',
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         organizationId: 3,
-        facebook: 'facebook.com/apdh',
-        linkedin: 'linkedin.com/in/apdh',
-        instagram: 'instagram.com/apdh',
+        facebook: 'https://www.facebook.com/apdh',
+        linkedin: 'https://www.linkedin.com/in/apdh',
+        instagram: 'https://www.instagram.com/apdh',
         createdAt: new Date(),
         updatedAt: new Date()
       }

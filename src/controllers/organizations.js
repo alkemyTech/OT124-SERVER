@@ -82,6 +82,9 @@ const editOrganization = async function (req, res, next) {
 
     let image;
     const error = [];
+    if (req.image) {
+      image = req.image;
+    }
     if (req.file) {
       const { url } = await uploadFile(req.file, next);
       image = url;
