@@ -5,7 +5,7 @@ module.exports = {
     server_port: 5000,
     db_port: 3306,
     username: "root",
-    password: null,
+    password: "root",
     database: "ong-dev",
     host: "localhost",
     dialect: "mysql",
