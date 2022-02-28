@@ -33,17 +33,19 @@ const isAdminOrItself = async (req, res, next) => {
   const {user} = req
   const {id} = req.params
   try {
-    if (user?.role === "admin") {
-      next();
+    if (user?.role == "admin") {
+      return next();
     }
-    if (user?.id === id) {
-      next();
+    if (user?.id == id) {
+      return next();
     }
-    else{
-      let err = new Error("Must be admin");
-      err.name = "AuthorizationError";
-      throw err;
-    }
+
+    console.log("No entra - Lo que se pidio")
+    
+    let err = new Error("Must be admin");
+    err.name = "AuthorizationError";
+    throw err;
+    
   } catch (err) {
     next(err);
   }
