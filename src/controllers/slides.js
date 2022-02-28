@@ -7,7 +7,7 @@ const getSlides = async (req, res, next) => {
         let err;
 
         if (!slides) {
-            err = new Error("User not found");
+            err = new Error("Slides not found");
             err.name= 'NotFoundError';
             throw err;
         }

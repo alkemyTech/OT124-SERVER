@@ -1,7 +1,10 @@
 const yup = require("yup");
 
 const memberPostSchema = yup.object().shape({
-  name: yup.string('Name must be a string').required('Name is required')
+  name: yup.string("Name must be a string").required("Name is required"),
+  position: yup
+    .string("Position must be a string")
+    .required("Position is required"),
 });
 
 const fileSchema = yup.object().shape({
@@ -23,8 +26,7 @@ const fileSchema = yup.object().shape({
     }),
 });
 
-
-module.exports = { 
-    memberPostSchema,
-    fileSchema
+module.exports = {
+  memberPostSchema,
+  fileSchema,
 };

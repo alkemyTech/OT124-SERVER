@@ -1,35 +1,36 @@
-'use strict';
+"use strict";
 
 module.exports = {
-  async up (queryInterface, Sequelize) {
+  async up(queryInterface, Sequelize) {
     await queryInterface.createTable(
-      'socials',
+      "socials",
       {
         id: {
           autoIncrement: true,
           type: Sequelize.INTEGER,
           allowNull: false,
-          primaryKey: true
+          primaryKey: true,
         },
         organizationId: {
           type: Sequelize.INTEGER,
+          onDelete: "CASCADE",
           references: {
-              model: 'organization',
-              key: 'id'
+            model: "organization",
+            key: "id",
           },
-          allowNull: false
+          allowNull: false,
         },
         facebook: {
           type: Sequelize.STRING,
-          allowNull: true
+          allowNull: true,
         },
         linkedin: {
           type: Sequelize.STRING,
-          allowNull: true
+          allowNull: true,
         },
         instagram: {
           type: Sequelize.STRING,
-          allowNull: true
+          allowNull: true,
         },
         createdAt: {
           type: Sequelize.DATE,
@@ -42,18 +43,18 @@ module.exports = {
         deletedAt: {
           type: Sequelize.DATE,
           allowNull: true,
-        }
+        },
       },
       {
         modelName: "socials",
         tableName: "socials",
         timestamps: true,
-        timestamps: true
+        timestamps: true,
       }
     );
   },
 
-  async down (queryInterface, Sequelize) {
+  async down(queryInterface, Sequelize) {
     await queryInterface.dropTable("socials");
-  }
+  },
 };

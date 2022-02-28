@@ -1,13 +1,16 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
 const authController = require("../middlewares/auth");
 const multer = require("multer");
 const upload = multer();
 const { isAdmin } = require("../middlewares/isRole");
-const organizationsController = require('../controllers/organizations');
+const organizationsController = require("../controllers/organizations");
 const { validation, fileValidation } = require("../middlewares/validator");
 const { fileSchema } = require("../validations/fileSchema");
-const { organizationPostSchema, organizationPutSchema } = require('../validations/organizationSchema');
+const {
+  organizationPostSchema,
+  organizationPutSchema,
+} = require("../validations/organizationSchema");
 
 const { idExists } = require('../middlewares/idExists');
 
@@ -18,10 +21,11 @@ router.get('/:id/public',
 );
 
 /*GET all organizations */
-router.get('/',
+router.get(
+  "/",
   authController.validateToken,
   isAdmin,
-  organizationsController.getOrganizations,
+  organizationsController.getOrganizations
 );
 
 /* POST create organization */
@@ -39,7 +43,6 @@ router.put(
   "/:id",
   authController.validateToken,
   isAdmin,
-  idExists,
   upload.single("image"),
   validation(organizationPostSchema),
   fileValidation(fileSchema),
@@ -52,7 +55,6 @@ router.delete(
   isAdmin,
   idExists,
   organizationsController.deleteOrganization
-)
-
+);
 
 module.exports = router;

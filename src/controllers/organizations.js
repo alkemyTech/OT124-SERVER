@@ -1,62 +1,56 @@
 const db = require("../models");
 const entity = "organization";
-const { uploadFile } = require("../services/aws_s3");
+const { uploadFile, updateFile } = require("../services/aws_s3");
 const { parseS3Url } = require("../helpers/parseS3Url");
 const { calculatePagination } = require("../helpers/calculatePagination");
 const { generateSearch } = require("../helpers/generateSearch");
 // El endpoint deberá devolver un JSON con los campos name, image, phone, address y welcomeText
 
-
-  
 const getOrganization = async function (req, res, next) {
   const { id } = req.params;
-  let err;
+  let err = [];
+
   try {
-    const organization = await db[entity].findOne({ where: { id: id } });
-    let socials = await db['socials'].findOne({ where: { organizationId: id } });
+    const organizationFound = await db[entity].findOne({
+      where: {
+        id,
+      },
+      include: db.socials,
+    });
 
-    if (!socials) socials = null;
-
-    if (!organization) {
-      err = new Error('Organization not found');
-      err.name = 'NotFoundError';
+    if (!organizationFound) {
+      err = new Error("Organization not found");
+      err.name = "NotFoundError";
       throw err;
     }
 
-    if (organization.image) {
-      const parsedImage = parseS3Url(organization.image);
-      organization.image = parsedImage;
+    if (organizationFound.image) {
+      const parsedImage = parseS3Url(organizationFound.image);
+      organizationFound.image = parsedImage;
     }
 
-    const { name, image, email, phone, address, welcomeText } = organization;
-
-    if (![name, email, phone, address, welcomeText].every(Boolean)) {
-      err = new Error('One of the fields of the organization is null');
-      err.name = 'NotFoundError';
-      throw err;
-    }
-    res.json({
-      name,
-      image,
-      email,
-      phone,
-      address,
-      welcomeText
+    res.send({
+      Title: "Organization",
+      organization: organizationFound,
     });
   } catch (error) {
     next(error);
   }
 };
+
 const getOrganizations = async function (req, res, next) {
-  const {size, page, search} = req.query
+  const { size, page, search } = req.query;
   try {
-    const { limit, offset } = calculatePagination(size, page)
-    
-    const searchQuery = generateSearch(entity, search)
+    const { limit, offset } = calculatePagination(size, page);
 
-    const organizationsFound = await db[entity].findAndCountAll({limit, offset, ...searchQuery});
+    const searchQuery = generateSearch(entity, search);
+
+    const organizationsFound = await db[entity].findAndCountAll({
+      limit,
+      offset,
+      ...searchQuery,
+    });
     if (organizationsFound) {
-
       const organizations = organizationsFound?.rows?.map((item) => {
         if (item.image) {
           const parsedImage = parseS3Url(item.image);
@@ -66,77 +60,84 @@ const getOrganizations = async function (req, res, next) {
       });
       res.send({
         organizations,
-        count: organizationsFound?.count
+        count: organizationsFound?.count,
       });
     } else {
       let err = new Error("Organizations not found");
       err.name = "NotFoundError";
       throw err;
     }
-
-
   } catch (err) {
     next(err);
   }
-
-}
+};
 
 const editOrganization = async function (req, res, next) {
+  const { id } = req.params;
+  const { body } = req;
+
   try {
-    const { id } = req.params;
+    // Find organization to update
+    const organizationFound = await db[entity].findOne({
+      where: {
+        id,
+      },
+    });
 
-
-    let { address, name, phone, email, welcomeText } = req.body
-
-
-    let image;
-    const error = [];
-    if (req.image) {
-      image = req.image;
+    // If not found, return
+    if (!organizationFound) {
+      const error = new Error("Organization not found");
+      error.name = "NotFoundError";
+      throw error;
     }
+
+    // If a file was sent
     if (req.file) {
-      const { url } = await uploadFile(req.file, next);
-      image = url;
-    }
-    //creo el data para comparar a mi conveniencia con la base de datos
-    let data = {
-      name,
-      image,
-      address,
-      phone,
-      email,
-      welcomeText,
-    }
-
-
-    const organizationFounded = await db[entity].findByPk(id);
-
-    if (organizationFounded) {
-
-      const organizationUpdated = await db[entity].update(
-        data,
-        { where: { id } });
-      if (organizationUpdated) {
-        return res.status(200).send({
-          title: "Organization",
-          message: "Organization updated successfully",
-          organizationUpdated
-        });
+      // If also a key was provided, update file with key and and update organizationFound url
+      if (body.key) {
+        const { url } = await updateFile(body.key, req.file, next);
+        organizationFound.image = url;
+        // If the is no provided key, upload new file and update organizationFound url
+      } else {
+        const { url } = await uploadFile(req.file, next);
+        organizationFound.image = url;
       }
-    } else {
-      let err = new Error("Organization not found, Organization id invalid");
-      err.name = "NotFoundError";
-      throw err;
     }
 
+    // If name was provided, update organizationfound
+    if (body.name) {
+      organizationFound.name = body.name;
+    }
+    // If phone was provided, update organizationFound
+    if (body.phone) {
+      organizationFound.content = body.content;
+    }
+    // If email was provided, update organizationfound
+    if (body.email) {
+      organizationFound.email = body.email;
+    }
+    // If address was provided, update organizationfound
+    if (body.address) {
+      organizationFound.address = body.address;
+    }
+    // If welcomeText was provided, update organizationfound
+    if (body.welcomeText) {
+      organizationFound.welcomeText = body.welcomeText;
+    }
 
+    // Save new organizationFound properties in db
+    await organizationFound.save();
+
+    return res.status(200).json({
+      title: "Organizations",
+      message: "The organization has been updated successfully",
+    });
   } catch (err) {
     next(err);
   }
-}
+};
 
 const deleteOrganization = async function (req, res, next) {
-
   try {
     const { id } = req.params;
 
@@ -152,13 +153,10 @@ const deleteOrganization = async function (req, res, next) {
         message: "The Organization has been deleted successfully",
       });
     }
-
   } catch (err) {
-
-    next(err)
-
+    next(err);
   }
-}
+};
 
 const createOrganization = async function (req, res, next) {
   try {
@@ -181,19 +179,16 @@ const createOrganization = async function (req, res, next) {
       message: "The Organization has been created successfully",
       newOrganization: organizationCreated,
     });
-
-
   } catch (err) {
     next(err);
   }
-}
+};
 const organizationsController = {
   getOrganization,
   createOrganization,
   editOrganization,
   getOrganizations,
   deleteOrganization,
- 
 };
 
 module.exports = organizationsController;
