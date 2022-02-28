@@ -2,15 +2,23 @@ const db = require("../models");
 const { generateS3Url } = require("../helpers/generateS3url");
 const { parseS3Url } = require("../helpers/parseS3Url");
 const { updateFile, uploadFile, deleteFile } = require("../services/aws_s3");
+const { calculatePagination } = require("../helpers/calculatePagination");
+const { generateSearch } = require("../helpers/generateSearch");
 const entity = "members";
 
 const getAllMembers = async function (req, res, next) {
+  const {size, page, search} = req.query
   try {
-    const membersFound = await db[entity].findAll({      
+    const { limit, offset } = calculatePagination(size, page)
+
+    const searchQuery = generateSearch(entity, search)
+
+    const membersFound = await db[entity].findAndCountAll({   
+      limit, offset, ...searchQuery,
       order: [["createdAt", "DESC"]],
     });
 
-    const members = membersFound.map((item) => {
+    const members = membersFound?.rows?.map((item) => {
       if (item.image) {
         const parsedImage = parseS3Url(item.image);
         item.image = parsedImage;
@@ -20,6 +28,7 @@ const getAllMembers = async function (req, res, next) {
 
     res.send({
       members,
+      count: membersFound?.count
     });
   } catch (err) {
     next(err);

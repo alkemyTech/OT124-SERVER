@@ -17,8 +17,6 @@ router.get("/", membersController.getAllMembers);
 /* POST new member */
 router.post("/", validateToken, isAdmin, upload.single("image"), validation(memberPostSchema), fileValidation(fileSchema), membersController.postMember);
 
-
-
 router.delete("/:id", validateToken, isAdmin, membersController.deleteMember);
 
 /* GET  member by id*/

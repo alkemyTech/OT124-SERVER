@@ -1,6 +1,8 @@
 const entity = 'users';
 const db = require('../models');
 const { generateEncryptedPassword } = require('../helpers/generateEncryptedPassword');
+const { calculatePagination } = require('../helpers/calculatePagination');
+const { generateSearch } = require('../helpers/generateSearch');
 
 const deleteUser = async (req, res, next) => {
     try {
@@ -58,10 +60,16 @@ const deleteUser = async (req, res, next) => {
 }
 
 const getAllUsers = async (req, res, next) => {
+    const {size, page, search} = req.query
     try {
-        const users = await db[entity].findAll();
+        const { limit, offset } = calculatePagination(size, page)
+
+        const searchQuery = generateSearch(entity, search)
+
+        const users = await db[entity].findAndCountAll({limit, offset, ...searchQuery});
         res.send({
-            users
+            users: users?.rows,
+            count: users?.count
         });
     } 
     catch (err) {
@@ -107,14 +115,16 @@ const updateUser = async (req, res, next) => {
             err.name= 'NotFoundError';
             throw err;
         }
-
-        passwordHash = await generateEncryptedPassword(password);
+        
+        if (password){
+            passwordHash = await generateEncryptedPassword(password);
+        }
 
         let payload = {
             firstName,
             lastName,
             email,
-            password: passwordHash,
+            password: password ? passwordHash : user.dataValues.password,
             role
         }
         
