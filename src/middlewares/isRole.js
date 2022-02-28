@@ -32,14 +32,8 @@ const isDev = async (req, res, next) => {
 const isAdminOrItself = async (req, res, next) => {
   const {user} = req
   const {id} = req.params
-
-  console.log(user.id)
-  console.log(id)
-
-  console.log(user?.role)
   try {
     if (user?.role == "admin") {
-      console.log("Entra")
       return next();
     }
     if (user?.id == id) {
