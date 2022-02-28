@@ -1,8 +1,17 @@
 "use strict";
 const { Model } = require("sequelize");
+const db = require(".");
 module.exports = (sequelize, DataTypes) => {
   class Users extends Model {
-    static associate(models) {}
+    static associate(models) {
+     
+    }
+  }
+  Users.associate = (models)=> {
+    Users.hasOne(models.Donate, {
+      as: 'donates',
+      foreignKey: 'userId'
+    });
   }
   Users.init(
     {
@@ -43,5 +52,6 @@ module.exports = (sequelize, DataTypes) => {
       paranoid: true,
     }
   );
+  
   return Users;
 };
