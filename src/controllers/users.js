@@ -8,7 +8,7 @@ const deleteUser = async (req, res, next) => {
     try {
         const { id } = req.params;
         const { force } = req.query;
-
+        console.log("Llego a control")
         if (!id) {
             let err = new Error("the id wasn't sent")
             err.name = 'ValidationError'
@@ -142,6 +142,24 @@ const updateUser = async (req, res, next) => {
     }
 }
 
+const updateSelf = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const { firstName, lastName, email } = req.body;
+
+        const userUpdate = await db[entity].update(
+            {firstName, lastName, email},
+            { where: { id } }
+        );
+        res.status(200).send({
+            title: "Users",
+            message: "The User has been updated successfully"
+        });
+    } catch (err) {
+        next(err);
+    }
+}
+
 const postUser = async (req, res, next) => {
     try {
         const { firstName, lastName, email, password, role } = req.body;
@@ -213,7 +231,8 @@ const usersController = {
     getUser,
     updateUser,
     postUser,
-    restore
+    restore,
+    updateSelf
 };
 
 module.exports = usersController;
