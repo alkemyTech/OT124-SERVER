@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
   Testimonials.init(
     {
       name: DataTypes.STRING,
-      lastimage: DataTypes.STRING,
+      image: DataTypes.STRING,
       content: DataTypes.TEXT,
     },
     {
@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "testimonials",
       tableName: "testimonials",
       timestamps: true,
-      paranoid: true
+      paranoid: true,
     }
   );
   return Testimonials;

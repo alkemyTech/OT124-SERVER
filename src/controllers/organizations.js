@@ -2,6 +2,8 @@ const db = require("../models");
 const entity = "organization";
 const { uploadFile } = require("../services/aws_s3");
 const { parseS3Url } = require("../helpers/parseS3Url");
+const { calculatePagination } = require("../helpers/calculatePagination");
+const { generateSearch } = require("../helpers/generateSearch");
 // El endpoint deberá devolver un JSON con los campos name, image, phone, address y welcomeText
 
 
@@ -23,41 +25,43 @@ const getOrganization = async function (req, res, next) {
       throw err;
     }
 
+    if (organization.image) {
+      const parsedImage = parseS3Url(organization.image);
+      organization.image = parsedImage;
+    }
+
     const { name, image,email, phone, address, welcomeText } = organization;
+
     if (![name, image,email, phone, address, welcomeText].every(Boolean)) {
       err = new Error('One of the fields of the organization is null');
       err.name = '';
       throw err;
     }
-
-    res.json({
-      name,
-      image,
-      email,
-      phone,
-      address,
-      welcomeText,
-      socials
-    });
+    res.json(organization);
   } catch (error) {
     next(error);
   }
 };
 const getOrganizations = async function (req, res, next) {
+  const {size, page, search} = req.query
   try {
-    const organizationsFound = await db[entity].findAll();
+    const { limit, offset } = calculatePagination(size, page)
+    
+    const searchQuery = generateSearch(entity, search)
+
+    const organizationsFound = await db[entity].findAndCountAll({limit, offset, ...searchQuery});
     if (organizationsFound) {
 
-      const organizations = organizationsFound.map((item) => {
+      const organizations = organizationsFound?.rows?.map((item) => {
         if (item.image) {
           const parsedImage = parseS3Url(item.image);
           item.image = parsedImage;
         }
         return item;
       });
-
       res.send({
         organizations,
+        count: organizationsFound?.count
       });
     } else {
       let err = new Error("Organizations not found");

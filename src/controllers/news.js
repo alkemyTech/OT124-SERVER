@@ -1,4 +1,6 @@
+const { calculatePagination } = require("../helpers/calculatePagination");
 const { generateS3Url } = require("../helpers/generateS3url");
+const { generateSearch } = require("../helpers/generateSearch");
 const { parseS3Url } = require("../helpers/parseS3Url");
 const db = require("../models");
 const { updateFile, uploadFile, deleteFile } = require("../services/aws_s3");
@@ -30,7 +32,7 @@ const updateNew = async function (req, res, next) {
     let { name, content, image, key, categoryId, type} = req.body;
     if (req.file){
         if (key){
-          const {url} = await updateFile(req.file, key, next)
+          const { url } = await updateFile(req.file, key, next)
           image = url
         }
         else{
@@ -85,13 +87,18 @@ const deleteNew = async function (req, res, next) {
 };
 
 const getAllNews = async function (req, res, next) {
+  const {size, page, search} = req.query
   try {
-    const newsFound = await db[entity].findAll({
-      paranoid: false,
+    const { limit, offset } = calculatePagination(size, page)
+
+    const searchQuery = generateSearch(entity, search)
+
+    const newsFound = await db[entity].findAndCountAll({
+      limit, offset, ...searchQuery,
       order: [["createdAt", "DESC"]],
     });
 
-    const news = newsFound.map((item) => {
+    const news = newsFound?.rows?.map((item) => {
       if (item.image) {
         const parsedImage = parseS3Url(item.image);
         item.image = parsedImage;
@@ -101,13 +108,14 @@ const getAllNews = async function (req, res, next) {
 
     res.send({
       news,
+      count: newsFound?.count
     });
   } catch (err) {
     next(err);
   }
 };
 
-const getNewById = async function (req, res, next) {
+const getNewById = async function (req, res, next) { 
   try {
     const { id } = req.params;
     let foundOne = await db[entity].findOne({ where: { id: id } });
