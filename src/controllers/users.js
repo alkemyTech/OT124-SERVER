@@ -151,6 +151,8 @@ const updateSelf = async (req, res, next) => {
             {firstName, lastName, email},
             { where: { id } }
         );
+
+        console.log(userUpdate)
         res.status(200).send({
             title: "Users",
             message: "The User has been updated successfully"
