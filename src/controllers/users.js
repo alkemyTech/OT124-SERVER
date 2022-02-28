@@ -45,7 +45,8 @@ const deleteUser = async (req, res, next) => {
                     await db[entity].destroy({
                         where: {
                             id: id
-                        }
+                        },
+                        force: true
                     })
                     res.send({
                         errors: null,
