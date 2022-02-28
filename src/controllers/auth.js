@@ -49,23 +49,21 @@ const registerUser = async function (req, res, next) {
   }
 };
 const getMe = async function (req, res, next) {
-
+      const { id } = req.user
   try {
-    const { authorization } = req.headers;
-    if (!authorization) {
-      let err = new Error("Token not found");
+  
+    const me = await db[userEntity].findOne({where: { id: id },
+      attributes: {
+        exclude: ["password", "createdAt", "updatedAt", "deletedAt"],
+      }})
+
+      if (!me){
+        let err = new Error("User not found");
       err.name = "NotFoundError";
       throw err;
-    }
-    let token = authorization.split(" ")[1];
-  
-    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-      if(err) {
-          throw err
-      } else {
-        res.status(200).send(decoded.user)
       }
-    })
+
+      res.send({ user: me })
     
   } catch (error) {
     next(error)
