@@ -10,10 +10,8 @@ const { generateSearch } = require("../helpers/generateSearch");
   
 const getOrganization = async function (req, res, next) {
   const { id } = req.params;
-  let err = []
+  let err;
   try {
-   
- 
     const organization = await db[entity].findOne({ where: { id: id } });
     let socials = await db['socials'].findOne({ where: { organizationId: id } });
 
@@ -21,7 +19,7 @@ const getOrganization = async function (req, res, next) {
 
     if (!organization) {
       err = new Error('Organization not found');
-      err.name = '';
+      err.name = 'NotFoundError';
       throw err;
     }
 
@@ -30,14 +28,21 @@ const getOrganization = async function (req, res, next) {
       organization.image = parsedImage;
     }
 
-    const { name, image,email, phone, address, welcomeText } = organization;
+    const { name, image, email, phone, address, welcomeText } = organization;
 
-    if (![name, image,email, phone, address, welcomeText].every(Boolean)) {
+    if (![name, email, phone, address, welcomeText].every(Boolean)) {
       err = new Error('One of the fields of the organization is null');
-      err.name = '';
+      err.name = 'NotFoundError';
       throw err;
     }
-    res.json(organization);
+    res.json({
+      name,
+      image,
+      email,
+      phone,
+      address,
+      welcomeText
+    });
   } catch (error) {
     next(error);
   }
