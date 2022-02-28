@@ -15,7 +15,7 @@ const getAllCategories = async function (req, res, next) {
     const categoriesFound = await db[entity].findAndCountAll({
       order: [["createdAt", "DESC"]],
       limit,
-      offset: search ? null : offset,
+      offset,
       ...searchQuery
     });
     res.send({

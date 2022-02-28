@@ -13,7 +13,7 @@ const getContacts = async function (req, res, next) {
     const searchQuery = generateSearch(entity, search)
 
     const contactList = await db[entity].findAndCountAll({
-      limit, offset: search ? null : offset, ...searchQuery
+      limit, offset, ...searchQuery
     });
 
     return res.send({

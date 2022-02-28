@@ -49,7 +49,7 @@ const getOrganizations = async function (req, res, next) {
     
     const searchQuery = generateSearch(entity, search)
 
-    const organizationsFound = await db[entity].findAndCountAll({limit, offset: search ? null : offset, ...searchQuery});
+    const organizationsFound = await db[entity].findAndCountAll({limit, offset, ...searchQuery});
     if (organizationsFound) {
 
       const organizations = organizationsFound?.rows?.map((item) => {
