@@ -2,9 +2,6 @@
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Slides extends Model {
-    static associate(models) {
-      Slides.belongsTo(models.organization);
-    }
   }
   Slides.init(
     {
@@ -14,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         primaryKey: true,
       },
-      imageUrl: {
+      image: {
         type: DataTypes.STRING,
         allowNull: false,
       },
