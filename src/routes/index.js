@@ -12,7 +12,7 @@ const authRouter = require("./auth");
 const organizationsRouter = require("./organizations");
 const categoriesRouter = require('./categories')
 const contribuyeRouter = require('./contribuye')
-
+const slidesRouter = require('./slides');
 
 
 router.use("/news", newRouter);
@@ -27,6 +27,8 @@ router.use('/members', membersRouter);
 router.use("/auth", authRouter);
 router.use('/categories', categoriesRouter);
 router.use('/donate', contribuyeRouter );
+router.use('/slides', slidesRouter);
+
 
 apiRouter.use("/api/v1", router);
 module.exports = apiRouter;

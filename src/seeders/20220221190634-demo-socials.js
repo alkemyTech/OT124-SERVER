@@ -5,12 +5,12 @@ module.exports = {
     return queryInterface.bulkInsert("socials", [
       {
         organizationId: 1,
-        facebook: "facebook.com/somos_mas",
-        linkedin: "linkedin.com/in/somosmas",
-        instagram: "instagram.com/somos_mas",
+        facebook: 'https://www.facebook.com/somos_mas',
+        linkedin: 'https://www.linkedin.com/in/somosmas',
+        instagram: 'https://www.instagram.com/somos_mas',
         createdAt: new Date(),
         updatedAt: new Date(),
-      },
+      }
     ]);
   },
 

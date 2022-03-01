@@ -12,9 +12,14 @@ const {
   organizationPutSchema,
 } = require("../validations/organizationSchema");
 
-const { idExists } = require("../middlewares/idExists");
+const { idExists } = require('../middlewares/idExists');
+
 /* GET organization by ID. */
-router.get("/:id/public", organizationsController.getOrganization);
+router.get('/:id/public',
+  idExists,
+  organizationsController.getOrganization
+);
+
 /*GET all organizations */
 router.get(
   "/",
