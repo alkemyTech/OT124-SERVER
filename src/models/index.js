@@ -36,7 +36,13 @@ Object.keys(db).forEach((modelName) => {
   }
 });
 
+//db['users'].belongsTo(db['donates'], { as: 'donate_amounts', constraints: false })
+// db['donates'].hasMany(db['users'])
+
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
+
+
+
 
 module.exports = db;
