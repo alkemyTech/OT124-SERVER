@@ -16,7 +16,6 @@ const deleteUser = async (req, res, next) => {
         } else {
             if (force) {
                 const idFound = await db[entity].findOne({where: {id}})
-
                 if (!idFound) {
                     let err = new Error('user not found, id invalid')
                     err.name = 'NotFoundError'
@@ -36,7 +35,14 @@ const deleteUser = async (req, res, next) => {
                 }
             } else {
                 const idFound = await db[entity].findOne({where: {id}})
-
+                const donate = await db["Donate"].findOne({where: {userId: idFound.id}})
+                if (donate){
+                    await  db["Donate"].destroy({
+                        where: {
+                            id: donate.dataValues.id
+                        },
+                    });
+                }
                 if (!idFound) {
                     let err = new Error('user not found, id invalid')
                     err.name = 'NotFoundError'
