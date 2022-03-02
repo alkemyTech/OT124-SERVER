@@ -9,7 +9,7 @@ const donate = require("../models/donate");
 
 const postDonate = async function (req, res, next) {
     mercadopago.configurations.setAccessToken(TOKEN);
-    //  console.log(mercadopago.configurations.getAccessToken())
+    console.log(mercadopago.configurations.getAccessToken())
 
     const payment_data = {
         transaction_amount: Number(req.body.transaction_amount),
@@ -26,6 +26,8 @@ const postDonate = async function (req, res, next) {
             },
         },
     };
+
+    console.log(payment_data)
 
 
     mercadopago.payment

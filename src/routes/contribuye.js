@@ -8,5 +8,5 @@ const router = express.Router();
 // SDK de Mercado Pago
 router.post("/process-payment",validateToken, postDonate)
 router.get("/process-payment/user",validateToken, getDonatesUser)
-router.get("/process-payment/all",validateToken, getDonatesAll)
+router.get("/process-payment/all",  getDonatesAll)
 module.exports = router;
