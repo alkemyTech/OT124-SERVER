@@ -8,7 +8,6 @@ const deleteUser = async (req, res, next) => {
     try {
         const { id } = req.params;
         const { force } = req.query;
-        console.log("Llego a control")
         if (!id) {
             let err = new Error("the id wasn't sent")
             err.name = 'ValidationError'
